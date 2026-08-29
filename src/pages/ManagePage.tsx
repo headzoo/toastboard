@@ -5,6 +5,7 @@ import { Shell, StatusNote } from "../components/ui.tsx";
 import { WallFeed } from "../components/WallFeed.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
+import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 
 export function ManagePage() {
   const { slug } = useParams();
@@ -24,7 +25,7 @@ export function ManagePage() {
   if (!token) {
     return (
       <Shell>
-        <section className="narrow">
+        <section className={narrowClass}>
           <h1>This page needs the host link</h1>
           <p>
             Toastboard doesn’t have accounts. If you still have the original “save this link” page, that’s the
@@ -46,7 +47,7 @@ export function ManagePage() {
   if (status !== "ready" || !event || !slug) {
     return (
       <Shell>
-        <section className="narrow">
+        <section className={narrowClass}>
           <h1>Guestbook not found</h1>
         </section>
       </Shell>
@@ -55,21 +56,21 @@ export function ManagePage() {
 
   return (
     <Shell>
-      <section className="wall-header">
-        <p className="kicker">Host tools — keep this URL private</p>
+      <section className="mb-8 max-w-[760px]">
+        <p className={kickerClass}>Host tools — keep this URL private</p>
         <h1>{event.coupleNames}</h1>
-        <p className="lede">Hide a toast if you need to. Guests never see these buttons.</p>
-        <div className="btn-row">
-          <Link className="btn btn-ghost" to={`/e/${slug}/wall`}>
+        <p className={ledeClass}>Hide a toast if you need to. Guests never see these buttons.</p>
+        <div className={btnRowClass}>
+          <Link className={btnClass("ghost")} to={`/e/${slug}/wall`}>
             Public wall
           </Link>
-          <Link className="btn btn-ghost" to={`/e/${slug}`}>
+          <Link className={btnClass("ghost")} to={`/e/${slug}`}>
             Guest form
           </Link>
         </div>
       </section>
 
-      <div className="manage-qr">
+      <div className="mt-3">
         <QrPanel slug={slug} />
       </div>
 

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { submitMessage } from "../lib/api.ts";
+import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { formatEventDate } from "../lib/theme.ts";
 
 export function GuestPage() {
@@ -58,7 +59,7 @@ export function GuestPage() {
   if (status !== "ready" || !event || !slug) {
     return (
       <Shell>
-        <section className="narrow">
+        <section className={narrowClass}>
           <h1>This guestbook wasn’t found</h1>
           <p>The QR code may be for a different event, or it hasn’t been created yet.</p>
         </section>
@@ -69,12 +70,12 @@ export function GuestPage() {
   if (done) {
     return (
       <Shell>
-        <section className="narrow thanks">
-          <p className="kicker">Sent</p>
+        <section className={`${narrowClass} pt-[8vh]`}>
+          <p className={kickerClass}>Sent</p>
           <h1>Thank you! Your message has been added 💌</h1>
-          <p className="lede">It should appear on the wall in a moment.</p>
-          <div className="btn-row">
-            <Link className="btn btn-primary" to={`/e/${slug}/wall`}>
+          <p className={ledeClass}>It should appear on the wall in a moment.</p>
+          <div className={btnRowClass}>
+            <Link className={btnClass("primary")} to={`/e/${slug}/wall`}>
               See the wall
             </Link>
             <Button
@@ -95,14 +96,14 @@ export function GuestPage() {
 
   return (
     <Shell>
-      <section className="narrow guest">
-        <p className="kicker">{formatEventDate(event.eventDate) || "A wedding guestbook"}</p>
+      <section className={narrowClass}>
+        <p className={kickerClass}>{formatEventDate(event.eventDate) || "A wedding guestbook"}</p>
         <h1>{event.coupleNames}</h1>
-        <p className="lede">
+        <p className={ledeClass}>
           {event.welcomeMessage || "Leave a toast — a memory, a wish, or a photo. No account needed."}
         </p>
 
-        <form className="stack" onSubmit={(e) => void onSubmit(e)}>
+        <form className="mt-6 grid gap-4" onSubmit={(e) => void onSubmit(e)}>
           <Field label="Your name" hint="Optional">
             <input
               maxLength={80}
@@ -128,7 +129,13 @@ export function GuestPage() {
               onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
             />
           </Field>
-          {preview ? <img className="photo-preview" src={preview} alt="Selected photo preview" /> : null}
+          {preview ? (
+            <img
+              className="block max-h-60 w-full rounded-2xl object-cover"
+              src={preview}
+              alt="Selected photo preview"
+            />
+          ) : null}
           {error ? <StatusNote tone="error">{error}</StatusNote> : null}
           <Button type="submit" disabled={busy}>
             {busy ? "Sending…" : "Add to the guestbook"}

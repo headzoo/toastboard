@@ -9,7 +9,7 @@ import { Shell } from "./components/ui.tsx";
 function NotFound() {
   return (
     <Shell>
-      <section className="narrow">
+      <section className="max-w-[760px]">
         <h1>That page isn’t on the table</h1>
       </section>
     </Shell>

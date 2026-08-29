@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { btnClass, btnVariants } from "../lib/styles.ts";
 
 type ShellProps = {
   children: ReactNode;
@@ -9,15 +10,23 @@ type ShellProps = {
 
 export function Shell({ children, eyebrow = "Toastboard", present = false }: ShellProps) {
   return (
-    <div className={`app${present ? " is-present" : ""}`}>
+    <div className="relative min-h-svh">
       <div className="paper-grain" aria-hidden="true" />
-      <header className="site-header">
-        <Link className="brand" to="/">
-          <span className="brand-mark" aria-hidden="true" />
+      <header className={`px-[6vw] pt-5 print:hidden${present ? " hidden" : ""}`}>
+        <Link
+          className="inline-flex items-center gap-2.5 font-serif text-[1.15rem] text-ink no-underline"
+          to="/"
+        >
+          <span
+            className="size-[0.85rem] -rotate-45 rounded-[50%_50%_50%_0] border-2 border-accent"
+            aria-hidden="true"
+          />
           <span>{eyebrow}</span>
         </Link>
       </header>
-      <main className="site-main">{children}</main>
+      <main className={`mx-auto px-[6vw] pb-20 pt-8${present ? " max-w-[1400px]" : " max-w-[1180px]"}`}>
+        {children}
+      </main>
     </div>
   );
 }
@@ -25,10 +34,11 @@ export function Shell({ children, eyebrow = "Toastboard", present = false }: She
 type ButtonProps = {
   children: ReactNode;
   type?: "button" | "submit";
-  variant?: "primary" | "ghost" | "danger";
+  variant?: keyof typeof btnVariants;
   disabled?: boolean;
   onClick?: () => void;
   href?: string;
+  small?: boolean;
 };
 
 export function Button({
@@ -38,16 +48,18 @@ export function Button({
   disabled,
   onClick,
   href,
+  small = false,
 }: ButtonProps) {
+  const className = btnClass(variant, small);
   if (href) {
     return (
-      <a className={`btn btn-${variant}`} href={href}>
+      <a className={className} href={href}>
         {children}
       </a>
     );
   }
   return (
-    <button className={`btn btn-${variant}`} type={type} disabled={disabled} onClick={onClick}>
+    <button className={className} type={type} disabled={disabled} onClick={onClick}>
       {children}
     </button>
   );
@@ -61,20 +73,27 @@ type FieldProps = {
 
 export function Field({ label, hint, children }: FieldProps) {
   return (
-    <label className="field">
-      <span className="field-label">{label}</span>
+    <label className="block">
+      <span className="mb-1.5 block text-[0.82rem] font-bold">{label}</span>
       {children}
-      {hint ? <span className="field-hint">{hint}</span> : null}
+      {hint ? <span className="mt-1.5 block text-[0.85rem] text-ink-soft">{hint}</span> : null}
     </label>
   );
 }
+
+const statusTones = {
+  muted: "text-ink-soft",
+  warn: "rounded-2xl bg-[color-mix(in_srgb,var(--color-warn)_12%,white)] px-4 py-3.5 text-warn print:hidden",
+  ok: "text-ok",
+  error: "rounded-2xl bg-[color-mix(in_srgb,var(--color-warn)_12%,white)] px-4 py-3.5 text-warn",
+} as const;
 
 export function StatusNote({
   children,
   tone = "muted",
 }: {
   children: ReactNode;
-  tone?: "muted" | "warn" | "ok" | "error";
+  tone?: keyof typeof statusTones;
 }) {
-  return <p className={`status status-${tone}`}>{children}</p>;
+  return <p className={`px-4 py-3.5 ${statusTones[tone]}`}>{children}</p>;
 }

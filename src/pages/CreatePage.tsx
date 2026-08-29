@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { HostKeepsafeCard } from "../components/HostKeepsafeCard.tsx";
 import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
 import { createEvent } from "../lib/api.ts";
 import { loadKeepsafe, saveKeepsafe } from "../lib/session.ts";
+import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { applyTheme } from "../lib/theme.ts";
 import { DEFAULT_THEME, THEME_SWATCHES } from "../lib/types.ts";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 export function CreatePage() {
   const existing = useMemo(() => loadKeepsafe(), []);
@@ -51,12 +52,12 @@ export function CreatePage() {
       {keepsafe ? (
         <HostKeepsafeCard keepsafe={keepsafe} />
       ) : (
-        <section className="narrow">
-          <p className="kicker">One-time setup</p>
+        <section className={narrowClass}>
+          <p className={kickerClass}>One-time setup</p>
           <h1>Create a guestbook</h1>
-          <p className="lede">No account. We’ll give you a host link once — save it like a key.</p>
+          <p className={ledeClass}>No account. We’ll give you a host link once — save it like a key.</p>
 
-          <form className="stack" onSubmit={(e) => void onSubmit(e)}>
+          <form className="mt-6 grid gap-4" onSubmit={(e) => void onSubmit(e)}>
             <Field label="Couple’s names" hint="Shown on the guest page and the wall.">
               <input
                 required
@@ -78,14 +79,15 @@ export function CreatePage() {
                 onChange={(e) => setWelcomeMessage(e.target.value)}
               />
             </Field>
-            <fieldset className="field">
-              <legend className="field-label">Theme color</legend>
-              <div className="swatches">
+            <fieldset className="block border-0 p-0">
+              <legend className="mb-1.5 block text-[0.82rem] font-bold">Theme color</legend>
+              <div className="flex items-center gap-2.5">
                 {THEME_SWATCHES.map((swatch) => (
                   <button
                     key={swatch.value}
                     type="button"
-                    className={`swatch${themeColor === swatch.value ? " is-on" : ""}`}
+                    className={`size-8 cursor-pointer rounded-full border-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)]${themeColor === swatch.value ? " outline outline-3 outline-offset-2 outline-ink" : ""
+                      }`}
                     style={{ background: swatch.value }}
                     aria-label={swatch.label}
                     onClick={() => setThemeColor(swatch.value)}

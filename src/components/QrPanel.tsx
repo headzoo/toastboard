@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { copyText, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls.ts";
+import { btnClass } from "../lib/styles.ts";
 
 type QrPanelProps = {
   slug: string;
@@ -21,15 +22,19 @@ export function QrPanel({ slug, caption = "Guest QR code" }: QrPanelProps) {
   }, [slug, url]);
 
   return (
-    <div className="qr-panel">
-      {src ? <img src={src} alt={caption} /> : <div className="qr-skeleton" />}
-      <div className="qr-actions">
-        <button className="btn btn-ghost" type="button" onClick={() => void copyText(url)}>
+    <div className="my-6 w-full">
+      {src ? (
+        <img className="block w-full rounded-2xl" src={src} alt={caption} />
+      ) : (
+        <div className="aspect-square rounded-2xl bg-paper-2" />
+      )}
+      <div className="mt-3 flex gap-3 print:hidden">
+        <button className={btnClass("ghost")} type="button" onClick={() => void copyText(url)}>
           Copy guest link
         </button>
         {src ? (
           <button
-            className="btn btn-ghost"
+            className={btnClass("ghost")}
             type="button"
             onClick={() => downloadDataUrl(src, `${slug}-guest-qr.png`)}
           >
