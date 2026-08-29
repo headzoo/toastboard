@@ -3,13 +3,12 @@ import { copyText, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls.ts";
 
 type QrPanelProps = {
   slug: string;
-  table?: string;
   caption?: string;
 };
 
-export function QrPanel({ slug, table, caption = "Guest QR code" }: QrPanelProps) {
+export function QrPanel({ slug, caption = "Guest QR code" }: QrPanelProps) {
   const [src, setSrc] = useState<string>("");
-  const url = guestUrl(slug, table);
+  const url = guestUrl(slug);
 
   useEffect(() => {
     let cancelled = false;
@@ -19,7 +18,7 @@ export function QrPanel({ slug, table, caption = "Guest QR code" }: QrPanelProps
     return () => {
       cancelled = true;
     };
-  }, [slug, table, url]);
+  }, [slug, url]);
 
   return (
     <div className="qr-panel">
@@ -32,7 +31,7 @@ export function QrPanel({ slug, table, caption = "Guest QR code" }: QrPanelProps
           <button
             className="btn btn-ghost"
             type="button"
-            onClick={() => downloadDataUrl(src, table ? `${slug}-table-${table}.png` : `${slug}-guest-qr.png`)}
+            onClick={() => downloadDataUrl(src, `${slug}-guest-qr.png`)}
           >
             Download QR
           </button>

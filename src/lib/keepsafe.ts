@@ -43,7 +43,7 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
 
   ctx.fillStyle = "#5C5146";
   ctx.font = "500 24px 'Figtree', sans-serif";
-  ctx.fillText("Guest QR  ·  table cards", width / 2, 1040);
+  ctx.fillText("Guest QR", width / 2, 1040);
 
   ctx.fillStyle = "#2A2118";
   ctx.font = "600 26px 'Figtree', sans-serif";

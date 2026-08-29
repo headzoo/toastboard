@@ -24,7 +24,6 @@ export const DEMO_SLUG = "maya-james-k8n2w4p9qx";
 const MAX_NAME = 80;
 const MAX_TEXT = 1000;
 const MAX_WELCOME = 500;
-const MAX_TABLE = 16;
 
 type CreatedEvent = {
   slug: string;
@@ -112,12 +111,10 @@ export async function submitMessage(input: {
   slug: string;
   guestName: string;
   text: string;
-  tableNumber: string;
   photo: File | null;
 }): Promise<void> {
   const guestName = sanitizeText(input.guestName, MAX_NAME);
   const text = sanitizeText(input.text, MAX_TEXT);
-  const tableNumber = sanitizeText(input.tableNumber, MAX_TABLE);
   if (!text && !input.photo) {
     throw new Error("Add a note, a photo, or both.");
   }
@@ -129,7 +126,6 @@ export async function submitMessage(input: {
   };
   if (guestName) payload.guestName = guestName;
   if (text) payload.text = text;
-  if (tableNumber) payload.tableNumber = tableNumber;
 
   if (input.photo) {
     payload.photoUrl = await storeGuestPhoto(input.slug, messageId, input.photo);
@@ -171,7 +167,6 @@ function mapMessage(id: string, data: DocumentData): MessageRecord {
     guestName: typeof data.guestName === "string" ? data.guestName : null,
     text: typeof data.text === "string" ? data.text : null,
     photoUrl: typeof data.photoUrl === "string" ? data.photoUrl : null,
-    tableNumber: typeof data.tableNumber === "string" ? data.tableNumber : null,
     createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
   };
 }

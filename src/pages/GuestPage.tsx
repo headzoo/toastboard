@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { submitMessage } from "../lib/api.ts";
@@ -7,22 +7,15 @@ import { formatEventDate } from "../lib/theme.ts";
 
 export function GuestPage() {
   const { slug } = useParams();
-  const [params] = useSearchParams();
-  const tableFromQr = params.get("table") ?? "";
   const { event, status } = useEvent(slug);
 
   const [guestName, setGuestName] = useState("");
   const [text, setText] = useState("");
-  const [tableNumber, setTableNumber] = useState(tableFromQr);
   const [photo, setPhoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    setTableNumber(tableFromQr);
-  }, [tableFromQr]);
 
   useEffect(() => {
     if (!photo) {
@@ -44,7 +37,6 @@ export function GuestPage() {
         slug,
         guestName,
         text,
-        tableNumber,
         photo,
       });
       setDone(true);
@@ -126,14 +118,6 @@ export function GuestPage() {
               placeholder="May your coffee always be hot and your inside jokes never make sense to anyone else."
               value={text}
               onChange={(e) => setText(e.target.value)}
-            />
-          </Field>
-          <Field label="Table number" hint="Filled in if you scanned a table QR">
-            <input
-              maxLength={16}
-              inputMode="numeric"
-              value={tableNumber}
-              onChange={(e) => setTableNumber(e.target.value)}
             />
           </Field>
           <Field label="Photo" hint="Optional — we’ll shrink it before upload so venue wifi survives.">

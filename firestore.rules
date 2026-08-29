@@ -45,7 +45,6 @@ service cloud.firestore {
             'guestName',
             'text',
             'photoUrl',
-            'tableNumber',
             'createdAt',
             'isHidden'
           ])
@@ -66,11 +65,7 @@ service cloud.firestore {
               && request.resource.data.photoUrl.size() < 900000
               && (request.resource.data.photoUrl.matches('^https://.+')
                 || request.resource.data.photoUrl.matches('^http://127\\.0\\.0\\.1:.+')
-                || request.resource.data.photoUrl.matches('^data:image/(jpeg|png|webp);base64,.+'))))
-          && (!('tableNumber' in request.resource.data)
-            || (request.resource.data.tableNumber is string
-              && request.resource.data.tableNumber.size() > 0
-              && request.resource.data.tableNumber.size() <= 16));
+                || request.resource.data.photoUrl.matches('^data:image/(jpeg|png|webp);base64,.+'))));
         // Possession of the plaintext host token is the credential.
         // The client hashes it and rules compare against a write-only secret.
         allow update: if resource.data.isHidden == false

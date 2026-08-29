@@ -19,7 +19,7 @@ export function HomePage() {
           ask for an account.
         </h1>
         <p className="lede">
-          Guests scan a QR code at the table, leave a toast or a photo, and it appears on a live wall. The host link
+          Guests scan a QR code, leave a toast or a photo, and it appears on a live wall. The host link
           <em> is </em>
           the login — no passwords, for anyone.
         </p>
@@ -41,7 +41,7 @@ export function HomePage() {
         </li>
         <li>
           <span>2</span>
-          <h2>Put a QR on the table</h2>
+          <h2>Share the QR</h2>
           <p>Guests never sign in. Optional name, a note, a photo from their camera. That’s the whole form.</p>
         </li>
         <li>

@@ -20,7 +20,6 @@ export type MessageRecord = {
   guestName: string | null;
   text: string | null;
   photoUrl: string | null;
-  tableNumber: string | null;
   createdAt: Date | null;
 };
 

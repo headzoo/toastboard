@@ -25,10 +25,8 @@ export async function copyText(value: string): Promise<boolean> {
   }
 }
 
-export function guestUrl(slug: string, table?: string) {
-  const url = new URL(`/e/${slug}`, window.location.origin);
-  if (table) url.searchParams.set("table", table);
-  return url.toString();
+export function guestUrl(slug: string) {
+  return new URL(`/e/${slug}`, window.location.origin).toString();
 }
 
 export function wallUrl(slug: string) {

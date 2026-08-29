@@ -34,12 +34,10 @@ const toasts = [
   {
     guestName: "Aunt June",
     text: "May your arguments be short, your Sunday mornings long, and your house always smell like someone just baked something.",
-    tableNumber: "3",
   },
   {
     guestName: "Priya",
     text: "Still can’t believe you two met over the last samosa. Please never stop telling that story.",
-    tableNumber: "1",
   },
   {
     guestName: "Best man, theoretically",
@@ -48,12 +46,10 @@ const toasts = [
   {
     guestName: "Grandad",
     text: "Look after each other. That’s the whole job.",
-    tableNumber: "2",
   },
   {
     guestName: "Sam from work",
     text: "The wall is already prettier than our Slack channel. Congratulations, you two.",
-    tableNumber: "8",
   },
   {
     guestName: "A guest who forgot their name tag",

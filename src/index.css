@@ -329,24 +329,6 @@ textarea {
   margin-top: 0.8rem;
 }
 
-.table-print {
-  margin-top: 2.5rem;
-}
-
-.table-sheet {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-top: 1.2rem;
-}
-
-.table-card {
-  background: var(--white);
-  border-radius: 1.2rem;
-  padding: 1rem;
-  text-align: center;
-}
-
 .photo-preview {
   max-height: 240px;
   object-fit: cover;
@@ -451,14 +433,9 @@ textarea {
   .no-print,
   .site-header,
   .btn-row,
-  .table-print .field,
   .status-warn,
   .qr-actions {
     display: none !important;
-  }
-
-  .table-sheet {
-    grid-template-columns: repeat(2, 1fr);
   }
 
   body {

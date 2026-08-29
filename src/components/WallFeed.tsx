@@ -31,7 +31,6 @@ export function MessageCard({ message, hostToken, slug, onHidden }: MessageCardP
         {message.text ? <p className="toast-text">{message.text}</p> : null}
         <div className="toast-meta">
           <span>{message.guestName || "A guest"}</span>
-          {message.tableNumber ? <span>Table {message.tableNumber}</span> : null}
           {message.createdAt ? <span>{formatEventDate(message.createdAt)}</span> : null}
         </div>
         {hostToken ? (
