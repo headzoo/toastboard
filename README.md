@@ -9,7 +9,7 @@ pnpm install
 pnpm dev
 ```
 
-Then open http://localhost:5173. The app talks to the `toastboard-guestbook` Firebase project.
+Then open http://localhost:5173. The app talks to the `toastboard` Firebase project.
 
 ```bash
 pnpm seed
@@ -23,6 +23,5 @@ seeds the Maya & James demo wall and writes the private host URL to `.demo-host-
 pnpm deploy
 ```
 
-Live site: https://toastboard-guestbook.web.app
+Live site: https://toastboard.web.app/
 
-Cloud Functions (`functions/index.js`, `deleteMessage`) are ready for Blaze. On Spark, host hide uses Firestore rules: the client hashes the host token and rules compare it to a write-only `secrets/host` document.
