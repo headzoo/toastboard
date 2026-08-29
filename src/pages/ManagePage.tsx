@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { QrPanel } from "../components/QrPanel.tsx";
+import { TableSignCard } from "../components/TableSignCard.tsx";
 import { Shell, StatusNote } from "../components/ui.tsx";
 import { WallFeed } from "../components/WallFeed.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
 import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
+import { formatEventDate } from "../lib/theme.ts";
 
 export function ManagePage() {
   const { slug } = useParams();
@@ -70,8 +71,14 @@ export function ManagePage() {
         </div>
       </section>
 
-      <div className="mt-3">
-        <QrPanel slug={slug} />
+      <div className="mt-3 max-w-[760px]">
+        <TableSignCard
+          slug={slug}
+          coupleNames={event.coupleNames}
+          themeColor={event.themeColor}
+          eventDateLabel={formatEventDate(event.eventDate)}
+          welcomeMessage={event.welcomeMessage}
+        />
       </div>
 
       {error ? <StatusNote tone="error">{error}</StatusNote> : null}

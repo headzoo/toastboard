@@ -1,25 +1,34 @@
 import { HostKeepsafeCard } from "../components/HostKeepsafeCard.tsx";
 import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
 import { createEvent } from "../lib/api.ts";
-import { loadKeepsafe, saveKeepsafe } from "../lib/session.ts";
+import { clearKeepsafe, loadKeepsafe, saveKeepsafe } from "../lib/session.ts";
 import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { applyTheme } from "../lib/theme.ts";
 import { DEFAULT_THEME, THEME_SWATCHES } from "../lib/types.ts";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export function CreatePage() {
-  const existing = useMemo(() => loadKeepsafe(), []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const forceNew = searchParams.get("new") === "true";
   const [coupleNames, setCoupleNames] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [themeColor, setThemeColor] = useState(DEFAULT_THEME);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [keepsafe, setKeepsafe] = useState(existing);
+  const [keepsafe, setKeepsafe] = useState(() => (forceNew ? null : loadKeepsafe()));
 
   useEffect(() => {
     applyTheme(themeColor);
   }, [themeColor]);
+
+  useEffect(() => {
+    if (!forceNew) return;
+    clearKeepsafe();
+    setKeepsafe(null);
+    setSearchParams({}, { replace: true });
+  }, [forceNew, setSearchParams]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -37,6 +46,8 @@ export function CreatePage() {
         hostToken: created.hostToken,
         coupleNames: coupleNames.trim(),
         themeColor,
+        eventDate: eventDate || undefined,
+        welcomeMessage: welcomeMessage.trim() || undefined,
       };
       saveKeepsafe(next);
       setKeepsafe(next);

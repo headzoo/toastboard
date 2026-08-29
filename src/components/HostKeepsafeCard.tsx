@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { QrPanel } from "./QrPanel.tsx";
+import { TableSignCard } from "./TableSignCard.tsx";
 import { renderKeepsafePng } from "../lib/keepsafe.ts";
-import { clearKeepsafe } from "../lib/session.ts";
 import { btnRowClass, ledeClass, narrowClass } from "../lib/styles.ts";
+import { formatEventDate } from "../lib/theme.ts";
 import { DEFAULT_THEME } from "../lib/types.ts";
 import { copyText, downloadDataUrl, guestUrl, manageUrl, wallUrl } from "../lib/urls.ts";
 import type { HostKeepsafe } from "../lib/types.ts";
@@ -43,7 +43,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
 
       <h1 className="mt-2.5">Save your host link</h1>
       <p className={ledeClass}>
-        {keepsafe.coupleNames}’s guestbook is live. Print the guest QR for your venue. Keep the host link somewhere only you can find.
+        {keepsafe.coupleNames}’s guestbook is live. Print the table sign for your venue. Keep the host link somewhere only you can find.
       </p>
 
       <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
@@ -54,6 +54,14 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
         </Button>
       </div>
 
+      <TableSignCard
+        slug={keepsafe.slug}
+        coupleNames={keepsafe.coupleNames}
+        themeColor={keepsafe.themeColor}
+        eventDateLabel={formatEventDate(keepsafe.eventDate)}
+        welcomeMessage={keepsafe.welcomeMessage}
+      />
+
       <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
         <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Guest page</span>
         <code className="break-all text-[0.82rem] text-ink-soft">{guestLink}</code>
@@ -62,10 +70,10 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
         </Button>
       </div>
 
-      <QrPanel slug={keepsafe.slug} />
-
       <div className={btnRowClass}>
-        <Button onClick={() => void downloadKeepsafe()}>Download keepsafe image</Button>
+        <Button variant="ghost" onClick={() => void downloadKeepsafe()}>
+          Download host backup (private)
+        </Button>
         <Button variant="ghost" href={wallUrl(keepsafe.slug)}>
           Open the wall
         </Button>
@@ -75,7 +83,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       </div>
 
       <p className="mt-8 text-[0.9rem]">
-        <Link to="/create" onClick={clearKeepsafe}>
+        <Link to="/create?new=true">
           Create another guestbook
         </Link>
       </p>

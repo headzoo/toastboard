@@ -28,4 +28,6 @@ export type HostKeepsafe = {
   hostToken: string;
   coupleNames: string;
   themeColor: string;
+  eventDate?: string;
+  welcomeMessage?: string;
 };

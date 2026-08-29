@@ -22,7 +22,7 @@ export function QrPanel({ slug, caption = "Guest QR code" }: QrPanelProps) {
   }, [slug, url]);
 
   return (
-    <div className="my-6 w-full">
+    <div className="my-6 w-full max-w-64">
       {src ? (
         <img className="block w-full rounded-2xl" src={src} alt={caption} />
       ) : (

@@ -1,10 +1,13 @@
 import QRCode from "qrcode";
 
-export async function qrDataUrl(value: string): Promise<string> {
+export async function qrDataUrl(
+  value: string,
+  options?: { width?: number; errorCorrectionLevel?: "L" | "M" | "Q" | "H" },
+): Promise<string> {
   return QRCode.toDataURL(value, {
-    width: 720,
+    width: options?.width ?? 720,
     margin: 2,
-    errorCorrectionLevel: "M",
+    errorCorrectionLevel: options?.errorCorrectionLevel ?? "M",
     color: { dark: "#2A2118", light: "#FFFCF7" },
   });
 }
@@ -14,6 +17,18 @@ export function downloadDataUrl(dataUrl: string, filename: string) {
   link.href = dataUrl;
   link.download = filename;
   link.click();
+}
+
+export function downloadBytes(bytes: Uint8Array, filename: string, type: string) {
+  const copy = new Uint8Array(bytes.byteLength);
+  copy.set(bytes);
+  const blob = new Blob([copy.buffer], { type });
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = href;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(href);
 }
 
 export async function copyText(value: string): Promise<boolean> {
