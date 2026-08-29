@@ -19,7 +19,7 @@ export type MessageRecord = {
   id: string;
   guestName: string | null;
   text: string | null;
-  photoUrl: string | null;
+  photoUrls: string[];
   createdAt: Date | null;
 };
 

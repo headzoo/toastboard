@@ -52,13 +52,27 @@ exports.deleteMessage = onCall({ cors: true, region: "us-central1" }, async (req
     hiddenAt: FieldValue.serverTimestamp(),
   });
 
-  const photoUrl = messageSnap.get("photoUrl");
-  if (typeof photoUrl === "string" && photoUrl.includes(`/events/${slug}/messages/`)) {
-    try {
-      await getStorage().bucket().file(`events/${slug}/messages/${messageId}.jpg`).delete({ ignoreNotFound: true });
-    } catch {
-      // Soft-delete in Firestore is the source of truth; storage cleanup is best-effort.
+  const photoUrls = messageSnap.get("photoUrls");
+  const legacyPhotoUrl = messageSnap.get("photoUrl");
+  const hasPhotos =
+    (Array.isArray(photoUrls) && photoUrls.length > 0) ||
+    (typeof legacyPhotoUrl === "string" && legacyPhotoUrl.includes(`/events/${slug}/messages/`));
+
+  if (hasPhotos) {
+    const bucket = getStorage().bucket();
+    const paths = [`events/${slug}/messages/${messageId}.jpg`];
+    for (let i = 0; i < 10; i += 1) {
+      paths.push(`events/${slug}/messages/${messageId}-${i}.jpg`);
     }
+    await Promise.all(
+      paths.map(async (path) => {
+        try {
+          await bucket.file(path).delete({ ignoreNotFound: true });
+        } catch {
+          // Soft-delete in Firestore is the source of truth; storage cleanup is best-effort.
+        }
+      }),
+    );
   }
 
   return { ok: true };

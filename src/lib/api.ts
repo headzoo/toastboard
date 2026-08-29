@@ -24,6 +24,7 @@ export const DEMO_SLUG = "maya-james-k8n2w4p9qx";
 const MAX_NAME = 80;
 const MAX_TEXT = 1000;
 const MAX_WELCOME = 500;
+export const MAX_PHOTOS = 10;
 
 type CreatedEvent = {
   slug: string;
@@ -111,11 +112,15 @@ export async function submitMessage(input: {
   slug: string;
   guestName: string;
   text: string;
-  photo: File | null;
+  photos: File[];
 }): Promise<void> {
   const guestName = sanitizeText(input.guestName, MAX_NAME);
   const text = sanitizeText(input.text, MAX_TEXT);
-  if (!text && !input.photo) {
+  if (input.photos.length > MAX_PHOTOS) {
+    throw new Error(`You can add up to ${MAX_PHOTOS} photos.`);
+  }
+  const photos = input.photos;
+  if (!text && photos.length === 0) {
     throw new Error("Add a note, a photo, or both.");
   }
 
@@ -127,8 +132,8 @@ export async function submitMessage(input: {
   if (guestName) payload.guestName = guestName;
   if (text) payload.text = text;
 
-  if (input.photo) {
-    payload.photoUrl = await storeGuestPhoto(input.slug, messageId, input.photo);
+  if (photos.length > 0) {
+    payload.photoUrls = await storeGuestPhotos(input.slug, messageId, photos);
   }
 
   try {
@@ -166,18 +171,44 @@ function mapMessage(id: string, data: DocumentData): MessageRecord {
     id,
     guestName: typeof data.guestName === "string" ? data.guestName : null,
     text: typeof data.text === "string" ? data.text : null,
-    photoUrl: typeof data.photoUrl === "string" ? data.photoUrl : null,
+    photoUrls: normalizePhotoUrls(data),
     createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
   };
 }
 
-async function storeGuestPhoto(slug: string, messageId: string, photo: File): Promise<string> {
+function normalizePhotoUrls(data: DocumentData): string[] {
+  if (Array.isArray(data.photoUrls)) {
+    return data.photoUrls.filter((url): url is string => typeof url === "string");
+  }
+  if (typeof data.photoUrl === "string") return [data.photoUrl];
+  return [];
+}
+
+async function storeGuestPhotos(slug: string, messageId: string, photos: File[]): Promise<string[]> {
+  const allowDataUrlFallback = photos.length === 1;
+  const urls: string[] = [];
+  for (let index = 0; index < photos.length; index += 1) {
+    urls.push(await storeGuestPhoto(slug, messageId, photos[index]!, index, allowDataUrlFallback));
+  }
+  return urls;
+}
+
+async function storeGuestPhoto(
+  slug: string,
+  messageId: string,
+  photo: File,
+  index: number,
+  allowDataUrlFallback: boolean,
+): Promise<string> {
   const compressed = await compressGuestPhoto(photo);
   try {
-    const photoRef = ref(storage, `events/${slug}/messages/${messageId}.jpg`);
+    const photoRef = ref(storage, `events/${slug}/messages/${messageId}-${index}.jpg`);
     await uploadBytes(photoRef, compressed, { contentType: "image/jpeg" });
     return await getDownloadURL(photoRef);
-  } catch {
+  } catch (error) {
+    if (!allowDataUrlFallback) {
+      throw toFriendlyError(error, "Photo upload isn’t available yet. Try one photo, or send a note for now.");
+    }
     const dataUrl = await fileToDataUrl(compressed);
     if (dataUrl.length >= 900000) {
       throw new Error("That photo is still a bit large after shrinking. Try a shorter note, or a smaller picture.");

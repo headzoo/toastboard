@@ -2,9 +2,13 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
-import { submitMessage } from "../lib/api.ts";
-import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
+import { MAX_PHOTOS, submitMessage } from "../lib/api.ts";
 import { formatEventDate } from "../lib/theme.ts";
+
+type PreviewItem = {
+  file: File;
+  url: string;
+};
 
 export function GuestPage() {
   const { slug } = useParams();
@@ -12,21 +16,34 @@ export function GuestPage() {
 
   const [guestName, setGuestName] = useState("");
   const [text, setText] = useState("");
-  const [photo, setPhoto] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<PreviewItem[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!photo) {
-      setPreview(null);
-      return;
-    }
-    const url = URL.createObjectURL(photo);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [photo]);
+    const next = photos.map((file) => ({ file, url: URL.createObjectURL(file) }));
+    setPreviews(next);
+    return () => {
+      for (const item of next) URL.revokeObjectURL(item.url);
+    };
+  }, [photos]);
+
+  function onPhotosChange(fileList: FileList | null) {
+    if (!fileList?.length) return;
+    const incoming = Array.from(fileList).filter((file) => file.type.startsWith("image/"));
+    setPhotos((prev) => {
+      const room = MAX_PHOTOS - prev.length;
+      if (room <= 0) return prev;
+      return [...prev, ...incoming.slice(0, room)];
+    });
+    setError(null);
+  }
+
+  function removePhoto(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+  }
 
   async function onSubmit(formEvent: FormEvent) {
     formEvent.preventDefault();
@@ -38,7 +55,7 @@ export function GuestPage() {
         slug,
         guestName,
         text,
-        photo,
+        photos,
       });
       setDone(true);
     } catch (err) {
@@ -59,7 +76,7 @@ export function GuestPage() {
   if (status !== "ready" || !event || !slug) {
     return (
       <Shell>
-        <section className={narrowClass}>
+        <section className="narrow">
           <h1>This guestbook wasn’t found</h1>
           <p>The QR code may be for a different event, or it hasn’t been created yet.</p>
         </section>
@@ -70,12 +87,12 @@ export function GuestPage() {
   if (done) {
     return (
       <Shell>
-        <section className={`${narrowClass} pt-[8vh]`}>
-          <p className={kickerClass}>Sent</p>
+        <section className="narrow thanks">
+          <p className="kicker">Sent</p>
           <h1>Thank you! Your message has been added 💌</h1>
-          <p className={ledeClass}>It should appear on the wall in a moment.</p>
-          <div className={btnRowClass}>
-            <Link className={btnClass("primary")} to={`/e/${slug}/wall`}>
+          <p className="lede">It should appear on the wall in a moment.</p>
+          <div className="btn-row">
+            <Link className="btn btn-primary" to={`/e/${slug}/wall`}>
               See the wall
             </Link>
             <Button
@@ -83,7 +100,7 @@ export function GuestPage() {
               onClick={() => {
                 setDone(false);
                 setText("");
-                setPhoto(null);
+                setPhotos([]);
               }}
             >
               Leave another
@@ -96,14 +113,14 @@ export function GuestPage() {
 
   return (
     <Shell>
-      <section className={narrowClass}>
-        <p className={kickerClass}>{formatEventDate(event.eventDate) || "A wedding guestbook"}</p>
+      <section className="narrow guest">
+        <p className="kicker">{formatEventDate(event.eventDate) || "A wedding guestbook"}</p>
         <h1>{event.coupleNames}</h1>
-        <p className={ledeClass}>
+        <p className="lede">
           {event.welcomeMessage || "Leave a toast — a memory, a wish, or a photo. No account needed."}
         </p>
 
-        <form className="mt-6 grid gap-4" onSubmit={(e) => void onSubmit(e)}>
+        <form className="stack" onSubmit={(e) => void onSubmit(e)}>
           <Field label="Your name" hint="Optional">
             <input
               maxLength={80}
@@ -121,20 +138,43 @@ export function GuestPage() {
               onChange={(e) => setText(e.target.value)}
             />
           </Field>
-          <Field label="Photo" hint="Optional — we’ll shrink it before upload so venue wifi survives.">
+          <Field
+            label="Photos"
+            hint={`Optional — up to ${MAX_PHOTOS}. We’ll shrink them before upload so venue wifi survives.`}
+          >
             <input
               type="file"
               accept="image/*"
               capture="environment"
-              onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+              multiple
+              disabled={photos.length >= MAX_PHOTOS}
+              onChange={(e) => {
+                onPhotosChange(e.target.files);
+                e.target.value = "";
+              }}
             />
           </Field>
-          {preview ? (
-            <img
-              className="block max-h-60 w-full rounded-2xl object-cover"
-              src={preview}
-              alt="Selected photo preview"
-            />
+          {previews.length > 0 ? (
+            <div className="photo-preview-grid">
+              {previews.map((item, index) => (
+                <div className="photo-preview-item" key={`${item.file.name}-${item.file.size}-${index}`}>
+                  <img className="photo-preview" src={item.url} alt={`Selected photo ${index + 1}`} />
+                  <button
+                    className="photo-preview-remove"
+                    type="button"
+                    aria-label={`Remove photo ${index + 1}`}
+                    onClick={() => removePhoto(index)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {photos.length > 0 ? (
+            <p className="field-hint">
+              {photos.length} of {MAX_PHOTOS} photos
+            </p>
           ) : null}
           {error ? <StatusNote tone="error">{error}</StatusNote> : null}
           <Button type="submit" disabled={busy}>

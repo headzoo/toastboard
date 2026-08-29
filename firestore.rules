@@ -9,6 +9,31 @@ service cloud.firestore {
       return value is string && value.size() == 64 && value.matches('^[a-f0-9]{64}$');
     }
 
+    function isValidPhotoUrl(url) {
+      return url is string
+        && url.size() > 12
+        && url.size() < 900000
+        && (url.matches('^https://.+')
+          || url.matches('^http://127\\.0\\.0\\.1:.+')
+          || url.matches('^data:image/(jpeg|png|webp);base64,.+'));
+    }
+
+    function isValidPhotoUrls(urls) {
+      return urls is list
+        && urls.size() > 0
+        && urls.size() <= 10
+        && isValidPhotoUrl(urls[0])
+        && (urls.size() < 2 || isValidPhotoUrl(urls[1]))
+        && (urls.size() < 3 || isValidPhotoUrl(urls[2]))
+        && (urls.size() < 4 || isValidPhotoUrl(urls[3]))
+        && (urls.size() < 5 || isValidPhotoUrl(urls[4]))
+        && (urls.size() < 6 || isValidPhotoUrl(urls[5]))
+        && (urls.size() < 7 || isValidPhotoUrl(urls[6]))
+        && (urls.size() < 8 || isValidPhotoUrl(urls[7]))
+        && (urls.size() < 9 || isValidPhotoUrl(urls[8]))
+        && (urls.size() < 10 || isValidPhotoUrl(urls[9]));
+    }
+
     match /events/{slug} {
       allow read: if true;
       allow create: if isValidSlug(slug)
@@ -44,13 +69,14 @@ service cloud.firestore {
         allow create: if request.resource.data.keys().hasOnly([
             'guestName',
             'text',
-            'photoUrl',
+            'photoUrls',
             'createdAt',
             'isHidden'
           ])
           && request.resource.data.createdAt == request.time
           && request.resource.data.isHidden == false
-          && ('text' in request.resource.data || 'photoUrl' in request.resource.data)
+          && ('text' in request.resource.data
+            || ('photoUrls' in request.resource.data && request.resource.data.photoUrls.size() > 0))
           && (!('guestName' in request.resource.data)
             || (request.resource.data.guestName is string
               && request.resource.data.guestName.size() > 0
@@ -59,13 +85,8 @@ service cloud.firestore {
             || (request.resource.data.text is string
               && request.resource.data.text.size() > 0
               && request.resource.data.text.size() <= 1000))
-          && (!('photoUrl' in request.resource.data)
-            || (request.resource.data.photoUrl is string
-              && request.resource.data.photoUrl.size() > 12
-              && request.resource.data.photoUrl.size() < 900000
-              && (request.resource.data.photoUrl.matches('^https://.+')
-                || request.resource.data.photoUrl.matches('^http://127\\.0\\.0\\.1:.+')
-                || request.resource.data.photoUrl.matches('^data:image/(jpeg|png|webp);base64,.+'))));
+          && (!('photoUrls' in request.resource.data)
+            || isValidPhotoUrls(request.resource.data.photoUrls));
         // Possession of the plaintext host token is the credential.
         // The client hashes it and rules compare against a write-only secret.
         allow update: if resource.data.isHidden == false
