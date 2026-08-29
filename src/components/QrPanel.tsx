@@ -30,7 +30,7 @@ export function QrPanel({ slug, caption = "Guest QR code" }: QrPanelProps) {
       )}
       <div className="mt-3 flex gap-3 print:hidden">
         <button className={btnClass("ghost")} type="button" onClick={() => void copyText(url)}>
-          Copy guest link
+          Copy wall link
         </button>
         {src ? (
           <button

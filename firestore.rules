@@ -42,12 +42,21 @@ service cloud.firestore {
           'eventDate',
           'welcomeMessage',
           'themeColor',
-          'createdAt'
+          'createdAt',
+          'signTheme'
         ])
         && request.resource.data.coupleNames is string
         && request.resource.data.coupleNames.size() > 0
         && request.resource.data.coupleNames.size() <= 120
         && request.resource.data.createdAt == request.time
+        && request.resource.data.signTheme in [
+          'classic',
+          'botanical',
+          'modern',
+          'art-deco',
+          'coastal',
+          'midnight'
+        ]
         && (!('eventDate' in request.resource.data) || request.resource.data.eventDate is timestamp)
         && (!('welcomeMessage' in request.resource.data)
           || (request.resource.data.welcomeMessage is string

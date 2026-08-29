@@ -7,6 +7,7 @@ const { HttpsError, onCall } = require("firebase-functions/v2/https");
 initializeApp();
 
 const SLUG = /^[a-z0-9-]{10,80}$/;
+const SIGN_THEMES = new Set(["classic", "botanical", "modern", "art-deco", "coastal", "midnight"]);
 
 function sha256Hex(value) {
   return createHash("sha256").update(value, "utf8").digest("hex");
@@ -19,6 +20,26 @@ function hashesMatch(a, b) {
   return timingSafeEqual(left, right);
 }
 
+async function verifyHostToken(slug, hostToken) {
+  if (!SLUG.test(slug) || hostToken.length < 20) {
+    throw new HttpsError("invalid-argument", "Missing or invalid host credential.");
+  }
+
+  const db = getFirestore();
+  const secretSnap = await db.doc(`events/${slug}/secrets/host`).get();
+  if (!secretSnap.exists) {
+    throw new HttpsError("permission-denied", "Host link is not valid for this guestbook.");
+  }
+
+  const incomingHash = sha256Hex(hostToken);
+  const storedHash = secretSnap.get("hostTokenHash");
+  if (typeof storedHash !== "string" || !hashesMatch(storedHash, incomingHash)) {
+    throw new HttpsError("permission-denied", "Host link is not valid for this guestbook.");
+  }
+
+  return { db, incomingHash };
+}
+
 exports.deleteMessage = onCall({ cors: true, region: "us-central1" }, async (request) => {
   const slug = typeof request.data?.slug === "string" ? request.data.slug : "";
   const messageId = typeof request.data?.messageId === "string" ? request.data.messageId : "";
@@ -28,17 +49,7 @@ exports.deleteMessage = onCall({ cors: true, region: "us-central1" }, async (req
     throw new HttpsError("invalid-argument", "Missing or invalid moderation payload.");
   }
 
-  const db = getFirestore();
-  const secretSnap = await db.doc(`events/${slug}/secrets/host`).get();
-  if (!secretSnap.exists) {
-    throw new HttpsError("permission-denied", "Host link is not valid for this guestbook.");
-  }
-
-  const storedHash = secretSnap.get("hostTokenHash");
-  const incomingHash = sha256Hex(hostToken);
-  if (typeof storedHash !== "string" || !hashesMatch(storedHash, incomingHash)) {
-    throw new HttpsError("permission-denied", "Host link is not valid for this guestbook.");
-  }
+  const { db, incomingHash } = await verifyHostToken(slug, hostToken);
 
   const messageRef = db.doc(`events/${slug}/messages/${messageId}`);
   const messageSnap = await messageRef.get();
@@ -76,4 +87,19 @@ exports.deleteMessage = onCall({ cors: true, region: "us-central1" }, async (req
   }
 
   return { ok: true };
+});
+
+exports.updateSignTheme = onCall({ cors: true, region: "us-central1" }, async (request) => {
+  const slug = typeof request.data?.slug === "string" ? request.data.slug : "";
+  const signTheme = typeof request.data?.signTheme === "string" ? request.data.signTheme : "";
+  const hostToken = typeof request.data?.hostToken === "string" ? request.data.hostToken : "";
+
+  if (!SLUG.test(slug) || hostToken.length < 20 || !SIGN_THEMES.has(signTheme)) {
+    throw new HttpsError("invalid-argument", "Missing or invalid theme update payload.");
+  }
+
+  const { db } = await verifyHostToken(slug, hostToken);
+  await db.doc(`events/${slug}`).update({ signTheme });
+
+  return { ok: true, signTheme };
 });

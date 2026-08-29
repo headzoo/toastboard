@@ -1,6 +1,6 @@
 {
   "name": "toastboard-functions",
-  "description": "Callable deleteMessage for Toastboard host moderation",
+  "description": "Callable host moderation for Toastboard",
   "engines": {
     "node": "20"
   },

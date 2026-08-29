@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { TableSignCard } from "../components/TableSignCard.tsx";
+import { SignThemePicker } from "../components/SignThemePicker.tsx";
 import { Shell, StatusNote } from "../components/ui.tsx";
 import { WallFeed } from "../components/WallFeed.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
+import { updateEventSignTheme } from "../lib/api.ts";
+import { getSignTheme, type SignThemeId } from "../lib/signThemes.ts";
 import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { formatEventDate } from "../lib/theme.ts";
+import { DEFAULT_THEME } from "../lib/types.ts";
 
 export function ManagePage() {
   const { slug } = useParams();
@@ -14,6 +18,11 @@ export function ManagePage() {
   const token = params.get("token") ?? "";
   const { event, status } = useEvent(slug);
   const { messages, error } = useMessages(slug, status === "ready" && Boolean(token));
+  const [signTheme, setSignTheme] = useState<SignThemeId>("classic");
+  const [themeBusy, setThemeBusy] = useState(false);
+  const [themePendingId, setThemePendingId] = useState<SignThemeId | null>(null);
+  const [themeError, setThemeError] = useState<string | null>(null);
+  const themeRequestRef = useRef<SignThemeId | null>(null);
 
   useEffect(() => {
     const robots = document.createElement("meta");
@@ -22,6 +31,36 @@ export function ManagePage() {
     document.head.appendChild(robots);
     return () => robots.remove();
   }, []);
+
+  useEffect(() => {
+    if (event) {
+      setSignTheme(getSignTheme(event.signTheme).id);
+    }
+  }, [event]);
+
+  async function selectSignTheme(id: SignThemeId) {
+    if (!slug || !token || themeBusy || id === signTheme) return;
+
+    themeRequestRef.current = id;
+    setThemeError(null);
+    setThemePendingId(id);
+    setThemeBusy(true);
+
+    try {
+      const saved = await updateEventSignTheme(slug, id, token);
+      if (themeRequestRef.current !== id) return;
+      setSignTheme(saved);
+    } catch (err) {
+      if (themeRequestRef.current !== id) return;
+      setThemeError(err instanceof Error ? err.message : "Couldn't save that design.");
+    } finally {
+      if (themeRequestRef.current === id) {
+        setThemeBusy(false);
+        setThemePendingId(null);
+        themeRequestRef.current = null;
+      }
+    }
+  }
 
   if (!token) {
     return (
@@ -55,6 +94,8 @@ export function ManagePage() {
     );
   }
 
+  const accent = event.themeColor || DEFAULT_THEME;
+
   return (
     <Shell>
       <section className="mb-8 max-w-[760px]">
@@ -72,10 +113,19 @@ export function ManagePage() {
       </section>
 
       <div className="mt-3 max-w-[760px]">
+        <SignThemePicker
+          selected={signTheme}
+          accent={accent}
+          busy={themeBusy}
+          pendingId={themePendingId}
+          onChange={(id) => void selectSignTheme(id)}
+        />
+        {themeError ? <StatusNote tone="error">{themeError}</StatusNote> : null}
         <TableSignCard
           slug={slug}
           coupleNames={event.coupleNames}
           themeColor={event.themeColor}
+          themeId={signTheme}
           eventDateLabel={formatEventDate(event.eventDate)}
           welcomeMessage={event.welcomeMessage}
         />

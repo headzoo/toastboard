@@ -1,6 +1,7 @@
 import { Shell } from "../components/ui.tsx";
 import { btnClass, btnRowClass, kickerClass, ledeClass } from "../lib/styles.ts";
 import { DEMO_SLUG } from "../lib/api.ts";
+import { loadKeepsafe } from "../lib/session.ts";
 import { applyTheme } from "../lib/theme.ts";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -9,6 +10,8 @@ export function HomePage() {
   useEffect(() => {
     applyTheme("#C45C67");
   }, []);
+
+  const keepsafe = loadKeepsafe();
 
   return (
     <Shell>
@@ -25,9 +28,20 @@ export function HomePage() {
           the login — no passwords, for anyone.
         </p>
         <div className={btnRowClass}>
-          <Link className={btnClass("primary")} to="/create">
-            Create a guestbook
-          </Link>
+          {keepsafe ? (
+            <>
+              <Link className={btnClass("primary")} to="/create">
+                Edit guestbook
+              </Link>
+              <Link className={btnClass("ghost")} to="/create?new=true">
+                Create another guestbook
+              </Link>
+            </>
+          ) : (
+            <Link className={btnClass("primary")} to="/create">
+              Create a guestbook
+            </Link>
+          )}
           <Link className={btnClass("ghost")} to={`/e/${DEMO_SLUG}/wall`}>
             See a live wall
           </Link>
@@ -62,7 +76,7 @@ export function HomePage() {
           <img
             className="block w-full rounded-[1.4rem] object-cover shadow-soft"
             src="/branding/family-table-wall.jpg"
-            alt="A family table at a wedding reception with a large TV nearby showing the Toastboard live guestbook wall for Maya and James"
+            alt="The bride, groom, and family sitting at the head table, with a TV to the left showing the Toastboard live guestbook, a dance floor in front, and guests at tables beyond"
             width={1920}
             height={1080}
           />

@@ -31,6 +31,27 @@ export function downloadBytes(bytes: Uint8Array, filename: string, type: string)
   URL.revokeObjectURL(href);
 }
 
+/** Save a remote or data-URL image. Falls back to opening a new tab if fetch fails. */
+export async function downloadRemoteUrl(url: string, filename: string): Promise<void> {
+  if (url.startsWith("data:")) {
+    downloadDataUrl(url, filename);
+    return;
+  }
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Download failed (${response.status})`);
+    const blob = await response.blob();
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = href;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(href);
+  } catch {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+}
+
 export async function copyText(value: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(value);

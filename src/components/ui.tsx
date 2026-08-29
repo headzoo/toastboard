@@ -5,14 +5,13 @@ import { btnClass, btnVariants } from "../lib/styles.ts";
 type ShellProps = {
   children: ReactNode;
   eyebrow?: string;
-  present?: boolean;
 };
 
-export function Shell({ children, eyebrow = "Toastboard", present = false }: ShellProps) {
+export function Shell({ children, eyebrow = "Toastboard" }: ShellProps) {
   return (
     <div className="relative min-h-svh">
       <div className="paper-grain" aria-hidden="true" />
-      <header className={`px-[6vw] pt-5 print:hidden${present ? " hidden" : ""}`}>
+      <header className="px-[6vw] pt-5 print:hidden">
         <Link
           className="inline-flex items-center gap-2.5 font-serif text-[1.15rem] text-ink no-underline"
           to="/"
@@ -24,7 +23,7 @@ export function Shell({ children, eyebrow = "Toastboard", present = false }: She
           <span>{eyebrow}</span>
         </Link>
       </header>
-      <main className={`mx-auto px-[6vw] pb-20 pt-8${present ? " max-w-[1400px]" : " max-w-[1180px]"}`}>
+      <main className="mx-auto max-w-[1180px] px-[6vw] pb-20 pt-8">
         {children}
       </main>
     </div>
@@ -95,5 +94,5 @@ export function StatusNote({
   children: ReactNode;
   tone?: keyof typeof statusTones;
 }) {
-  return <p className={`px-4 py-3.5 ${statusTones[tone]}`}>{children}</p>;
+  return <p className={`px-4 py-3.5 ${statusTones[tone]} mb-1`}>{children}</p>;
 }

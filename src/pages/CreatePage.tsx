@@ -48,6 +48,7 @@ export function CreatePage() {
         themeColor,
         eventDate: eventDate || undefined,
         welcomeMessage: welcomeMessage.trim() || undefined,
+        signTheme: created.signTheme,
       };
       saveKeepsafe(next);
       setKeepsafe(next);

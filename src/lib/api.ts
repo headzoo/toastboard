@@ -13,10 +13,12 @@ import {
   type FirestoreError,
   type Unsubscribe,
 } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { compressGuestPhoto } from "./compress.ts";
 import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from "./crypto.ts";
-import { db, storage } from "./firebase.ts";
+import { db, functions, storage } from "./firebase.ts";
+import { DEFAULT_SIGN_THEME, getSignTheme, type SignThemeId } from "./signThemes.ts";
 import type { EventRecord, MessageRecord } from "./types.ts";
 
 export const DEMO_SLUG = "maya-james-k8n2w4p9qx";
@@ -29,6 +31,7 @@ export const MAX_PHOTOS = 10;
 type CreatedEvent = {
   slug: string;
   hostToken: string;
+  signTheme: SignThemeId;
 };
 
 export async function createEvent(input: {
@@ -49,6 +52,7 @@ export async function createEvent(input: {
     const payload: DocumentData = {
       coupleNames,
       createdAt: serverTimestamp(),
+      signTheme: DEFAULT_SIGN_THEME,
     };
     if (input.eventDate) {
       payload.eventDate = Timestamp.fromDate(new Date(`${input.eventDate}T12:00:00`));
@@ -65,7 +69,7 @@ export async function createEvent(input: {
 
     try {
       await batch.commit();
-      return { slug, hostToken };
+      return { slug, hostToken, signTheme: DEFAULT_SIGN_THEME };
     } catch (error) {
       if (attempt === 5) throw toFriendlyError(error, "Couldn’t create the guestbook. Please try again.");
     }
@@ -157,12 +161,30 @@ export async function hideMessage(slug: string, messageId: string, hostToken: st
   }
 }
 
+export async function updateEventSignTheme(
+  slug: string,
+  signTheme: SignThemeId,
+  hostToken: string,
+): Promise<SignThemeId> {
+  try {
+    const updateSignTheme = httpsCallable<
+      { slug: string; signTheme: SignThemeId; hostToken: string },
+      { ok: true; signTheme: SignThemeId }
+    >(functions, "updateSignTheme");
+    const result = await updateSignTheme({ slug, signTheme, hostToken });
+    return getSignTheme(result.data.signTheme).id;
+  } catch (error) {
+    throw toFriendlyError(error, "Couldn’t save that design. Please try again.");
+  }
+}
+
 function mapEvent(data: DocumentData): EventRecord {
   return {
     coupleNames: String(data.coupleNames ?? "This wedding"),
     eventDate: data.eventDate instanceof Timestamp ? data.eventDate.toDate() : null,
     welcomeMessage: typeof data.welcomeMessage === "string" ? data.welcomeMessage : null,
     themeColor: typeof data.themeColor === "string" ? data.themeColor : null,
+    signTheme: getSignTheme(data.signTheme).id,
   };
 }
 
@@ -227,6 +249,18 @@ function fileToDataUrl(file: File): Promise<string> {
 }
 
 function toFriendlyError(error: unknown, fallback: string): Error {
+  const message = error instanceof Error ? error.message : "";
+  const code =
+    error && typeof error === "object" && "code" in error && typeof error.code === "string"
+      ? error.code
+      : "";
+
+  if (/functions\/(permission-denied|invalid-argument)|Host link is not valid/i.test(message)) {
+    return new Error("That host link isn’t valid for this guestbook.");
+  }
+  if (/functions\/(not-found|unavailable|internal|deadline-exceeded)/i.test(`${code} ${message}`)) {
+    return new Error(fallback);
+  }
   if (error instanceof Error && /storage\/unauthorized|storage\/retry-limit/i.test(error.message)) {
     return new Error("Photo upload isn’t available yet. Send a note for now, or try again shortly.");
   }

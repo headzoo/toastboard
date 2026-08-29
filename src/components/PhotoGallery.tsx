@@ -1,4 +1,7 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { PhotoLightbox } from "./PhotoLightbox.tsx";
+
+const CLICK_MOVE_THRESHOLD = 10;
 
 type PhotoGalleryProps = {
   urls: string[];
@@ -6,7 +9,9 @@ type PhotoGalleryProps = {
 
 export function PhotoGallery({ urls }: PhotoGalleryProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const [index, setIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const onScroll = useCallback(() => {
     const track = trackRef.current;
@@ -15,10 +20,47 @@ export function PhotoGallery({ urls }: PhotoGalleryProps) {
     setIndex(Math.min(Math.max(next, 0), urls.length - 1));
   }, [urls.length]);
 
+  const onPointerDown = (event: PointerEvent) => {
+    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const openIfClick = (photoIndex: number, event: PointerEvent | MouseEvent) => {
+    const start = pointerStartRef.current;
+    pointerStartRef.current = null;
+    if (start) {
+      const dx = Math.abs(event.clientX - start.x);
+      const dy = Math.abs(event.clientY - start.y);
+      if (dx > CLICK_MOVE_THRESHOLD || dy > CLICK_MOVE_THRESHOLD) return;
+    }
+    setLightboxIndex(photoIndex);
+  };
+
   if (urls.length === 0) return null;
 
+  const lightbox = lightboxIndex !== null ? (
+    <PhotoLightbox
+      urls={urls}
+      index={lightboxIndex}
+      onIndexChange={setLightboxIndex}
+      onClose={() => setLightboxIndex(null)}
+    />
+  ) : null;
+
   if (urls.length === 1) {
-    return <img className="toast-photo" src={urls[0]} alt="" />;
+    return (
+      <>
+        <button
+          className="toast-photo-button"
+          type="button"
+          onPointerDown={onPointerDown}
+          onClick={(event) => openIfClick(0, event)}
+          aria-label="View photo"
+        >
+          <img className="toast-photo" src={urls[0]} alt="" />
+        </button>
+        {lightbox}
+      </>
+    );
   }
 
   return (
@@ -32,13 +74,22 @@ export function PhotoGallery({ urls }: PhotoGalleryProps) {
       >
         {urls.map((url, i) => (
           <div className="photo-gallery-slide" key={`${url}-${i}`}>
-            <img className="toast-photo" src={url} alt="" />
+            <button
+              className="toast-photo-button"
+              type="button"
+              onPointerDown={onPointerDown}
+              onClick={(event) => openIfClick(i, event)}
+              aria-label={`View photo ${i + 1} of ${urls.length}`}
+            >
+              <img className="toast-photo" src={url} alt="" />
+            </button>
           </div>
         ))}
       </div>
       <span className="photo-gallery-counter" aria-live="polite">
         {index + 1} / {urls.length}
       </span>
+      {lightbox}
     </div>
   );
 }
