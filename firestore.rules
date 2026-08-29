@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isValidSlug(slug) {
+      return slug.matches('^[a-z0-9-]{10,80}$');
+    }
+
+    function isHexSha256(value) {
+      return value is string && value.size() == 64 && value.matches('^[a-f0-9]{64}$');
+    }
+
+    match /events/{slug} {
+      allow read: if true;
+      allow create: if isValidSlug(slug)
+        && request.resource.data.keys().hasOnly([
+          'coupleNames',
+          'eventDate',
+          'welcomeMessage',
+          'themeColor',
+          'createdAt'
+        ])
+        && request.resource.data.coupleNames is string
+        && request.resource.data.coupleNames.size() > 0
+        && request.resource.data.coupleNames.size() <= 120
+        && request.resource.data.createdAt == request.time
+        && (!('eventDate' in request.resource.data) || request.resource.data.eventDate is timestamp)
+        && (!('welcomeMessage' in request.resource.data)
+          || (request.resource.data.welcomeMessage is string
+            && request.resource.data.welcomeMessage.size() <= 500))
+        && (!('themeColor' in request.resource.data)
+          || request.resource.data.themeColor.matches('^#[0-9A-Fa-f]{6}$'));
+      allow update, delete: if false;
+
+      match /secrets/{id} {
+        allow read: if false;
+        allow create: if id == 'host'
+          && request.resource.data.keys().hasOnly(['hostTokenHash'])
+          && isHexSha256(request.resource.data.hostTokenHash);
+        allow update, delete: if false;
+      }
+
+      match /messages/{messageId} {
+        allow read: if resource.data.isHidden == false;
+        allow create: if request.resource.data.keys().hasOnly([
+            'guestName',
+            'text',
+            'photoUrl',
+            'tableNumber',
+            'createdAt',
+            'isHidden'
+          ])
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.isHidden == false
+          && ('text' in request.resource.data || 'photoUrl' in request.resource.data)
+          && (!('guestName' in request.resource.data)
+            || (request.resource.data.guestName is string
+              && request.resource.data.guestName.size() > 0
+              && request.resource.data.guestName.size() <= 80))
+          && (!('text' in request.resource.data)
+            || (request.resource.data.text is string
+              && request.resource.data.text.size() > 0
+              && request.resource.data.text.size() <= 1000))
+          && (!('photoUrl' in request.resource.data)
+            || (request.resource.data.photoUrl is string
+              && request.resource.data.photoUrl.size() > 12
+              && request.resource.data.photoUrl.size() < 900000
+              && (request.resource.data.photoUrl.matches('^https://.+')
+                || request.resource.data.photoUrl.matches('^http://127\\.0\\.0\\.1:.+')
+                || request.resource.data.photoUrl.matches('^data:image/(jpeg|png|webp);base64,.+'))))
+          && (!('tableNumber' in request.resource.data)
+            || (request.resource.data.tableNumber is string
+              && request.resource.data.tableNumber.size() > 0
+              && request.resource.data.tableNumber.size() <= 16));
+        // Possession of the plaintext host token is the credential.
+        // The client hashes it and rules compare against a write-only secret.
+        allow update: if resource.data.isHidden == false
+          && request.resource.data.isHidden == true
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['isHidden', 'hostTokenHash'])
+          && isHexSha256(request.resource.data.hostTokenHash)
+          && request.resource.data.hostTokenHash
+            == get(/databases/$(database)/documents/events/$(slug)/secrets/host).data.hostTokenHash;
+        allow delete: if false;
+      }
+    }
+  }
+}
