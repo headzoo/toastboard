@@ -3,6 +3,8 @@ import { CreatePage } from "./pages/CreatePage.tsx";
 import { GuestPage } from "./pages/GuestPage.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
 import { ManagePage } from "./pages/ManagePage.tsx";
+import { PrivacyPage } from "./pages/PrivacyPage.tsx";
+import { TermsPage } from "./pages/TermsPage.tsx";
 import { WallPage } from "./pages/WallPage.tsx";
 import { Shell } from "./components/ui.tsx";
 
@@ -22,6 +24,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/e/:slug" element={<GuestPage />} />
         <Route path="/e/:slug/wall" element={<WallPage />} />
         <Route path="/e/:slug/manage" element={<ManagePage />} />

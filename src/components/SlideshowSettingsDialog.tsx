@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { SIGN_THEMES, type SignThemeId } from "../lib/signThemes.ts";
 import {
   MOTION_STYLES,
   SLIDESHOW_DURATIONS,
@@ -9,13 +10,23 @@ import {
 
 type Props = {
   preferences: SlideshowPreferences;
+  accent: string;
+  eventSignTheme: SignThemeId;
   onChange: (preferences: SlideshowPreferences) => void;
   onClose: () => void;
   restoreFocusRef: React.RefObject<HTMLButtonElement | null>;
 };
 
-export function SlideshowSettingsDialog({ preferences, onChange, onClose, restoreFocusRef }: Props) {
+export function SlideshowSettingsDialog({
+  preferences,
+  accent,
+  eventSignTheme,
+  onChange,
+  onClose,
+  restoreFocusRef,
+}: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const selectedTheme = preferences.signTheme ?? eventSignTheme;
 
   useEffect(() => {
     const firstControl = dialogRef.current?.querySelector<HTMLButtonElement>("button");
@@ -47,6 +58,7 @@ export function SlideshowSettingsDialog({ preferences, onChange, onClose, restor
 
   const selectDuration = (duration: SlideshowDuration) => onChange({ ...preferences, duration });
   const selectMotion = (motion: MotionStyle) => onChange({ ...preferences, motion });
+  const selectSignTheme = (signTheme: SignThemeId) => onChange({ ...preferences, signTheme });
 
   return (
     <div className="slideshow-dialog-backdrop" role="presentation" onMouseDown={onClose}>
@@ -92,6 +104,30 @@ export function SlideshowSettingsDialog({ preferences, onChange, onClose, restor
                 onClick={() => selectMotion(motion)}
               >
                 {motion[0].toUpperCase() + motion.slice(1)}
+              </button>
+            ))}
+          </div>
+        </section>
+        <section aria-labelledby="sign-design-label">
+          <h3 id="sign-design-label">Sign design</h3>
+          <div className="slideshow-theme-grid">
+            {SIGN_THEMES.map((theme) => (
+              <button
+                key={theme.id}
+                className="slideshow-theme-chip"
+                type="button"
+                aria-pressed={selectedTheme === theme.id}
+                aria-label={`${theme.label}: ${theme.description}`}
+                onClick={() => selectSignTheme(theme.id)}
+              >
+                <span
+                  className="slideshow-theme-swatch"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.paper} 55%, ${accent} 55%)`,
+                  }}
+                  aria-hidden
+                />
+                <span className="slideshow-theme-label">{theme.label}</span>
               </button>
             ))}
           </div>

@@ -29,7 +29,7 @@ export function WallPage() {
 
   if (status === "loading") {
     return (
-      <Shell>
+      <Shell footer={false}>
         <StatusNote>Gathering toasts…</StatusNote>
       </Shell>
     );
@@ -37,7 +37,7 @@ export function WallPage() {
 
   if (status !== "ready" || !event || !slug) {
     return (
-      <Shell>
+      <Shell footer={false}>
         <section className={narrowClass}>
           <h1>This wall isn’t here yet</h1>
           <p>Create a guestbook first, then share the guest QR.</p>
@@ -64,7 +64,7 @@ export function WallPage() {
   const exitSlideshow = () => {
     setSlideshowActive(false);
     if (document.fullscreenElement === fullscreenRootRef.current) {
-      void document.exitFullscreen().catch(() => {});
+      void document.exitFullscreen().catch(() => { });
     }
   };
 
@@ -81,36 +81,36 @@ export function WallPage() {
           onExit={exitSlideshow}
         />
       ) : (
-    <Shell>
-      <section className="mb-8 max-w-[760px]">
-        <p className={kickerClass}>
-          {live ? (
-            <span className="size-2.5 animate-live rounded-full bg-ok shadow-[0_0_0_0_color-mix(in_srgb,var(--color-ok)_60%,transparent)]" />
-          ) : null}
-          Live guestbook
-        </p>
-        <h1>{event.coupleNames}</h1>
-        {event.eventDate ? <p className={ledeClass}>{formatEventDate(event.eventDate)}</p> : null}
-        <div className={`${btnRowClass} print:hidden`}>
-          <Link className={btnClass("ghost")} to={`/e/${slug}`}>
-            Leave a toast
-          </Link>
-          <button
-            className={btnClass("ghost")}
-            type="button"
-            onClick={() => void startSlideshow()}
-            style={{ borderColor: palette.inkSoft, color: palette.ink, backgroundColor: palette.cream }}
-          >
-            Start slideshow
-          </button>
-        </div>
-      </section>
-      {error || fullscreenError ? <StatusNote tone="error">{error ?? fullscreenError}</StatusNote> : null}
-      <WallFeed
-        messages={messages}
-        emptyLabel="The first toast hasn’t been written yet. Scan the QR and be the first."
-      />
-    </Shell>
+        <Shell footer={false}>
+          <section className="mb-8 max-w-[760px]">
+            <p className={kickerClass}>
+              {live ? (
+                <span className="size-2.5 animate-live rounded-full bg-ok shadow-[0_0_0_0_color-mix(in_srgb,var(--color-ok)_60%,transparent)]" />
+              ) : null}
+              Live guestbook
+            </p>
+            <h1>{event.coupleNames}</h1>
+            {event.eventDate ? <p className={ledeClass}>{formatEventDate(event.eventDate)}</p> : null}
+            <div className={`${btnRowClass} print:hidden`}>
+              <Link className={btnClass("ghost")} to={`/e/${slug}`}>
+                Leave a toast
+              </Link>
+              <button
+                className={btnClass("ghost")}
+                type="button"
+                onClick={() => void startSlideshow()}
+                style={{ borderColor: palette.inkSoft, color: palette.ink, backgroundColor: palette.cream }}
+              >
+                Start slideshow
+              </button>
+            </div>
+          </section>
+          {error || fullscreenError ? <StatusNote tone="error">{error ?? fullscreenError}</StatusNote> : null}
+          <WallFeed
+            messages={messages}
+            emptyLabel="The first toast hasn’t been written yet. Scan the QR and be the first."
+          />
+        </Shell>
       )}
     </div>
   );

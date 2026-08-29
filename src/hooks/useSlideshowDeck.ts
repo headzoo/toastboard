@@ -60,6 +60,7 @@ export function useSlideshowDeck(
 
   const liveRef = useRef(new Map<string, DeckEntry>());
   const queueRef = useRef<DeckEntry[]>([]);
+  const historyRef = useRef<string[]>([]);
   const currentRef = useRef<SlideSlot>(slot);
   const timerRef = useRef<number | null>(null);
   const deadlineRef = useRef<number | null>(null);
@@ -70,8 +71,15 @@ export function useSlideshowDeck(
   const advancingRef = useRef(false);
   const unmountedRef = useRef(false);
   const cacheRef = useRef(new SlideImageCache());
-  const advanceRef = useRef<() => Promise<void>>(async () => {});
+  const advanceRef = useRef<() => Promise<void>>(async () => { });
   const preferencesRef = useRef(preferences);
+
+  const rememberLeftEntry = useCallback((priorId: string | undefined, nextId: string) => {
+    if (!priorId || priorId === nextId) return;
+    const history = historyRef.current;
+    if (history[history.length - 1] === priorId) return;
+    history.push(priorId);
+  }, []);
 
   const updateSlot = useCallback((next: SlideSlot) => {
     currentRef.current = next;
@@ -150,18 +158,15 @@ export function useSlideshowDeck(
     [updateSlot],
   );
 
-  const advance = useCallback(async () => {
-    if (advancingRef.current || unmountedRef.current) return;
-    advancingRef.current = true;
-    setIsLoading(false);
-    try {
-      const prior = currentRef.current;
+  const promoteFromQueue = useCallback(
+    async (prior: SlideSlot, skipRemainingPhotos: boolean): Promise<boolean> => {
+      const priorId = prior.kind === "content" ? prior.messageId : undefined;
       const liveCount = liveRef.current.size;
       const visitLimit = Math.max(1, [...liveRef.current.values()].reduce((total, entry) => total + Math.max(1, entry.photoUrls.length), 0) + 1);
       let visits = 0;
       let next: { entry: DeckEntry; photoIndex: number | null } | null = null;
 
-      if (prior.kind === "content") {
+      if (!skipRemainingPhotos && prior.kind === "content") {
         const currentLive = liveRef.current.get(prior.messageId);
         if (currentLive && prior.photoIndex !== null && prior.photoIndex + 1 < currentLive.photoUrls.length) {
           next = { entry: currentLive, photoIndex: prior.photoIndex + 1 };
@@ -177,8 +182,7 @@ export function useSlideshowDeck(
             candidate = liveRef.current.get(queued.id);
           }
           if (!candidate && liveCount > 0) {
-            const avoidId = prior.kind === "content" ? prior.messageId : undefined;
-            queueRef.current = shuffleEntries([...liveRef.current.values()], avoidId);
+            queueRef.current = shuffleEntries([...liveRef.current.values()], priorId);
             continue;
           }
           if (!candidate) break;
@@ -186,9 +190,10 @@ export function useSlideshowDeck(
         }
 
         if (await promote(next.entry, next.photoIndex)) {
+          rememberLeftEntry(priorId, next.entry.id);
           preloadNearFuture();
           schedule(preferencesRef.current.duration);
-          return;
+          return true;
         }
 
         // A failed photo is skipped. Re-read the live entry so a snapshot
@@ -205,13 +210,92 @@ export function useSlideshowDeck(
         }
       }
 
+      return false;
+    },
+    [preloadNearFuture, promote, rememberLeftEntry, schedule],
+  );
+
+  const advance = useCallback(async () => {
+    if (advancingRef.current || unmountedRef.current) return;
+    advancingRef.current = true;
+    setIsLoading(false);
+    try {
+      const prior = currentRef.current;
+      if (await promoteFromQueue(prior, false)) return;
+
       cycleRef.current += 1;
       updateSlot(emptySlot(cycleRef.current));
       schedule(preferencesRef.current.duration);
     } finally {
       advancingRef.current = false;
     }
-  }, [preloadNearFuture, promote, schedule, updateSlot]);
+  }, [promoteFromQueue, schedule, updateSlot]);
+
+  const goNextEntry = useCallback(async () => {
+    if (advancingRef.current || unmountedRef.current) return;
+    if (liveRef.current.size === 0) return;
+    advancingRef.current = true;
+    setIsLoading(false);
+    try {
+      const prior = currentRef.current;
+      if (await promoteFromQueue(prior, true)) return;
+
+      cycleRef.current += 1;
+      updateSlot(emptySlot(cycleRef.current));
+      schedule(preferencesRef.current.duration);
+    } finally {
+      advancingRef.current = false;
+    }
+  }, [promoteFromQueue, schedule, updateSlot]);
+
+  const goPrevEntry = useCallback(async () => {
+    if (advancingRef.current || unmountedRef.current) return;
+    if (historyRef.current.length === 0) return;
+
+    advancingRef.current = true;
+    setIsLoading(false);
+    try {
+      const prior = currentRef.current;
+      let previous: DeckEntry | undefined;
+      while (historyRef.current.length && !previous) {
+        const candidateId = historyRef.current.pop()!;
+        previous = liveRef.current.get(candidateId);
+      }
+      if (!previous) return;
+
+      if (prior.kind === "content") {
+        const currentLive = liveRef.current.get(prior.messageId);
+        if (currentLive) {
+          queueRef.current = [
+            currentLive,
+            ...queueRef.current.filter((queued) => queued.id !== currentLive.id),
+          ];
+        }
+      }
+
+      const photoIndex = previous.photoUrls.length ? 0 : null;
+      if (await promote(previous, photoIndex)) {
+        preloadNearFuture();
+        schedule(preferencesRef.current.duration);
+        return;
+      }
+
+      // First photo failed — fall through remaining photos of that entry, then stop.
+      if (photoIndex !== null) {
+        for (let index = 1; index < previous.photoUrls.length; index += 1) {
+          const liveEntry = liveRef.current.get(previous.id);
+          if (!liveEntry) break;
+          if (await promote(liveEntry, index)) {
+            preloadNearFuture();
+            schedule(preferencesRef.current.duration);
+            return;
+          }
+        }
+      }
+    } finally {
+      advancingRef.current = false;
+    }
+  }, [preloadNearFuture, promote, schedule]);
 
   useEffect(() => {
     advanceRef.current = advance;
@@ -230,6 +314,7 @@ export function useSlideshowDeck(
       [...liveRef.current.values()].filter((entry) => entry.id !== activeId),
       activeId,
     );
+    historyRef.current = historyRef.current.filter((id) => liveRef.current.has(id) && id !== activeId);
     preloadNearFuture();
 
     if (!ready || initializedRef.current) return;
@@ -243,6 +328,7 @@ export function useSlideshowDeck(
     return () => {
       unmountedRef.current = true;
       initializedRef.current = false;
+      historyRef.current = [];
       clearTimer();
     };
   }, [clearTimer]);
@@ -284,5 +370,7 @@ export function useSlideshowDeck(
     setPreferences,
     pause,
     resume,
+    goNextEntry,
+    goPrevEntry,
   };
 }

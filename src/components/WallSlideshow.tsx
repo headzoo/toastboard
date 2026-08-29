@@ -1,5 +1,5 @@
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "motion/react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { useSlideshowDeck } from "../hooks/useSlideshowDeck.ts";
 import { getSignTheme } from "../lib/signThemes.ts";
 import { renderTableSignPng } from "../lib/tableSign.ts";
@@ -7,7 +7,6 @@ import type { MotionStyle } from "../lib/slideshow.ts";
 import type { EventRecord, MessageRecord } from "../lib/types.ts";
 import { formatEventDate } from "../lib/theme.ts";
 import { guestUrl, qrDataUrl } from "../lib/urls.ts";
-import { PhotoLightbox } from "./PhotoLightbox.tsx";
 import { SlideshowSettingsDialog } from "./SlideshowSettingsDialog.tsx";
 
 type Props = {
@@ -18,12 +17,17 @@ type Props = {
   onExit: () => void;
 };
 
+type ExpandTarget = "quote" | "photo";
+
 type WakeLockSentinel = {
   release: () => Promise<void>;
   addEventListener: (type: "release", listener: () => void) => void;
   removeEventListener: (type: "release", listener: () => void) => void;
 };
 type NavigatorWithWakeLock = Navigator & { wakeLock?: { request: (type: "screen") => Promise<WakeLockSentinel> } };
+
+const EXPAND_MS = 10_000;
+const SWIPE_THRESHOLD = 80;
 
 const transitions = {
   fade: { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } },
@@ -43,22 +47,75 @@ function transitionFor(slotKey: string, preference: MotionStyle, reduced: boolea
 }
 
 export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
-  const palette = getSignTheme(event.signTheme);
   const deck = useSlideshowDeck(slug, messages, ready);
+  const effectiveSignTheme = deck.preferences.signTheme ?? event.signTheme;
+  const palette = getSignTheme(effectiveSignTheme);
+  const accent = event.themeColor ?? "#C45C67";
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [lightbox, setLightbox] = useState<{ urls: string[]; index: number } | null>(null);
+  const [expandState, setExpandState] = useState<{ target: ExpandTarget; cycleKey: string } | null>(null);
   const [qr, setQr] = useState<string | null>(null);
+  const [qrEnlarged, setQrEnlarged] = useState(false);
   const [poster, setPoster] = useState<string | null>(null);
   const gearRef = useRef<HTMLButtonElement>(null);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+  const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
   const reducedMotion = useReducedMotion();
+  const expanded = expandState?.cycleKey === deck.slot.cycleKey ? expandState.target : null;
+  const qrIsEnlarged = deck.slot.kind !== "empty" && Boolean(qr) && qrEnlarged;
+  const swipeEnabled = !settingsOpen;
+
+  const navigateFromSwipe = useCallback((direction: "next" | "prev") => {
+    setExpandState(null);
+    if (direction === "next") void deck.goNextEntry();
+    else void deck.goPrevEntry();
+  }, [deck]);
+
+  const onSwipeDragEnd = useCallback((_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!swipeEnabled) return;
+    if (info.offset.x <= -SWIPE_THRESHOLD) navigateFromSwipe("next");
+    else if (info.offset.x >= SWIPE_THRESHOLD) navigateFromSwipe("prev");
+  }, [navigateFromSwipe, swipeEnabled]);
+
+  const onSwipePointerDown = useCallback((event: ReactPointerEvent) => {
+    if (!swipeEnabled || !reducedMotion || !event.isPrimary) return;
+    swipeStartRef.current = { x: event.clientX, y: event.clientY };
+  }, [reducedMotion, swipeEnabled]);
+
+  const onSwipePointerUp = useCallback((event: ReactPointerEvent) => {
+    if (!swipeEnabled || !reducedMotion) {
+      swipeStartRef.current = null;
+      return;
+    }
+    const start = swipeStartRef.current;
+    swipeStartRef.current = null;
+    if (!start) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) <= Math.abs(dy)) return;
+    navigateFromSwipe(dx < 0 ? "next" : "prev");
+  }, [navigateFromSwipe, reducedMotion, swipeEnabled]);
+
+  useEffect(() => {
+    if (!qrIsEnlarged) return;
+    const timer = setTimeout(() => setQrEnlarged(false), EXPAND_MS);
+    return () => clearTimeout(timer);
+  }, [qrIsEnlarged]);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const timer = setTimeout(() => setExpandState(null), EXPAND_MS);
+    return () => clearTimeout(timer);
+  }, [expanded]);
 
   const rootStyle = {
     "--slideshow-paper": palette.paper,
     "--slideshow-cream": palette.cream,
     "--slideshow-ink": palette.ink,
     "--slideshow-ink-soft": palette.inkSoft,
-    "--slideshow-accent": event.themeColor ?? "#C45C67",
+    "--slideshow-shadow": palette.shadow,
+    "--slideshow-frame-border": palette.frameBorder,
+    "--slideshow-frame-highlight": palette.frameHighlight,
+    "--slideshow-accent": accent,
     "--slideshow-font": palette.id === "modern" ? '"Figtree", system-ui, sans-serif' : '"Fraunces", Georgia, serif',
   } as CSSProperties;
 
@@ -77,8 +134,8 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
     void renderTableSignPng({
       coupleNames: event.coupleNames,
       guestUrl: guestUrl(slug),
-      themeColor: event.themeColor ?? "#C45C67",
-      themeId: event.signTheme,
+      themeColor: accent,
+      themeId: effectiveSignTheme,
       eventDateLabel: event.eventDate ? formatEventDate(event.eventDate) : null,
       welcomeMessage: event.welcomeMessage,
     }, true).then((next) => {
@@ -87,7 +144,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
       if (!cancelled) setPoster(null);
     });
     return () => { cancelled = true; };
-  }, [event, slug]);
+  }, [accent, effectiveSignTheme, event.coupleNames, event.eventDate, event.welcomeMessage, slug]);
 
   useEffect(() => {
     const navigatorWithWakeLock = navigator as NavigatorWithWakeLock;
@@ -149,29 +206,28 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
   }, []);
 
   useEffect(() => {
-    if (settingsOpen || lightbox) deck.pause();
+    if (settingsOpen || expanded) deck.pause();
     else deck.resume();
-  }, [deck, lightbox, settingsOpen]);
+  }, [deck, expanded, settingsOpen]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       event.preventDefault();
       event.stopPropagation();
-      if (lightbox) setLightbox(null);
+      if (expanded) setExpandState(null);
       else if (settingsOpen) setSettingsOpen(false);
       else onExit();
     };
     document.addEventListener("keydown", onKeyDown, true);
     return () => document.removeEventListener("keydown", onKeyDown, true);
-  }, [lightbox, onExit, settingsOpen]);
+  }, [expanded, onExit, settingsOpen]);
 
-  const openLightbox = () => {
-    const slot = deck.slot;
-    if (slot.kind !== "content" || slot.photoIndex === null) return;
-    const message = messages.find((entry) => entry.id === slot.messageId);
-    if (!message?.photoUrls.length) return;
-    setLightbox({ urls: [...message.photoUrls], index: slot.photoIndex });
+  const toggleExpand = (target: ExpandTarget) => {
+    setExpandState((current) => {
+      if (current?.cycleKey === deck.slot.cycleKey && current.target === target) return null;
+      return { target, cycleKey: deck.slot.cycleKey };
+    });
   };
 
   const rotation = useMemo(
@@ -179,10 +235,22 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
     [deck.slot.cycleKey],
   );
   const animation = transitionFor(deck.slot.cycleKey, deck.preferences.motion, Boolean(reducedMotion));
+  const hasPhoto = deck.slot.kind === "content" && Boolean(deck.slot.photoUrl);
+  const hasText = deck.slot.kind === "content" && Boolean(deck.slot.text);
+  const guestLabel = deck.slot.kind === "content" ? (deck.slot.guestName || "A guest") : "A guest";
+  const expandMotion = reducedMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+    : { initial: { opacity: 0, scale: 0.96 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.98 } };
 
   return (
     <section className="slideshow-root" style={rootStyle} aria-label={`${event.coupleNames} slideshow`}>
-      <div className="slideshow-stage" aria-live="polite">
+      <div
+        className="slideshow-stage"
+        aria-live="polite"
+        onPointerDown={onSwipePointerDown}
+        onPointerUp={onSwipePointerUp}
+        onPointerCancel={() => { swipeStartRef.current = null; }}
+      >
         <AnimatePresence mode="wait">
           {deck.slot.kind === "empty" ? (
             <motion.div
@@ -190,22 +258,31 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
               className="slideshow-empty"
               {...animation}
               transition={{ duration: reducedMotion ? 0.18 : 0.5 }}
+              drag={swipeEnabled && !reducedMotion ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={onSwipeDragEnd}
             >
               {poster ? <img className="slideshow-poster" src={poster} alt={`Table sign for ${event.coupleNames}`} /> : null}
             </motion.div>
           ) : (
             <motion.article
               key={deck.slot.cycleKey}
-              className="slideshow-slide"
+              className={`slideshow-slide${hasPhoto ? " slideshow-slide-has-photo" : ""}`}
               {...animation}
               transition={{ duration: reducedMotion ? 0.18 : 0.55 }}
+              drag={swipeEnabled && !reducedMotion ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={onSwipeDragEnd}
             >
               {deck.slot.photoUrl ? (
                 <button
                   className="slideshow-photo-button"
                   type="button"
-                  onClick={openLightbox}
-                  aria-label="View photo"
+                  onClick={() => toggleExpand("photo")}
+                  aria-expanded={expanded === "photo"}
+                  aria-label={expanded === "photo" ? "Close photo" : "Expand photo"}
                   style={{ transform: `rotate(${rotation}deg)` }}
                 >
                   <div className="slideshow-photo-frame">
@@ -219,20 +296,38 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
                   </div>
                 </button>
               ) : null}
-              <div className={`slideshow-quote-card${deck.slot.text ? "" : " slideshow-quote-card-empty"}`}>
-                {deck.slot.text ? <p className="slideshow-quote">{deck.slot.text}</p> : null}
-                <p className="slideshow-attribution">— {deck.slot.guestName || "A guest"}</p>
-              </div>
+              {hasText ? (
+                <button
+                  type="button"
+                  className="slideshow-quote-card"
+                  aria-expanded={expanded === "quote"}
+                  aria-label={expanded === "quote" ? "Hide full message" : "Show full message"}
+                  onClick={() => toggleExpand("quote")}
+                >
+                  <p className="slideshow-quote">{deck.slot.text}</p>
+                  <p className="slideshow-attribution">— {guestLabel}</p>
+                </button>
+              ) : (
+                <div className="slideshow-quote-card slideshow-quote-card-empty">
+                  <p className="slideshow-attribution">— {guestLabel}</p>
+                </div>
+              )}
             </motion.article>
           )}
         </AnimatePresence>
       </div>
 
       {deck.slot.kind !== "empty" && qr ? (
-        <aside className="slideshow-qr" aria-label="Scan to leave a toast">
-          <img src={qr} alt="QR code to leave a toast" />
+        <button
+          type="button"
+          className={`slideshow-qr${qrIsEnlarged ? " slideshow-qr-enlarged" : ""}`}
+          aria-pressed={qrIsEnlarged}
+          aria-label={qrIsEnlarged ? "Shrink guest QR" : "Enlarge guest QR"}
+          onClick={() => setQrEnlarged((current) => !current)}
+        >
+          <img src={qr} alt="" />
           <span>Scan to leave a toast</span>
-        </aside>
+        </button>
       ) : null}
 
       <div className="slideshow-controls">
@@ -244,20 +339,78 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
           Exit slideshow
         </button>
       </div>
+
+      <AnimatePresence>
+        {expanded && deck.slot.kind === "content" ? (
+          <motion.div
+            key={expanded}
+            className="slideshow-expand-backdrop"
+            role="presentation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0.12 : 0.22 }}
+            onPointerDown={(event) => {
+              if (!swipeEnabled || !event.isPrimary) return;
+              swipeStartRef.current = { x: event.clientX, y: event.clientY };
+            }}
+            onPointerUp={(event) => {
+              if (!swipeEnabled) {
+                swipeStartRef.current = null;
+                return;
+              }
+              const start = swipeStartRef.current;
+              swipeStartRef.current = null;
+              if (!start) return;
+              const dx = event.clientX - start.x;
+              const dy = event.clientY - start.y;
+              if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) <= Math.abs(dy)) return;
+              navigateFromSwipe(dx < 0 ? "next" : "prev");
+            }}
+            onPointerCancel={() => { swipeStartRef.current = null; }}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setExpandState(null);
+            }}
+          >
+            {expanded === "quote" && deck.slot.text ? (
+              <motion.button
+                type="button"
+                className="slideshow-expand-quote"
+                aria-label="Hide full message"
+                onClick={() => setExpandState(null)}
+                {...expandMotion}
+                transition={{ duration: reducedMotion ? 0.12 : 0.28 }}
+              >
+                <p className="slideshow-expand-quote-text">{deck.slot.text}</p>
+                <p className="slideshow-attribution">— {guestLabel}</p>
+              </motion.button>
+            ) : null}
+            {expanded === "photo" && deck.slot.photoUrl ? (
+              <motion.button
+                type="button"
+                className="slideshow-expand-photo"
+                aria-label="Close photo"
+                onClick={() => setExpandState(null)}
+                {...expandMotion}
+                transition={{ duration: reducedMotion ? 0.12 : 0.28 }}
+              >
+                <div className="slideshow-expand-photo-frame">
+                  <img className="slideshow-expand-photo-image" src={deck.slot.photoUrl} alt="" />
+                </div>
+              </motion.button>
+            ) : null}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
       {settingsOpen ? (
         <SlideshowSettingsDialog
           preferences={deck.preferences}
+          accent={accent}
+          eventSignTheme={event.signTheme}
           onChange={deck.setPreferences}
           onClose={() => setSettingsOpen(false)}
           restoreFocusRef={gearRef}
-        />
-      ) : null}
-      {lightbox ? (
-        <PhotoLightbox
-          urls={lightbox.urls}
-          index={lightbox.index}
-          onIndexChange={(next) => setLightbox((current) => current ? { ...current, index: next } : current)}
-          onClose={() => setLightbox(null)}
         />
       ) : null}
     </section>

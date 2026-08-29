@@ -5,11 +5,31 @@ import { btnClass, btnVariants } from "../lib/styles.ts";
 type ShellProps = {
   children: ReactNode;
   eyebrow?: string;
+  footer?: boolean;
 };
 
-export function Shell({ children, eyebrow = "Toastboard" }: ShellProps) {
+function SiteFooter() {
+  const year = new Date().getFullYear();
   return (
-    <div className="relative min-h-svh">
+    <footer className="mt-auto border-t border-[color-mix(in_srgb,var(--color-ink)_12%,transparent)] px-[6vw] py-8 print:hidden">
+      <div className="mx-auto flex max-w-[1180px] flex-col gap-3 text-[0.85rem] text-ink-soft min-[700px]:flex-row min-[700px]:items-center min-[700px]:justify-between">
+        <p className="m-0">© {year} Toastboard. All rights reserved.</p>
+        <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Legal">
+          <Link className="text-ink-soft no-underline hover:text-ink" to="/terms">
+            Terms and Conditions
+          </Link>
+          <Link className="text-ink-soft no-underline hover:text-ink" to="/privacy">
+            Privacy Policy
+          </Link>
+        </nav>
+      </div>
+    </footer>
+  );
+}
+
+export function Shell({ children, eyebrow = "Toastboard", footer = true }: ShellProps) {
+  return (
+    <div className="relative flex min-h-svh flex-col">
       <div className="paper-grain" aria-hidden="true" />
       <header className="px-[6vw] pt-5 print:hidden">
         <Link
@@ -23,9 +43,10 @@ export function Shell({ children, eyebrow = "Toastboard" }: ShellProps) {
           <span>{eyebrow}</span>
         </Link>
       </header>
-      <main className="mx-auto max-w-[1180px] px-[6vw] pb-20 pt-8">
+      <main className="mx-auto w-full max-w-[1180px] flex-1 px-[6vw] pb-20 pt-8">
         {children}
       </main>
+      {footer ? <SiteFooter /> : null}
     </div>
   );
 }

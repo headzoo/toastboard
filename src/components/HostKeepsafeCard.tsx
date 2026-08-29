@@ -10,7 +10,7 @@ import {
   getSignTheme,
   type SignThemeId,
 } from "../lib/signThemes.ts";
-import { btnClass, btnRowClass, ledeClass, narrowClass } from "../lib/styles.ts";
+import { btnClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { formatEventDate } from "../lib/theme.ts";
 import { DEFAULT_THEME } from "../lib/types.ts";
 import { copyText, downloadDataUrl, guestUrl, manageUrl, wallUrl } from "../lib/urls.ts";
@@ -95,10 +95,10 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
           This host link is the only way to moderate the guestbook. It cannot be recovered if you lose it — there is no email, no account, no reset.
         </StatusNote>
         <code className="break-all text-[0.82rem] text-ink-soft">{hostLink}</code>
-        <Button variant="ghost" href={hostLink}>
+        <Button variant="primary" href={hostLink}>
           Open host tools
         </Button>
-        <Button variant="primary" onClick={() => void copy("host")}>
+        <Button variant="ghost" onClick={() => void copy("host")}>
           {copied === "host" ? "Copied" : "Copy host link"}
         </Button>
       </div>
@@ -133,14 +133,11 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
         <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Guest page</span>
         <code className="break-all text-[0.82rem] text-ink-soft">{guestLink}</code>
+        <Button variant="primary" href={wallUrl(keepsafe.slug)}>
+          Open the wall
+        </Button>
         <Button variant="ghost" onClick={() => void copy("guest")}>
           {copied === "guest" ? "Copied" : "Copy wall link"}
-        </Button>
-      </div>
-
-      <div className={btnRowClass}>
-        <Button variant="ghost" href={wallUrl(keepsafe.slug)}>
-          Open the wall
         </Button>
       </div>
 

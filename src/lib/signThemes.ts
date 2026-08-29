@@ -9,6 +9,9 @@ export const SIGN_THEMES = [
     cream: "#FFFCF7",
     ink: "#2A2118",
     inkSoft: "#5C5146",
+    shadow: "#2A2118",
+    frameBorder: "#FFFFFF",
+    frameHighlight: "#FFFFFF",
   },
   {
     id: "botanical",
@@ -18,6 +21,9 @@ export const SIGN_THEMES = [
     cream: "#FFFEF8",
     ink: "#2A2E24",
     inkSoft: "#5A6352",
+    shadow: "#2A2E24",
+    frameBorder: "#FFFFFF",
+    frameHighlight: "#FFFFFF",
   },
   {
     id: "modern",
@@ -27,6 +33,9 @@ export const SIGN_THEMES = [
     cream: "#FFFFFF",
     ink: "#1C1A17",
     inkSoft: "#6B6560",
+    shadow: "#1C1A17",
+    frameBorder: "#FFFFFF",
+    frameHighlight: "#FFFFFF",
   },
   {
     id: "art-deco",
@@ -36,6 +45,9 @@ export const SIGN_THEMES = [
     cream: "#FFF9F0",
     ink: "#1F1A14",
     inkSoft: "#5C5246",
+    shadow: "#1F1A14",
+    frameBorder: "#FFFFFF",
+    frameHighlight: "#FFFFFF",
   },
   {
     id: "coastal",
@@ -45,6 +57,9 @@ export const SIGN_THEMES = [
     cream: "#FFFFFF",
     ink: "#243038",
     inkSoft: "#5A6B74",
+    shadow: "#243038",
+    frameBorder: "#FFFFFF",
+    frameHighlight: "#FFFFFF",
   },
   {
     id: "midnight",
@@ -54,6 +69,9 @@ export const SIGN_THEMES = [
     cream: "#2A241E",
     ink: "#F5EDE2",
     inkSoft: "#B8A99A",
+    shadow: "#000000",
+    frameBorder: "#3D342C",
+    frameHighlight: "#B8A99A",
   },
 ] as const;
 

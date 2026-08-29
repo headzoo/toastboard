@@ -1,3 +1,4 @@
+import { isSignThemeId, type SignThemeId } from "./signThemes.ts";
 import type { MessageRecord } from "./types.ts";
 
 export const SLIDESHOW_DURATIONS = [5000, 8000, 12000, 20000] as const;
@@ -10,6 +11,7 @@ export const MOTION_STYLES = ["random", "fade", "zoom", "lift", "swing"] as cons
 export type SlideshowPreferences = Readonly<{
   duration: SlideshowDuration;
   motion: MotionStyle;
+  signTheme?: SignThemeId;
 }>;
 
 export type SlideImageDimensions = Readonly<{
@@ -79,7 +81,14 @@ export function validateSlideshowPreferences(value: unknown): SlideshowPreferenc
   if (!isDuration(candidate.duration) || !isMotionStyle(candidate.motion)) {
     return DEFAULT_SLIDESHOW_PREFERENCES;
   }
-  return { duration: candidate.duration, motion: candidate.motion };
+  const preferences: SlideshowPreferences = {
+    duration: candidate.duration,
+    motion: candidate.motion,
+  };
+  if (isSignThemeId(candidate.signTheme)) {
+    return { ...preferences, signTheme: candidate.signTheme };
+  }
+  return preferences;
 }
 
 export function loadSlideshowPreferences(slug: string): SlideshowPreferences {

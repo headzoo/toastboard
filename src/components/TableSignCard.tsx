@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { renderTableSignPdf, renderTableSignPng, type TableSignInput } from "../lib/tableSign.ts";
 import type { SignThemeId } from "../lib/signThemes.ts";
 import { DEFAULT_THEME } from "../lib/types.ts";
-import { btnRowClass } from "../lib/styles.ts";
 import { copyText, downloadBytes, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls.ts";
 import { Button, StatusNote } from "./ui.tsx";
 
@@ -72,7 +71,7 @@ export function TableSignCard({
     <div className="my-6">
       <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Table sign</span>
       <p className="mt-1.5 mb-3 text-[0.9rem] text-ink-soft">
-        Letter size, 8.5 × 11 in. Print on cardstock at Staples and set one on each table.
+        Letter size, 8.5 × 11 in. Print on cardstock at your local copy service center and set one on each table.
       </p>
       {preview ? (
         <img
@@ -84,7 +83,7 @@ export function TableSignCard({
         <div className="aspect-[8.5/11] rounded-2xl bg-paper-2" />
       )}
       {error ? <StatusNote tone="error">{error}</StatusNote> : null}
-      <div className={btnRowClass}>
+      <div className="mt-6 flex flex-wrap gap-3 [&>*]:flex-1">
         <Button
           disabled={busy !== null}
           onClick={() =>
@@ -93,7 +92,7 @@ export function TableSignCard({
             })
           }
         >
-          {busy === "pdf" ? "Preparing…" : "Download table sign PDF"}
+          {busy === "pdf" ? "Preparing…" : "Download sign PDF"}
         </Button>
         <Button
           variant="ghost"
@@ -104,7 +103,7 @@ export function TableSignCard({
             })
           }
         >
-          {busy === "png" ? "Preparing…" : "Download table sign PNG"}
+          {busy === "png" ? "Preparing…" : "Download sign PNG"}
         </Button>
         <Button
           variant="ghost"
