@@ -1,3 +1,4 @@
+import { isSignThemeId } from "./signThemes.ts";
 import type { HostKeepsafe } from "./types.ts";
 
 const KEY = "toastboard:host-keepsafe";
@@ -12,6 +13,9 @@ export function loadKeepsafe(): HostKeepsafe | null {
   try {
     const parsed = JSON.parse(raw) as HostKeepsafe;
     if (!parsed.slug || !parsed.hostToken || !parsed.coupleNames) return null;
+    if (parsed.signTheme && !isSignThemeId(parsed.signTheme)) {
+      delete parsed.signTheme;
+    }
     return parsed;
   } catch {
     return null;

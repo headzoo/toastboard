@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { renderTableSignPdf, renderTableSignPng, type TableSignInput } from "../lib/tableSign.ts";
+import type { SignThemeId } from "../lib/signThemes.ts";
 import { DEFAULT_THEME } from "../lib/types.ts";
 import { btnRowClass } from "../lib/styles.ts";
 import { copyText, downloadBytes, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls.ts";
@@ -9,6 +10,7 @@ type TableSignCardProps = {
   slug: string;
   coupleNames: string;
   themeColor?: string | null;
+  themeId?: SignThemeId | string | null;
   eventDateLabel?: string | null;
   welcomeMessage?: string | null;
 };
@@ -17,6 +19,7 @@ export function TableSignCard({
   slug,
   coupleNames,
   themeColor,
+  themeId,
   eventDateLabel,
   welcomeMessage,
 }: TableSignCardProps) {
@@ -30,10 +33,11 @@ export function TableSignCard({
       coupleNames,
       guestUrl: guestLink,
       themeColor: themeColor || DEFAULT_THEME,
+      themeId,
       eventDateLabel,
       welcomeMessage,
     }),
-    [coupleNames, guestLink, themeColor, eventDateLabel, welcomeMessage],
+    [coupleNames, guestLink, themeColor, themeId, eventDateLabel, welcomeMessage],
   );
 
   useEffect(() => {

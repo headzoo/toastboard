@@ -30,4 +30,5 @@ export type HostKeepsafe = {
   themeColor: string;
   eventDate?: string;
   welcomeMessage?: string;
+  signTheme?: string;
 };

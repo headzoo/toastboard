@@ -1,3 +1,4 @@
+import { getSignTheme } from "./signThemes.ts";
 import { qrDataUrl } from "./urls.ts";
 
 type KeepsafeInput = {
@@ -5,6 +6,7 @@ type KeepsafeInput = {
   guestUrl: string;
   manageUrl: string;
   themeColor: string;
+  themeId?: string | null;
 };
 
 export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
@@ -17,7 +19,9 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Couldn’t draw the keepsafe card.");
 
-  ctx.fillStyle = "#F7F0E6";
+  const palette = getSignTheme(input.themeId);
+
+  ctx.fillStyle = palette.paper;
   ctx.fillRect(0, 0, width, height);
 
   ctx.strokeStyle = input.themeColor;
@@ -25,7 +29,7 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
   roundRect(ctx, 48, 48, width - 96, height - 96, 48);
   ctx.stroke();
 
-  ctx.fillStyle = "#2A2118";
+  ctx.fillStyle = palette.ink;
   ctx.font = "600 42px 'Fraunces', serif";
   ctx.textAlign = "center";
   ctx.fillText("Toastboard", width / 2, 160);
@@ -41,18 +45,18 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
   const qrSize = 520;
   ctx.drawImage(qrImage, (width - qrSize) / 2, 480, qrSize, qrSize);
 
-  ctx.fillStyle = "#5C5146";
+  ctx.fillStyle = palette.inkSoft;
   ctx.font = "500 24px 'Figtree', sans-serif";
   ctx.fillText("Guest QR", width / 2, 1040);
 
-  ctx.fillStyle = "#2A2118";
+  ctx.fillStyle = palette.ink;
   ctx.font = "600 26px 'Figtree', sans-serif";
   ctx.fillText("Private host link", width / 2, 1110);
 
   ctx.font = "400 22px 'Figtree', sans-serif";
   wrapText(ctx, input.manageUrl, width / 2, 1160, width - 180, 34);
 
-  ctx.fillStyle = "#5C5146";
+  ctx.fillStyle = palette.inkSoft;
   ctx.font = "400 22px 'Figtree', sans-serif";
   ctx.fillText("Guest page", width / 2, 1336);
   wrapText(ctx, input.guestUrl, width / 2, 1374, width - 180, 32);
