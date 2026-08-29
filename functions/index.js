@@ -1,12 +1,15 @@
 const { createHash, timingSafeEqual } = require("crypto");
 const { initializeApp } = require("firebase-admin/app");
-const { getFirestore, FieldValue } = require("firebase-admin/firestore");
+const { getFirestore, FieldValue, Timestamp } = require("firebase-admin/firestore");
 const { getStorage } = require("firebase-admin/storage");
 const { HttpsError, onCall } = require("firebase-functions/v2/https");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 
 initializeApp();
 
 const SLUG = /^[a-z0-9-]{10,80}$/;
+const DEMO_SLUG = "maya-james-k8n2w4p9qx";
+const DEMO_TTL_MS = 15 * 60 * 1000;
 const SIGN_THEMES = new Set(["classic", "botanical", "modern", "art-deco", "coastal", "midnight"]);
 
 function sha256Hex(value) {
@@ -103,3 +106,39 @@ exports.updateSignTheme = onCall({ cors: true, region: "us-central1" }, async (r
 
   return { ok: true, signTheme };
 });
+
+exports.purgeExpiredGuestbooks = onSchedule(
+  { schedule: "every 15 minutes", region: "us-central1", timeoutSeconds: 300 },
+  async () => {
+    const db = getFirestore();
+    const bucket = getStorage().bucket();
+    const cutoff = Timestamp.fromMillis(Date.now() - DEMO_TTL_MS);
+    const expired = await db.collection("events").where("createdAt", "<", cutoff).get();
+
+    let purged = 0;
+    let skipped = 0;
+    let failed = 0;
+
+    for (const eventDoc of expired.docs) {
+      const slug = eventDoc.id;
+      if (slug === DEMO_SLUG) {
+        skipped += 1;
+        continue;
+      }
+
+      try {
+        await bucket.deleteFiles({ prefix: `events/${slug}/` });
+        await db.recursiveDelete(eventDoc.ref);
+        purged += 1;
+        console.log(`Purged guestbook ${slug}`);
+      } catch (error) {
+        failed += 1;
+        console.error(`Failed to purge guestbook ${slug}`, error);
+      }
+    }
+
+    console.log(
+      `purgeExpiredGuestbooks finished: purged=${purged} skipped=${skipped} failed=${failed} scanned=${expired.size}`,
+    );
+  },
+);

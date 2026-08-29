@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { useImageDimensions } from "../hooks/useImageDimensions.ts";
 import { PhotoLightbox } from "./PhotoLightbox.tsx";
 
 const CLICK_MOVE_THRESHOLD = 10;
@@ -12,6 +13,8 @@ export function PhotoGallery({ urls }: PhotoGalleryProps) {
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const [index, setIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const singleUrl = urls.length === 1 ? urls[0] : undefined;
+  const dimensions = useImageDimensions(singleUrl);
 
   const onScroll = useCallback(() => {
     const track = trackRef.current;
@@ -47,17 +50,33 @@ export function PhotoGallery({ urls }: PhotoGalleryProps) {
   ) : null;
 
   if (urls.length === 1) {
+    const url = urls[0];
     return (
       <>
-        <button
-          className="toast-photo-button"
-          type="button"
-          onPointerDown={onPointerDown}
-          onClick={(event) => openIfClick(0, event)}
-          aria-label="View photo"
+        <div
+          className="toast-photo-frame"
+          style={dimensions
+            ? { aspectRatio: `${dimensions.width} / ${dimensions.height}` }
+            : undefined}
         >
-          <img className="toast-photo" src={urls[0]} alt="" />
-        </button>
+          {dimensions ? (
+            <button
+              className="toast-photo-button"
+              type="button"
+              onPointerDown={onPointerDown}
+              onClick={(event) => openIfClick(0, event)}
+              aria-label="View photo"
+            >
+              <img
+                className="toast-photo"
+                src={url}
+                alt=""
+                width={dimensions.width}
+                height={dimensions.height}
+              />
+            </button>
+          ) : null}
+        </div>
         {lightbox}
       </>
     );

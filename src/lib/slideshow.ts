@@ -1,3 +1,4 @@
+import { getImageDimensionsEntry, type ImageDimensions } from "./imageDimensions.ts";
 import { isSignThemeId, type SignThemeId } from "./signThemes.ts";
 import type { MessageRecord } from "./types.ts";
 
@@ -14,10 +15,7 @@ export type SlideshowPreferences = Readonly<{
   signTheme?: SignThemeId;
 }>;
 
-export type SlideImageDimensions = Readonly<{
-  width: number;
-  height: number;
-}>;
+export type SlideImageDimensions = ImageDimensions;
 
 export type ContentSlideSlot = Readonly<{
   kind: "content";
@@ -137,41 +135,13 @@ export type ImageCacheEntry = Readonly<{
   dimensions?: SlideImageDimensions;
 }>;
 
+/** Thin wrapper around the shared image-dimension cache (same URL keys as wall photos). */
 export class SlideImageCache {
-  private readonly entries = new Map<string, ImageCacheEntry>();
-
   preload(url: string): Promise<SlideImageDimensions | null> {
     return this.get(url).promise;
   }
 
   get(url: string): ImageCacheEntry {
-    const existing = this.entries.get(url);
-    if (existing) return existing;
-
-    let resolve!: (dimensions: SlideImageDimensions | null) => void;
-    const promise = new Promise<SlideImageDimensions | null>((done) => {
-      resolve = done;
-    });
-    const loading: ImageCacheEntry = { status: "loading", promise };
-    this.entries.set(url, loading);
-
-    if (typeof Image === "undefined") {
-      this.entries.set(url, { status: "failed", promise });
-      resolve(null);
-      return this.entries.get(url)!;
-    }
-
-    const image = new Image();
-    image.onload = () => {
-      const dimensions = { width: image.naturalWidth, height: image.naturalHeight };
-      this.entries.set(url, { status: "loaded", promise, dimensions });
-      resolve(dimensions);
-    };
-    image.onerror = () => {
-      this.entries.set(url, { status: "failed", promise });
-      resolve(null);
-    };
-    image.src = url;
-    return loading;
+    return getImageDimensionsEntry(url);
   }
 }

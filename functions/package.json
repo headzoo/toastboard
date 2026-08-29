@@ -1,6 +1,6 @@
 {
   "name": "toastboard-functions",
-  "description": "Callable host moderation for Toastboard",
+  "description": "Callable host moderation and scheduled demo guestbook purge for Toastboard",
   "engines": {
     "node": "20"
   },
