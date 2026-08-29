@@ -51,6 +51,66 @@ export function HomePage() {
           <p>The reception screen updates live. Hide a toast later with the host link — possession is permission.</p>
         </li>
       </ol>
+
+      <section className="mt-16 pb-8" aria-label="Toastboard at the reception">
+        <p className={kickerClass}>In the room</p>
+        <h2 className="mb-6 max-w-[28rem] font-serif text-[clamp(1.6rem,3.5vw,2.2rem)] font-medium tracking-[-0.03em]">
+          The guestbook that sits with the party.
+        </h2>
+
+        <figure className="m-0">
+          <img
+            className="block w-full rounded-[1.4rem] object-cover shadow-soft"
+            src="/branding/family-table-wall.jpg"
+            alt="A family table at a wedding reception with a large TV nearby showing the Toastboard live guestbook wall for Maya and James"
+            width={1920}
+            height={1080}
+          />
+          <figcaption className="mt-3 font-serif text-[1.05rem] text-ink-soft">
+            The family table watches the wall fill.
+          </figcaption>
+        </figure>
+
+        <div className="mt-8 grid gap-6 min-[700px]:grid-cols-2">
+          <figure className="m-0">
+            <img
+              className="block aspect-[3/4] w-full rounded-[1.4rem] object-cover shadow-soft"
+              src="/branding/table-sign.jpg"
+              alt="Printed cream Toastboard table sign with a rose border, Maya and James, and a large QR code standing on a guest table among candles and flowers"
+              width={900}
+              height={1200}
+            />
+            <figcaption className="mt-3 font-serif text-[1.05rem] text-ink-soft">
+              Print one card per table.
+            </figcaption>
+          </figure>
+          <figure className="m-0">
+            <img
+              className="block aspect-[4/3] w-full rounded-[1.4rem] object-cover shadow-soft min-[700px]:aspect-[3/4]"
+              src="/branding/guest-scan.jpg"
+              alt="A wedding guest holds a phone over a Toastboard table sign, scanning the QR code while the reception continues behind them"
+              width={1200}
+              height={900}
+            />
+            <figcaption className="mt-3 font-serif text-[1.05rem] text-ink-soft">
+              Guests scan. No app.
+            </figcaption>
+          </figure>
+        </div>
+
+        <figure className="m-0 mt-8">
+          <img
+            className="block w-full rounded-[1.4rem] object-cover shadow-soft"
+            src="/branding/reception-selfie.jpg"
+            alt="Guests take a selfie at a wedding reception with a Toastboard table sign and QR code visible on a nearby table"
+            width={1920}
+            height={1080}
+          />
+          <figcaption className="mt-3 font-serif text-[1.05rem] text-ink-soft">
+            The party keeps going.
+          </figcaption>
+        </figure>
+      </section>
     </Shell>
   );
 }
