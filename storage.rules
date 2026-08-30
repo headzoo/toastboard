@@ -2,7 +2,8 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     match /events/{slug}/messages/{fileName} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if false;
       allow create: if slug.matches('^[a-z0-9-]{10,80}$')
         && fileName.matches('^[A-Za-z0-9._-]+\\.(jpg|jpeg|png|webp)$')
         && request.resource.size < 2 * 1024 * 1024

@@ -35,7 +35,8 @@ service cloud.firestore {
     }
 
     match /events/{slug} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if false;
       allow create: if isValidSlug(slug)
         && request.resource.data.keys().hasOnly([
           'coupleNames',
