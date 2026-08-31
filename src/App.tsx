@@ -6,7 +6,6 @@ import { ManagePage } from "./pages/ManagePage.tsx";
 import { PrivacyPage } from "./pages/PrivacyPage.tsx";
 import { TermsPage } from "./pages/TermsPage.tsx";
 import { WallPage } from "./pages/WallPage.tsx";
-import { DemoBanner } from "./components/DemoBanner.tsx";
 import { Shell } from "./components/ui.tsx";
 
 function NotFound() {
@@ -22,7 +21,6 @@ function NotFound() {
 export default function App() {
   return (
     <BrowserRouter>
-      <DemoBanner />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePage />} />
