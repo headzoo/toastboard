@@ -31,3 +31,4 @@ functions/node_modules
 *.sln
 *.sw?
 .firebase
+*.scratch.*

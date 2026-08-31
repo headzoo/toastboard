@@ -53,23 +53,28 @@
       "messages": [
         {
           "guestName": "Mom",
-          "text": "Thirty never looked so good. May this year be loud, kind, and full of cake for breakfast."
+          "text": "Thirty never looked so good. May this year be loud, kind, and full of cake for breakfast.",
+          "photos": ["guestbook-lena-mom.jpg"]
         },
         {
           "guestName": "Mateo",
-          "text": "You once said you’d never throw a party. Look at this wall. Happy birthday, you wonderful hypocrite."
+          "text": "You once said you’d never throw a party. Look at this wall. Happy birthday, you wonderful hypocrite.",
+          "photos": ["guestbook-lena-mateo.jpg"]
         },
         {
           "guestName": "Aunt Rhea",
-          "text": "Another trip around the sun. Keep collecting people who make you laugh like this."
+          "text": "Another trip around the sun. Keep collecting people who make you laugh like this.",
+          "photos": ["guestbook-lena-aunt-rhea.jpg"]
         },
         {
           "guestName": "The neighbors downstairs",
-          "text": "Please keep celebrating this loudly. Also, we left sparkling wine by the door."
+          "text": "Please keep celebrating this loudly. Also, we left sparkling wine by the door.",
+          "photos": ["guestbook-lena-neighbors.jpg"]
         },
         {
           "guestName": "Priya from college",
-          "text": "Still the person I’d call to pick me up from the airport. Wishing you a year as generous as you are."
+          "text": "Still the person I’d call to pick me up from the airport. Wishing you a year as generous as you are.",
+          "photos": ["guestbook-lena-priya-1.jpg", "guestbook-lena-priya-2.jpg"]
         },
         {
           "guestName": "A guest who slipped in late",
@@ -89,23 +94,28 @@
       "messages": [
         {
           "guestName": "Professor Okonkwo",
-          "text": "You asked better questions than you answered, which is how this is supposed to work. Go make something that lasts."
+          "text": "You asked better questions than you answered, which is how this is supposed to work. Go make something that lasts.",
+          "photos": ["guestbook-jordan-professor.jpg"]
         },
         {
           "guestName": "Samira, roommate",
-          "text": "Four years of instant noodles and panic. You did the hard part. Now go nap, then change the world a little."
+          "text": "Four years of instant noodles and panic. You did the hard part. Now go nap, then change the world a little.",
+          "photos": ["guestbook-jordan-samira-1.jpg", "guestbook-jordan-samira-2.jpg"]
         },
         {
           "guestName": "Dad",
-          "text": "Proud is too small a word. Take the afternoon off from proving anything."
+          "text": "Proud is too small a word. Take the afternoon off from proving anything.",
+          "photos": ["guestbook-jordan-dad.jpg"]
         },
         {
           "guestName": "Little sister, Mina",
-          "text": "You still have to come to my recitals even though you’re a graduate now. That’s the deal."
+          "text": "You still have to come to my recitals even though you’re a graduate now. That’s the deal.",
+          "photos": ["guestbook-jordan-mina.jpg"]
         },
         {
           "guestName": "Coach Patel",
-          "text": "Talent is common. Showing up is not. You showed up."
+          "text": "Talent is common. Showing up is not. You showed up.",
+          "photos": ["guestbook-jordan-coach.jpg"]
         },
         {
           "guestName": "Someone from the back row",
@@ -125,23 +135,28 @@
       "messages": [
         {
           "guestName": "Grandma Ruth",
-          "text": "Mazel tov, Noah. May this day be the first of many where your voice carries."
+          "text": "Mazel tov, Noah. May this day be the first of many where your voice carries.",
+          "photos": ["guestbook-noah-grandma.jpg"]
         },
         {
           "guestName": "Uncle Eli",
-          "text": "Today you stood up and read. Tomorrow you get to keep standing up for people. We’re so proud."
+          "text": "Today you stood up and read. Tomorrow you get to keep standing up for people. We’re so proud.",
+          "photos": ["guestbook-noah-uncle-1.jpg", "guestbook-noah-uncle-2.jpg"]
         },
         {
           "guestName": "Family friend, Miriam",
-          "text": "A beautiful milestone, celebrated in your own way. May the years ahead be full of curiosity and kindness."
+          "text": "A beautiful milestone, celebrated in your own way. May the years ahead be full of curiosity and kindness.",
+          "photos": ["guestbook-noah-miriam.jpg"]
         },
         {
           "guestName": "Cousin Leah",
-          "text": "You nailed it. Also you still have to pass the challah. Mazel tov."
+          "text": "You nailed it. Also you still have to pass the challah. Mazel tov.",
+          "photos": ["guestbook-noah-leah.jpg"]
         },
         {
           "guestName": "From Hebrew school",
-          "text": "We knew you’d get here. Save us a seat at the party."
+          "text": "We knew you’d get here. Save us a seat at the party.",
+          "photos": ["guestbook-noah-hebrew-school.jpg"]
         },
         {
           "guestName": "A guest from the next table",
