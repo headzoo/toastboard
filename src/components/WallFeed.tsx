@@ -3,23 +3,30 @@ import { formatEventDate } from "../lib/theme.ts";
 import type { MessageRecord } from "../lib/types.ts";
 import { PhotoGallery } from "./PhotoGallery.tsx";
 
+export type ModerationCopy = {
+  hideConfirmLabel: string;
+  hideButtonLabel: string;
+  hideErrorFallback: string;
+};
+
 type MessageCardProps = {
   message: MessageRecord;
   hostToken?: string;
   slug?: string;
+  moderation?: ModerationCopy;
   onHidden?: (id: string) => void;
 };
 
-export function MessageCard({ message, hostToken, slug, onHidden }: MessageCardProps) {
+export function MessageCard({ message, hostToken, slug, moderation, onHidden }: MessageCardProps) {
   async function onDelete() {
-    if (!hostToken || !slug) return;
-    const ok = window.confirm("Remove this toast from the wall?");
+    if (!hostToken || !slug || !moderation) return;
+    const ok = window.confirm(moderation.hideConfirmLabel);
     if (!ok) return;
     try {
       await hideMessage(slug, message.id, hostToken);
       onHidden?.(message.id);
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "Couldn’t remove that toast.");
+      window.alert(error instanceof Error ? error.message : moderation.hideErrorFallback);
     }
   }
 
@@ -32,9 +39,9 @@ export function MessageCard({ message, hostToken, slug, onHidden }: MessageCardP
           <span>{message.guestName || "A guest"}</span>
           {message.createdAt ? <span>{formatEventDate(message.createdAt)}</span> : null}
         </div>
-        {hostToken ? (
+        {hostToken && moderation ? (
           <button className="btn btn-danger btn-small" type="button" onClick={() => void onDelete()}>
-            Hide toast
+            {moderation.hideButtonLabel}
           </button>
         ) : null}
       </div>
@@ -47,9 +54,10 @@ type WallFeedProps = {
   hostToken?: string;
   slug?: string;
   emptyLabel: string;
+  moderation?: ModerationCopy;
 };
 
-export function WallFeed({ messages, hostToken, slug, emptyLabel }: WallFeedProps) {
+export function WallFeed({ messages, hostToken, slug, emptyLabel, moderation }: WallFeedProps) {
   if (messages.length === 0) {
     return (
       <div className="empty-wall">
@@ -66,6 +74,7 @@ export function WallFeed({ messages, hostToken, slug, emptyLabel }: WallFeedProp
           message={message}
           hostToken={hostToken}
           slug={slug}
+          moderation={moderation}
         />
       ))}
     </div>

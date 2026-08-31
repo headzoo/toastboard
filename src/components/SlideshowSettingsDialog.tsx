@@ -77,7 +77,7 @@ export function SlideshowSettingsDialog({
           </button>
         </div>
         <section aria-labelledby="duration-label">
-          <h3 id="duration-label">Time per toast</h3>
+          <h3 id="duration-label">Time per message</h3>
           <div className="slideshow-chips">
             {SLIDESHOW_DURATIONS.map((duration) => (
               <button

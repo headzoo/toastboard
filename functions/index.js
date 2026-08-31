@@ -8,6 +8,13 @@ initializeApp();
 
 const SLUG = /^[a-z0-9-]{10,80}$/;
 const SIGN_THEMES = new Set(["classic", "botanical", "modern", "art-deco", "coastal", "midnight"]);
+// Hard-coded marketed demos only. Do not read the catalog at runtime.
+const DEMO_EVENT_TYPES = Object.freeze({
+  "maya-james-k8n2w4p9qx": "wedding",
+  "lena-birthday-b7r3m9q2vx": "birthday",
+  "jordan-graduation-g6p4n8w2kc": "graduation",
+  "noah-bar-mitzvah-r5m8k2q7tz": "religious-milestone",
+});
 
 function sha256Hex(value) {
   return createHash("sha256").update(value, "utf8").digest("hex");
@@ -102,4 +109,41 @@ exports.updateSignTheme = onCall({ cors: true, region: "us-central1" }, async (r
   await db.doc(`events/${slug}`).update({ signTheme });
 
   return { ok: true, signTheme };
+});
+
+exports.enrichDemoEventType = onCall({ cors: true, region: "us-central1" }, async (request) => {
+  const data = request.data && typeof request.data === "object" ? request.data : {};
+  const extraKeys = Object.keys(data).filter((key) => key !== "slug" && key !== "hostToken");
+  if (extraKeys.length > 0) {
+    throw new HttpsError("invalid-argument", "Missing or invalid demo metadata payload.");
+  }
+
+  const slug = typeof data.slug === "string" ? data.slug : "";
+  const hostToken = typeof data.hostToken === "string" ? data.hostToken : "";
+  const expectedType = DEMO_EVENT_TYPES[slug];
+
+  if (!expectedType || hostToken.length < 20) {
+    throw new HttpsError("invalid-argument", "Missing or invalid demo metadata payload.");
+  }
+
+  const { db } = await verifyHostToken(slug, hostToken);
+  const eventRef = db.doc(`events/${slug}`);
+  const eventSnap = await eventRef.get();
+  if (!eventSnap.exists) {
+    throw new HttpsError("not-found", "That demo guestbook does not exist.");
+  }
+
+  const currentType = eventSnap.get("eventType");
+  if (currentType == null || currentType === "") {
+    await eventRef.update({ eventType: expectedType });
+    return { ok: true, eventType: expectedType, updated: true };
+  }
+  if (currentType === expectedType) {
+    return { ok: true, eventType: expectedType, updated: false };
+  }
+
+  throw new HttpsError(
+    "failed-precondition",
+    `This demo already has eventType "${currentType}"; expected "${expectedType}".`,
+  );
 });

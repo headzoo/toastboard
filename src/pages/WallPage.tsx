@@ -7,6 +7,7 @@ import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
 import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { getSignTheme } from "../lib/signThemes.ts";
+import { getEventCopy } from "../lib/eventTypes.ts";
 import { formatEventDate } from "../lib/theme.ts";
 
 export function WallPage() {
@@ -30,7 +31,7 @@ export function WallPage() {
   if (status === "loading") {
     return (
       <Shell footer={false}>
-        <StatusNote>Gathering toasts…</StatusNote>
+        <StatusNote>Loading the wall…</StatusNote>
       </Shell>
     );
   }
@@ -69,6 +70,7 @@ export function WallPage() {
   };
 
   const palette = getSignTheme(event.signTheme);
+  const copy = getEventCopy(event.eventType);
 
   return (
     <div ref={fullscreenRootRef}>
@@ -93,7 +95,7 @@ export function WallPage() {
             {event.eventDate ? <p className={ledeClass}>{formatEventDate(event.eventDate)}</p> : null}
             <div className={`${btnRowClass} print:hidden`}>
               <Link className={btnClass("ghost")} to={`/e/${slug}`}>
-                Leave a toast
+                {copy.wallCtaLabel}
               </Link>
               <button
                 className={btnClass("ghost")}
@@ -108,7 +110,7 @@ export function WallPage() {
           {error || fullscreenError ? <StatusNote tone="error">{error ?? fullscreenError}</StatusNote> : null}
           <WallFeed
             messages={messages}
-            emptyLabel="The first toast hasn’t been written yet. Scan the QR and be the first."
+            emptyLabel={copy.wallEmptyLabel}
           />
         </Shell>
       )}

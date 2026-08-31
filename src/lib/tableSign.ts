@@ -17,6 +17,9 @@ export type TableSignInput = {
   themeId?: SignThemeId | string | null;
   eventDateLabel?: string | null;
   welcomeMessage?: string | null;
+  signKicker: string;
+  signScanInstruction: string;
+  signTagline: string;
 };
 
 type DrawCtx = {
@@ -63,7 +66,7 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
   const kickerTracking = palette.id === "art-deco" ? P(5.5) : P(3.2);
   ctx.fillStyle = accent;
   ctx.font = `700 ${P(10)}px "Figtree", sans-serif`;
-  fillTextSpaced(ctx, "LEAVE A TOAST", cx, P(108), kickerTracking);
+  fillTextSpaced(ctx, input.signKicker, cx, P(108), kickerTracking);
 
   const nameFont =
     palette.id === "modern"
@@ -141,7 +144,7 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
 
   y = cardY + card + P(28);
   ctx.fillStyle = palette.ink;
-  y = fitWrappedText(ctx, "Scan to leave a message and upload a photo.", cx, y, width - P(130), 2, {
+  y = fitWrappedText(ctx, input.signScanInstruction, cx, y, width - P(130), 2, {
     maxSize: P(16),
     minSize: P(13),
     lineHeight: 1.2,
@@ -153,7 +156,7 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
 
   ctx.fillStyle = palette.inkSoft;
   ctx.font = `400 ${P(11)}px "Figtree", sans-serif`;
-  ctx.fillText("No app. No login. It appears on the wall.", cx, y + P(18));
+  ctx.fillText(input.signTagline, cx, y + P(18));
   y += P(34);
 
   ctx.fillStyle = hexAlpha(palette.inkSoft, 0.85);

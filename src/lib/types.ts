@@ -1,3 +1,4 @@
+import type { EventType } from "./eventTypes.ts";
 import type { SignThemeId } from "./signThemes.ts";
 
 export const DEFAULT_THEME = "#C45C67";
@@ -11,6 +12,7 @@ export const THEME_SWATCHES = [
 ] as const;
 
 export type EventRecord = {
+  eventType: EventType;
   coupleNames: string;
   eventDate: Date | null;
   welcomeMessage: string | null;
@@ -29,6 +31,7 @@ export type MessageRecord = {
 export type HostKeepsafe = {
   slug: string;
   hostToken: string;
+  eventType: EventType;
   coupleNames: string;
   themeColor: string;
   eventDate?: string;

@@ -1,10 +1,14 @@
 import { Shell } from "../components/ui.tsx";
 import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
+import { TERMS_PAGE_METADATA } from "../lib/pageMetadata.ts";
 import { applyTheme } from "../lib/theme.ts";
+import { usePageMetadata } from "../hooks/usePageMetadata.ts";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export function TermsPage() {
+  usePageMetadata(TERMS_PAGE_METADATA);
+
   useEffect(() => {
     applyTheme("#C45C67");
   }, []);
@@ -19,10 +23,10 @@ export function TermsPage() {
         <section className="mt-8 space-y-4">
           <h2>1. Agreement</h2>
           <p>
-            These Terms and Conditions (“Terms”) govern your use of Toastboard, a wedding guestbook
-            service available at toastboard.web.app (the “Service”). By creating a guestbook, leaving a
-            toast, viewing a wall, or otherwise using the Service, you agree to these Terms. If you do
-            not agree, do not use the Service.
+            These Terms and Conditions (“Terms”) govern your use of Toastboard, a personal event
+            guestbook service available at toastboard.web.app (the “Service”). By creating a guestbook,
+            submitting Guest Content, viewing a wall, or otherwise using the Service, you agree to these
+            Terms. If you do not agree, do not use the Service.
           </p>
 
           <h2>2. The Service</h2>

@@ -18,6 +18,11 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { compressGuestPhoto } from "./compress.ts";
 import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from "./crypto.ts";
 import { db, functions, storage } from "./firebase.ts";
+import {
+  getEventCopy,
+  normalizeEventType,
+  type EventType,
+} from "./eventTypes.ts";
 import { DEFAULT_SIGN_THEME, getSignTheme, type SignThemeId } from "./signThemes.ts";
 import type { EventRecord, MessageRecord } from "./types.ts";
 
@@ -35,13 +40,16 @@ type CreatedEvent = {
 };
 
 export async function createEvent(input: {
+  eventType: EventType;
   coupleNames: string;
   eventDate: string;
   welcomeMessage: string;
   themeColor: string;
 }): Promise<CreatedEvent> {
+  const eventType = normalizeEventType(input.eventType);
+  const copy = getEventCopy(eventType);
   const coupleNames = sanitizeText(input.coupleNames, 120);
-  if (!coupleNames) throw new Error("Please add the couple’s names.");
+  if (!coupleNames) throw new Error(copy.displayNameRequiredError);
 
   const hostToken = randomToken(32);
   const hostTokenHash = await sha256Hex(hostToken);
@@ -51,6 +59,7 @@ export async function createEvent(input: {
     const eventRef = doc(db, "events", slug);
     const payload: DocumentData = {
       coupleNames,
+      eventType,
       createdAt: serverTimestamp(),
       signTheme: DEFAULT_SIGN_THEME,
     };
@@ -145,7 +154,7 @@ export async function submitMessage(input: {
       .set(doc(db, "events", input.slug, "messages", messageId), payload)
       .commit();
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t send that toast. Please try again.");
+    throw toFriendlyError(error, "Couldn’t send that message. Please try again.");
   }
 }
 
@@ -179,8 +188,11 @@ export async function updateEventSignTheme(
 }
 
 function mapEvent(data: DocumentData): EventRecord {
+  const eventType = normalizeEventType(data.eventType);
+  const copy = getEventCopy(eventType);
   return {
-    coupleNames: String(data.coupleNames ?? "This wedding"),
+    eventType,
+    coupleNames: String(data.coupleNames ?? copy.displayNameFallback),
     eventDate: data.eventDate instanceof Timestamp ? data.eventDate.toDate() : null,
     welcomeMessage: typeof data.welcomeMessage === "string" ? data.welcomeMessage : null,
     themeColor: typeof data.themeColor === "string" ? data.themeColor : null,

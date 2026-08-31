@@ -1,3 +1,4 @@
+import { normalizeEventType } from "./eventTypes.ts";
 import { isSignThemeId } from "./signThemes.ts";
 import type { HostKeepsafe } from "./types.ts";
 
@@ -16,6 +17,7 @@ export function loadKeepsafe(): HostKeepsafe | null {
     if (parsed.signTheme && !isSignThemeId(parsed.signTheme)) {
       delete parsed.signTheme;
     }
+    parsed.eventType = normalizeEventType(parsed.eventType);
     return parsed;
   } catch {
     return null;

@@ -1,10 +1,14 @@
 import { Shell } from "../components/ui.tsx";
 import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
+import { PRIVACY_PAGE_METADATA } from "../lib/pageMetadata.ts";
 import { applyTheme } from "../lib/theme.ts";
+import { usePageMetadata } from "../hooks/usePageMetadata.ts";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export function PrivacyPage() {
+  usePageMetadata(PRIVACY_PAGE_METADATA);
+
   useEffect(() => {
     applyTheme("#C45C67");
   }, []);
@@ -20,7 +24,7 @@ export function PrivacyPage() {
           <h2>1. Overview</h2>
           <p>
             This Privacy Policy explains how Toastboard (“we,” “us”) collects, uses, and shares
-            information when you use the wedding guestbook service at toastboard.web.app (the
+            information when you use the personal event guestbook service at toastboard.web.app (the
             “Service”). Toastboard does not require accounts, email addresses, or passwords. The host
             link is the credential for moderating a guestbook.
           </p>
@@ -29,8 +33,9 @@ export function PrivacyPage() {
           <p>Depending on how you use the Service, we may process:</p>
           <ul className="mb-4 list-disc space-y-2 pl-5">
             <li>
-              <strong>Event details</strong> you provide when creating a guestbook, such as couple
-              names, optional event date, welcome message, theme color, and sign design.
+              <strong>Event details</strong> you provide when creating a guestbook, such as the event
+              or host display name (for example couple names, a celebrant name, or an honoree name),
+              optional event date, welcome message, theme color, and sign design.
             </li>
             <li>
               <strong>Guest Content</strong> submitted to a guestbook: optional guest name, note text,
@@ -82,8 +87,8 @@ export function PrivacyPage() {
           <h2>6. Retention and deletion</h2>
           <p>
             Event and Guest Content remain available while the guestbook exists, subject to host
-            moderation and Service availability. When a host hides a toast, we mark it hidden and, when
-            possible, delete associated photos from storage. Browser keepsafe and slideshow settings
+            moderation and Service availability. When a host hides Guest Content, we mark it hidden and,
+            when possible, delete associated photos from storage. Browser keepsafe and slideshow settings
             remain until you clear them. We may retain limited technical logs for security and
             operations for a reasonable period.
           </p>

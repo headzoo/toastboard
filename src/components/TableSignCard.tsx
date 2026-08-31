@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { getEventCopy, type EventType } from "../lib/eventTypes.ts";
 import { renderTableSignPdf, renderTableSignPng, type TableSignInput } from "../lib/tableSign.ts";
 import type { SignThemeId } from "../lib/signThemes.ts";
 import { DEFAULT_THEME } from "../lib/types.ts";
@@ -7,6 +8,7 @@ import { Button, StatusNote } from "./ui.tsx";
 
 type TableSignCardProps = {
   slug: string;
+  eventType: EventType;
   coupleNames: string;
   themeColor?: string | null;
   themeId?: SignThemeId | string | null;
@@ -16,6 +18,7 @@ type TableSignCardProps = {
 
 export function TableSignCard({
   slug,
+  eventType,
   coupleNames,
   themeColor,
   themeId,
@@ -27,6 +30,7 @@ export function TableSignCard({
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const guestLink = useMemo(() => guestUrl(slug), [slug]);
+  const signCopy = getEventCopy(eventType);
   const input = useMemo<TableSignInput>(
     () => ({
       coupleNames,
@@ -35,8 +39,21 @@ export function TableSignCard({
       themeId,
       eventDateLabel,
       welcomeMessage,
+      signKicker: signCopy.signKicker,
+      signScanInstruction: signCopy.signScanInstruction,
+      signTagline: signCopy.signTagline,
     }),
-    [coupleNames, guestLink, themeColor, themeId, eventDateLabel, welcomeMessage],
+    [
+      coupleNames,
+      guestLink,
+      themeColor,
+      themeId,
+      eventDateLabel,
+      welcomeMessage,
+      signCopy.signKicker,
+      signCopy.signScanInstruction,
+      signCopy.signTagline,
+    ],
   );
 
   useEffect(() => {

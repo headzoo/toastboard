@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { useSlideshowDeck } from "../hooks/useSlideshowDeck.ts";
+import { getEventCopy } from "../lib/eventTypes.ts";
 import { getSignTheme } from "../lib/signThemes.ts";
 import { renderTableSignPng } from "../lib/tableSign.ts";
 import type { MotionStyle } from "../lib/slideshow.ts";
@@ -51,6 +52,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
   const effectiveSignTheme = deck.preferences.signTheme ?? event.signTheme;
   const palette = getSignTheme(effectiveSignTheme);
   const accent = event.themeColor ?? "#C45C67";
+  const copy = getEventCopy(event.eventType);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [expandState, setExpandState] = useState<{ target: ExpandTarget; cycleKey: string } | null>(null);
   const [qr, setQr] = useState<string | null>(null);
@@ -138,13 +140,16 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
       themeId: effectiveSignTheme,
       eventDateLabel: event.eventDate ? formatEventDate(event.eventDate) : null,
       welcomeMessage: event.welcomeMessage,
+      signKicker: copy.signKicker,
+      signScanInstruction: copy.signScanInstruction,
+      signTagline: copy.signTagline,
     }, true).then((next) => {
       if (!cancelled) setPoster(next);
     }).catch(() => {
       if (!cancelled) setPoster(null);
     });
     return () => { cancelled = true; };
-  }, [accent, effectiveSignTheme, event.coupleNames, event.eventDate, event.welcomeMessage, slug]);
+  }, [accent, copy.signKicker, copy.signScanInstruction, copy.signTagline, effectiveSignTheme, event.coupleNames, event.eventDate, event.welcomeMessage, slug]);
 
   useEffect(() => {
     const navigatorWithWakeLock = navigator as NavigatorWithWakeLock;
@@ -326,7 +331,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
           onClick={() => setQrEnlarged((current) => !current)}
         >
           <img src={qr} alt="" />
-          <span>Scan to leave a toast</span>
+          <span>{copy.slideshowQrPrompt}</span>
         </button>
       ) : null}
 

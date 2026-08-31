@@ -12,9 +12,11 @@ import {
 } from "../lib/signThemes.ts";
 import { btnClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { formatEventDate } from "../lib/theme.ts";
-import { DEFAULT_THEME } from "../lib/types.ts";
+import { formatKeepsafeLede, getEventCopy } from "../lib/eventTypes.ts";
 import { copyText, downloadDataUrl, guestUrl, manageUrl, wallUrl } from "../lib/urls.ts";
+import { DEFAULT_THEME } from "../lib/types.ts";
 import type { HostKeepsafe } from "../lib/types.ts";
+
 import { Button, StatusNote } from "./ui.tsx";
 
 export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
@@ -31,6 +33,8 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
   );
   const guestLink = useMemo(() => guestUrl(keepsafe.slug), [keepsafe.slug]);
   const accent = keepsafe.themeColor || DEFAULT_THEME;
+  const eventCopy = getEventCopy(keepsafe.eventType);
+  const createAnotherHref = `/create?new=true&type=${keepsafe.eventType}`;
 
   async function selectSignTheme(id: SignThemeId) {
     if (themeBusy || id === signTheme) return;
@@ -84,7 +88,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       <h1 className="mt-2.5 mb-1">Save your host link</h1>
 
       <p className={ledeClass}>
-        {keepsafe.coupleNames}’s guestbook is live. Print the table sign for your venue. Keep the host link somewhere only you can find.
+        {formatKeepsafeLede(eventCopy, keepsafe.coupleNames)}
       </p>
 
 
@@ -106,7 +110,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
         <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Host backup</span>
         <p className="text-[0.92rem] leading-snug text-ink-soft">
-          A private printable card with your guest QR code, host link, and guest page. Save it somewhere only you can find — like a wedding folder or password manager — so you can recover access if you lose this page.
+          {eventCopy.keepsafeBackupFolderHint}
         </p>
         <Button variant="ghost" onClick={() => void downloadKeepsafe()}>
           Download host backup
@@ -123,6 +127,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
 
       <TableSignCard
         slug={keepsafe.slug}
+        eventType={keepsafe.eventType}
         coupleNames={keepsafe.coupleNames}
         themeColor={keepsafe.themeColor}
         themeId={signTheme || DEFAULT_SIGN_THEME}
@@ -142,7 +147,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       </div>
 
       <div className="mt-8 flex justify-center">
-        <Link className={btnClass("primary")} to="/create?new=true">
+        <Link className={btnClass("primary")} to={createAnotherHref}>
           Create another guestbook
         </Link>
       </div>

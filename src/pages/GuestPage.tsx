@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { MAX_PHOTOS, submitMessage } from "../lib/api.ts";
+import { getEventCopy } from "../lib/eventTypes.ts";
 import { formatEventDate } from "../lib/theme.ts";
 
 type PreviewItem = {
@@ -59,7 +60,8 @@ export function GuestPage() {
       });
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn’t send that toast.");
+      const fallback = event ? getEventCopy(event.eventType).submitErrorFallback : "Couldn’t send that message.";
+      setError(err instanceof Error ? err.message : fallback);
     } finally {
       setBusy(false);
     }
@@ -84,12 +86,14 @@ export function GuestPage() {
     );
   }
 
+  const copy = getEventCopy(event.eventType);
+
   if (done) {
     return (
       <Shell>
         <section className="narrow thanks">
           <p className="kicker">Sent</p>
-          <h1>Thank you! Your message has been added 💌</h1>
+          <h1>{copy.thankYouHeadline}</h1>
           <p className="lede">It should appear on the wall in a moment.</p>
           <div className="btn-row">
             <Link className="btn btn-primary" to={`/e/${slug}/wall`}>
@@ -103,7 +107,7 @@ export function GuestPage() {
                 setPhotos([]);
               }}
             >
-              Leave another
+              {copy.leaveAnotherLabel}
             </Button>
           </div>
         </section>
@@ -114,10 +118,10 @@ export function GuestPage() {
   return (
     <Shell>
       <section className="narrow guest">
-        <p className="kicker">{formatEventDate(event.eventDate) || "A wedding guestbook"}</p>
+        <p className="kicker">{formatEventDate(event.eventDate) || copy.guestKickerFallback}</p>
         <h1>{event.coupleNames}</h1>
         <p className="lede">
-          {event.welcomeMessage || "Leave a toast — a memory, a wish, or a photo. No account needed."}
+          {event.welcomeMessage || copy.defaultWelcomeMessage}
         </p>
 
         <form className="stack" onSubmit={(e) => void onSubmit(e)}>
@@ -129,11 +133,11 @@ export function GuestPage() {
               onChange={(e) => setGuestName(e.target.value)}
             />
           </Field>
-          <Field label="Your toast">
+          <Field label={copy.messageFieldLabel}>
             <textarea
               maxLength={1000}
               rows={5}
-              placeholder="May your coffee always be hot and your inside jokes never make sense to anyone else."
+              placeholder={copy.messageFieldPlaceholder}
               value={text}
               onChange={(e) => setText(e.target.value)}
             />
@@ -178,7 +182,7 @@ export function GuestPage() {
           ) : null}
           {error ? <StatusNote tone="error">{error}</StatusNote> : null}
           <Button type="submit" disabled={busy}>
-            {busy ? "Sending…" : "Add to the guestbook"}
+            {busy ? copy.submitBusyLabel : copy.submitButtonLabel}
           </Button>
         </form>
       </section>

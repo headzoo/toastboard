@@ -34,6 +34,10 @@ service cloud.firestore {
         && (urls.size() < 10 || isValidPhotoUrl(urls[9]));
     }
 
+    function isValidEventType(value) {
+      return value in ['wedding', 'birthday', 'graduation', 'religious-milestone', 'other'];
+    }
+
     match /events/{slug} {
       allow get: if true;
       allow list: if false;
@@ -41,6 +45,7 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly([
           'coupleNames',
           'eventDate',
+          'eventType',
           'welcomeMessage',
           'themeColor',
           'createdAt',
@@ -59,6 +64,8 @@ service cloud.firestore {
           'midnight'
         ]
         && (!('eventDate' in request.resource.data) || request.resource.data.eventDate is timestamp)
+        && (!('eventType' in request.resource.data)
+          || isValidEventType(request.resource.data.eventType))
         && (!('welcomeMessage' in request.resource.data)
           || (request.resource.data.welcomeMessage is string
             && request.resource.data.welcomeMessage.size() <= 500))

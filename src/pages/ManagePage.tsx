@@ -7,6 +7,7 @@ import { WallFeed } from "../components/WallFeed.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
 import { updateEventSignTheme } from "../lib/api.ts";
+import { getEventCopy } from "../lib/eventTypes.ts";
 import { getSignTheme, type SignThemeId } from "../lib/signThemes.ts";
 import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { formatEventDate } from "../lib/theme.ts";
@@ -95,13 +96,19 @@ export function ManagePage() {
   }
 
   const accent = event.themeColor || DEFAULT_THEME;
+  const copy = getEventCopy(event.eventType);
+  const moderation = {
+    hideConfirmLabel: copy.hideConfirmLabel,
+    hideButtonLabel: copy.hideButtonLabel,
+    hideErrorFallback: copy.hideErrorFallback,
+  };
 
   return (
     <Shell>
       <section className="mb-8 max-w-[760px]">
         <p className={kickerClass}>Host tools — keep this URL private</p>
         <h1>{event.coupleNames}</h1>
-        <p className={ledeClass}>Hide a toast if you need to. Guests never see these buttons.</p>
+        <p className={ledeClass}>{copy.moderationIntro}</p>
         <div className={btnRowClass}>
           <Link className={btnClass("ghost")} to={`/e/${slug}/wall`}>
             Public wall
@@ -123,6 +130,7 @@ export function ManagePage() {
         {themeError ? <StatusNote tone="error">{themeError}</StatusNote> : null}
         <TableSignCard
           slug={slug}
+          eventType={event.eventType}
           coupleNames={event.coupleNames}
           themeColor={event.themeColor}
           themeId={signTheme}
@@ -136,7 +144,8 @@ export function ManagePage() {
         messages={messages}
         slug={slug}
         hostToken={token}
-        emptyLabel="No toasts yet. Share the guest QR and they’ll land here."
+        emptyLabel={copy.moderationEmptyLabel}
+        moderation={moderation}
       />
     </Shell>
   );
