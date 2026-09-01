@@ -19,7 +19,7 @@ export function HomePage() {
 
   return (
     <Shell>
-      <section className="max-w-[760px] pb-10 pt-[7vh]">
+      <section className="max-w-[760px] pb-10 pt-4">
         <p className={kickerClass}>Zero sign-up. Zero login. Zero email.</p>
         <h1>
           A guestbook that doesn’t
@@ -27,7 +27,7 @@ export function HomePage() {
           ask for an account.
         </h1>
         <p className={ledeClass}>
-          Toastboard is a live event guestbook for weddings, birthdays, graduations, religious
+          Wishing Wall is a live event guestbook for weddings, birthdays, graduations, religious
           milestones, and more. Guests scan a QR code, leave a note, photos, or one short video, and it appears on a
           wall. The host link is the login — no passwords, for anyone.
         </p>

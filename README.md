@@ -1,4 +1,4 @@
-# Toastboard
+# Wishing Wall
 
 A live guestbook for personal events with no sign-up, no login, and no email. Guests scan a QR code, leave a note, photos, or one short video, and it appears on a live wall. The host link is the credential.
 

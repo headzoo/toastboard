@@ -23,9 +23,9 @@ export function PrivacyPage() {
         <section className="mt-8 space-y-4">
           <h2>1. Overview</h2>
           <p>
-            This Privacy Policy explains how Toastboard (“we,” “us”) collects, uses, and shares
+            This Privacy Policy explains how Wishing Wall (“we,” “us”) collects, uses, and shares
             information when you use the personal event guestbook service at toastboard.web.app (the
-            “Service”). Toastboard does not require accounts, email addresses, or passwords. The host
+            “Service”). Wishing Wall does not require accounts, email addresses, or passwords. The host
             link is the credential for moderating a guestbook.
           </p>
 
@@ -118,7 +118,7 @@ export function PrivacyPage() {
           <h2>9. International processing</h2>
           <p>
             The Service is hosted on infrastructure that may process data in the United States or other
-            countries where our providers operate. By using Toastboard, you understand that information
+            countries where our providers operate. By using Wishing Wall, you understand that information
             may be transferred to and processed in those locations.
           </p>
 
@@ -144,7 +144,7 @@ export function PrivacyPage() {
 
           <h2>13. Contact</h2>
           <p>
-            Privacy questions may be directed to Toastboard through the site at toastboard.web.app.
+            Privacy questions may be directed to Wishing Wall through the site at toastboard.web.app.
           </p>
         </section>
       </article>

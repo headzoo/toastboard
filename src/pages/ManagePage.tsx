@@ -69,7 +69,7 @@ export function ManagePage() {
         <section className={narrowClass}>
           <h1>This page needs the host link</h1>
           <p>
-            Toastboard doesn’t have accounts. If you still have the original “save this link” page, that’s the
+            Wishing Wall doesn’t have accounts. If you still have the original “save this link” page, that’s the
             credential.
           </p>
         </section>

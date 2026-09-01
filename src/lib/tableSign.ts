@@ -170,7 +170,7 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
   drawToastMark(ctx, cx - P(52), height - P(56), P(8), accent);
   ctx.fillStyle = palette.ink;
   ctx.font = `500 ${P(11)}px "Fraunces", serif`;
-  ctx.fillText("Toastboard", cx + P(6), height - P(52));
+  ctx.fillText("Wishing Wall", cx + P(6), height - P(52));
 
   return canvas;
 }

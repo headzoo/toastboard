@@ -87,7 +87,7 @@ const WEDDING_MARKETING: MarketingContent = {
     {
       title: "Create once",
       description:
-        "Enter the couple’s names. Toastboard gives you a guest URL, a host link, and a QR code.",
+        "Enter the couple’s names. Wishing Wall gives you a guest URL, a host link, and a QR code.",
     },
     {
       title: "Share the QR",
@@ -111,7 +111,7 @@ const WEDDING_MARKETING: MarketingContent = {
         layout: "full",
         image: {
           src: "/branding/family-table-wall.jpg",
-          alt: "The bride, groom, and family sitting at the head table, with a TV to the left showing the Toastboard live guestbook, a dance floor in front, and guests at tables beyond",
+          alt: "The bride, groom, and family sitting at the head table, with a TV to the left showing the Wishing Wall live guestbook, a dance floor in front, and guests at tables beyond",
           width: 1920,
           height: 1080,
         },
@@ -121,7 +121,7 @@ const WEDDING_MARKETING: MarketingContent = {
         layout: "grid-pair",
         image: {
           src: "/branding/table-sign.jpg",
-          alt: "Printed cream Toastboard table sign with a rose border, Maya and James, and a large QR code standing on a guest table among candles and flowers",
+          alt: "Printed cream Wishing Wall table sign with a rose border, Maya and James, and a large QR code standing on a guest table among candles and flowers",
           width: 900,
           height: 1200,
           aspectClass: "aspect-[3/4]",
@@ -132,7 +132,7 @@ const WEDDING_MARKETING: MarketingContent = {
         layout: "grid-pair",
         image: {
           src: "/branding/guest-scan.jpg",
-          alt: "A wedding guest holds a phone over a Toastboard table sign, scanning the QR code while the reception continues behind them",
+          alt: "A wedding guest holds a phone over a Wishing Wall table sign, scanning the QR code while the reception continues behind them",
           width: 1200,
           height: 900,
           aspectClass: "aspect-[4/3] min-[700px]:aspect-[3/4]",
@@ -143,7 +143,7 @@ const WEDDING_MARKETING: MarketingContent = {
         layout: "full",
         image: {
           src: "/branding/reception-selfie.jpg",
-          alt: "Guests take a selfie at a wedding reception with a Toastboard table sign and QR code visible on a nearby table",
+          alt: "Guests take a selfie at a wedding reception with a Wishing Wall table sign and QR code visible on a nearby table",
           width: 1920,
           height: 1080,
         },
@@ -167,7 +167,7 @@ const BIRTHDAY_MARKETING: MarketingContent = {
     {
       title: "Create once",
       description:
-        "Add the celebrant’s name and party details. Toastboard gives you a guest URL, a host link, and a QR code.",
+        "Add the celebrant’s name and party details. Wishing Wall gives you a guest URL, a host link, and a QR code.",
     },
     {
       title: "Share the QR",
@@ -216,7 +216,7 @@ const GRADUATION_MARKETING: MarketingContent = {
     {
       title: "Create once",
       description:
-        "Add the graduate’s name and celebration date. Toastboard gives you a guest URL, a host link, and a QR code.",
+        "Add the graduate’s name and celebration date. Wishing Wall gives you a guest URL, a host link, and a QR code.",
     },
     {
       title: "Share the QR",
@@ -265,7 +265,7 @@ const RELIGIOUS_MILESTONE_MARKETING: MarketingContent = {
     {
       title: "Create once",
       description:
-        "Add the honoree’s name and celebration date. Toastboard gives you a guest URL, a host link, and a QR code.",
+        "Add the honoree’s name and celebration date. Wishing Wall gives you a guest URL, a host link, and a QR code.",
     },
     {
       title: "Share the QR",
