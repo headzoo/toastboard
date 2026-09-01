@@ -6,7 +6,6 @@ import {
   query,
   serverTimestamp,
   Timestamp,
-  updateDoc,
   where,
   writeBatch,
   type DocumentData,
@@ -24,7 +23,7 @@ import {
   type EventType,
 } from "./eventTypes.ts";
 import { DEFAULT_SIGN_THEME, getSignTheme, type SignThemeId } from "./signThemes.ts";
-import type { EventRecord, MessageRecord } from "./types.ts";
+import type { EventRecord, MessageRecord, VideoStatus } from "./types.ts";
 
 export const DEMO_SLUG = "maya-james-k8n2w4p9qx";
 
@@ -32,6 +31,17 @@ const MAX_NAME = 80;
 const MAX_TEXT = 1000;
 const MAX_WELCOME = 500;
 export const MAX_PHOTOS = 10;
+export const MAX_VIDEO_BYTES = 10 * 1024 * 1024;
+
+const SUPPORTED_VIDEO_FORMATS = [
+  { extension: "mp4", contentType: "video/mp4" },
+  { extension: "mov", contentType: "video/quicktime" },
+  { extension: "webm", contentType: "video/webm" },
+  { extension: "m4v", contentType: "video/x-m4v" },
+  { extension: "3gp", contentType: "video/3gpp" },
+] as const;
+
+export type SupportedVideoFormat = (typeof SUPPORTED_VIDEO_FORMATS)[number];
 
 type CreatedEvent = {
   slug: string;
@@ -126,6 +136,7 @@ export async function submitMessage(input: {
   guestName: string;
   text: string;
   photos: File[];
+  video: File | null;
 }): Promise<void> {
   const guestName = sanitizeText(input.guestName, MAX_NAME);
   const text = sanitizeText(input.text, MAX_TEXT);
@@ -133,8 +144,12 @@ export async function submitMessage(input: {
     throw new Error(`You can add up to ${MAX_PHOTOS} photos.`);
   }
   const photos = input.photos;
-  if (!text && photos.length === 0) {
-    throw new Error("Add a note, a photo, or both.");
+  if (photos.length > 0 && input.video) {
+    throw new Error("Choose photos or one video, not both.");
+  }
+  const videoFormat = input.video ? validateGuestVideo(input.video) : null;
+  if (!text && photos.length === 0 && !input.video) {
+    throw new Error("Add a note, photo, or video.");
   }
 
   const messageId = crypto.randomUUID();
@@ -148,6 +163,10 @@ export async function submitMessage(input: {
   if (photos.length > 0) {
     payload.photoUrls = await storeGuestPhotos(input.slug, messageId, photos);
   }
+  if (input.video && videoFormat) {
+    await storeGuestVideo(input.slug, messageId, input.video, videoFormat);
+    payload.videoStatus = "processing";
+  }
 
   try {
     await writeBatch(db)
@@ -159,12 +178,12 @@ export async function submitMessage(input: {
 }
 
 export async function hideMessage(slug: string, messageId: string, hostToken: string): Promise<void> {
-  const hostTokenHash = await sha256Hex(hostToken);
   try {
-    await updateDoc(doc(db, "events", slug, "messages", messageId), {
-      isHidden: true,
-      hostTokenHash,
-    });
+    const deleteMessage = httpsCallable<
+      { slug: string; messageId: string; hostToken: string },
+      { ok: true }
+    >(functions, "deleteMessage");
+    await deleteMessage({ slug, messageId, hostToken });
   } catch (error) {
     throw toFriendlyError(error, "That host link isn’t valid for this guestbook.");
   }
@@ -206,6 +225,8 @@ function mapMessage(id: string, data: DocumentData): MessageRecord {
     guestName: typeof data.guestName === "string" ? data.guestName : null,
     text: typeof data.text === "string" ? data.text : null,
     photoUrls: normalizePhotoUrls(data),
+    videoUrl: typeof data.videoUrl === "string" ? data.videoUrl : null,
+    videoStatus: normalizeVideoStatus(data.videoStatus),
     createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
   };
 }
@@ -216,6 +237,29 @@ function normalizePhotoUrls(data: DocumentData): string[] {
   }
   if (typeof data.photoUrl === "string") return [data.photoUrl];
   return [];
+}
+
+export function validateGuestVideo(video: File): SupportedVideoFormat {
+  if (video.size === 0) {
+    throw new Error("Choose a video file with content.");
+  }
+  if (video.size >= MAX_VIDEO_BYTES) {
+    throw new Error("Videos must be smaller than 10 MiB.");
+  }
+
+  const extension = video.name.split(".").pop()?.toLowerCase() ?? "";
+  const contentType = video.type.toLowerCase();
+  const format = SUPPORTED_VIDEO_FORMATS.find(
+    (candidate) => candidate.extension === extension && candidate.contentType === contentType,
+  );
+  if (!format) {
+    throw new Error("Use an MP4, MOV, WebM, M4V, or 3GP video file.");
+  }
+  return format;
+}
+
+function normalizeVideoStatus(value: unknown): VideoStatus | null {
+  return value === "processing" || value === "ready" || value === "failed" ? value : null;
 }
 
 async function storeGuestPhotos(slug: string, messageId: string, photos: File[]): Promise<string[]> {
@@ -251,6 +295,20 @@ async function storeGuestPhoto(
   }
 }
 
+async function storeGuestVideo(
+  slug: string,
+  messageId: string,
+  video: File,
+  format: SupportedVideoFormat,
+): Promise<void> {
+  try {
+    const videoRef = ref(storage, `events/${slug}/messages/${messageId}-raw.${format.extension}`);
+    await uploadBytes(videoRef, video, { contentType: format.contentType });
+  } catch (error) {
+    throw toFriendlyError(error, "Video upload isn’t available yet. Try again shortly.");
+  }
+}
+
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -274,7 +332,7 @@ function toFriendlyError(error: unknown, fallback: string): Error {
     return new Error(fallback);
   }
   if (error instanceof Error && /storage\/unauthorized|storage\/retry-limit/i.test(error.message)) {
-    return new Error("Photo upload isn’t available yet. Send a note for now, or try again shortly.");
+    return new Error("Media upload isn’t available yet. Send a note for now, or try again shortly.");
   }
   return new Error(fallback);
 }

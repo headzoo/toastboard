@@ -18,7 +18,7 @@ type Props = {
   onExit: () => void;
 };
 
-type ExpandTarget = "quote" | "photo";
+type ExpandTarget = "quote" | "photo" | "video";
 
 type WakeLockSentinel = {
   release: () => Promise<void>;
@@ -61,6 +61,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
   const gearRef = useRef<HTMLButtonElement>(null);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [videoFailedCycleKey, setVideoFailedCycleKey] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
   const expanded = expandState?.cycleKey === deck.slot.cycleKey ? expandState.target : null;
   const qrIsEnlarged = deck.slot.kind !== "empty" && Boolean(qr) && qrEnlarged;
@@ -235,12 +236,28 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
     });
   };
 
+  useEffect(() => {
+    setVideoFailedCycleKey(null);
+  }, [deck.slot.cycleKey]);
+
+  const handleVideoError = useCallback(() => {
+    setVideoFailedCycleKey((current) => {
+      if (current === deck.slot.cycleKey) return current;
+      return deck.slot.cycleKey;
+    });
+    setExpandState((current) => (
+      current?.cycleKey === deck.slot.cycleKey && current.target === "video" ? null : current
+    ));
+  }, [deck.slot.cycleKey]);
+
   const rotation = useMemo(
     () => ((stableNumber(deck.slot.cycleKey) % 401) / 100) - 2,
     [deck.slot.cycleKey],
   );
   const animation = transitionFor(deck.slot.cycleKey, deck.preferences.motion, Boolean(reducedMotion));
-  const hasPhoto = deck.slot.kind === "content" && Boolean(deck.slot.photoUrl);
+  const hasPhoto = deck.slot.kind === "content" && deck.slot.media.kind === "photo";
+  const hasVideo = deck.slot.kind === "content" && deck.slot.media.kind === "video";
+  const videoFailed = hasVideo && videoFailedCycleKey === deck.slot.cycleKey;
   const hasText = deck.slot.kind === "content" && Boolean(deck.slot.text);
   const guestLabel = deck.slot.kind === "content" ? (deck.slot.guestName || "A guest") : "A guest";
   const expandMotion = reducedMotion
@@ -273,7 +290,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
           ) : (
             <motion.article
               key={deck.slot.cycleKey}
-              className={`slideshow-slide${hasPhoto ? " slideshow-slide-has-photo" : ""}`}
+              className={`slideshow-slide${hasPhoto || hasVideo ? " slideshow-slide-has-media" : ""}`}
               {...animation}
               transition={{ duration: reducedMotion ? 0.18 : 0.55 }}
               drag={swipeEnabled && !reducedMotion ? "x" : false}
@@ -281,7 +298,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
               dragElastic={0.2}
               onDragEnd={onSwipeDragEnd}
             >
-              {deck.slot.photoUrl ? (
+              {deck.slot.media.kind === "photo" ? (
                 <button
                   className="slideshow-photo-button"
                   type="button"
@@ -292,7 +309,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
                 >
                   <div className="slideshow-photo-frame">
                     <img
-                      src={deck.slot.photoUrl}
+                      src={deck.slot.media.url}
                       className={deck.slot.dimensions && deck.slot.dimensions.height > deck.slot.dimensions.width
                         ? "slideshow-photo slideshow-photo-portrait"
                         : "slideshow-photo"}
@@ -300,6 +317,38 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
                     />
                   </div>
                 </button>
+              ) : null}
+              {deck.slot.media.kind === "video" ? (
+                <div className="slideshow-video-frame">
+                  {videoFailed ? (
+                    <div className="slideshow-video-unavailable" role="status">
+                      <p className="slideshow-video-unavailable-text">Video unavailable</p>
+                    </div>
+                  ) : (
+                    <>
+                      <video
+                        key={deck.slot.cycleKey}
+                        className="slideshow-video"
+                        src={deck.slot.media.url}
+                        autoPlay
+                        muted
+                        playsInline
+                        preload="metadata"
+                        aria-label={`Video from ${guestLabel}`}
+                        onError={handleVideoError}
+                      />
+                      <button
+                        className="slideshow-video-expand"
+                        type="button"
+                        onClick={() => toggleExpand("video")}
+                        aria-expanded={expanded === "video"}
+                        aria-label={expanded === "video" ? "Close video" : "Expand video"}
+                      >
+                        Expand
+                      </button>
+                    </>
+                  )}
+                </div>
               ) : null}
               {hasText ? (
                 <button
@@ -373,7 +422,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
               navigateFromSwipe(dx < 0 ? "next" : "prev");
             }}
             onPointerCancel={() => { swipeStartRef.current = null; }}
-            onMouseDown={(event) => {
+            onClick={(event) => {
               if (event.target === event.currentTarget) setExpandState(null);
             }}
           >
@@ -390,7 +439,7 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
                 <p className="slideshow-attribution">— {guestLabel}</p>
               </motion.button>
             ) : null}
-            {expanded === "photo" && deck.slot.photoUrl ? (
+            {expanded === "photo" && deck.slot.media.kind === "photo" ? (
               <motion.button
                 type="button"
                 className="slideshow-expand-photo"
@@ -400,9 +449,34 @@ export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
                 transition={{ duration: reducedMotion ? 0.12 : 0.28 }}
               >
                 <div className="slideshow-expand-photo-frame">
-                  <img className="slideshow-expand-photo-image" src={deck.slot.photoUrl} alt="" />
+                  <img className="slideshow-expand-photo-image" src={deck.slot.media.url} alt="" />
                 </div>
               </motion.button>
+            ) : null}
+            {expanded === "video" && deck.slot.media.kind === "video" && !videoFailed ? (
+              <motion.div
+                className="slideshow-expand-video"
+                role="dialog"
+                aria-label={`Expanded video from ${guestLabel}`}
+                {...expandMotion}
+                transition={{ duration: reducedMotion ? 0.12 : 0.28 }}
+              >
+                <video
+                  key={deck.slot.cycleKey}
+                  className="slideshow-expand-video-player"
+                  src={deck.slot.media.url}
+                  autoPlay
+                  muted
+                  controls
+                  playsInline
+                  preload="metadata"
+                  aria-label={`Video from ${guestLabel}`}
+                  onError={handleVideoError}
+                />
+                <button type="button" className="slideshow-expand-video-close" onClick={() => setExpandState(null)}>
+                  Close video
+                </button>
+              </motion.div>
             ) : null}
           </motion.div>
         ) : null}

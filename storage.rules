@@ -5,9 +5,29 @@ service firebase.storage {
       allow get: if true;
       allow list: if false;
       allow create: if slug.matches('^[a-z0-9-]{10,80}$')
-        && fileName.matches('^[A-Za-z0-9._-]+\\.(jpg|jpeg|png|webp)$')
-        && request.resource.size < 2 * 1024 * 1024
-        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+        && (
+          (
+            fileName.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}-[0-9]+\\.jpg$')
+            && request.resource.size < 2 * 1024 * 1024
+            && request.resource.contentType == 'image/jpeg'
+          )
+          || (
+            request.resource.size > 0
+            && request.resource.size < 10 * 1024 * 1024
+            && (
+              (fileName.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}-raw\\.mp4$')
+                && request.resource.contentType == 'video/mp4')
+              || (fileName.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}-raw\\.mov$')
+                && request.resource.contentType == 'video/quicktime')
+              || (fileName.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}-raw\\.webm$')
+                && request.resource.contentType == 'video/webm')
+              || (fileName.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}-raw\\.m4v$')
+                && request.resource.contentType == 'video/x-m4v')
+              || (fileName.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}-raw\\.3gp$')
+                && request.resource.contentType == 'video/3gpp')
+            )
+          )
+        );
       allow update, delete: if false;
     }
   }

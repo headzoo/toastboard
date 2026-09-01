@@ -28,7 +28,7 @@ export function HomePage() {
         </h1>
         <p className={ledeClass}>
           Toastboard is a live event guestbook for weddings, birthdays, graduations, religious
-          milestones, and more. Guests scan a QR code, leave a note or photo, and it appears on a
+          milestones, and more. Guests scan a QR code, leave a note, photos, or one short video, and it appears on a
           wall. The host link is the login — no passwords, for anyone.
         </p>
         <div className={btnRowClass}>

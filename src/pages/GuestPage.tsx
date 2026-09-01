@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
-import { MAX_PHOTOS, submitMessage } from "../lib/api.ts";
+import { MAX_PHOTOS, submitMessage, validateGuestVideo } from "../lib/api.ts";
 import { getEventCopy } from "../lib/eventTypes.ts";
 import { formatEventDate } from "../lib/theme.ts";
 
@@ -10,6 +10,15 @@ type PreviewItem = {
   file: File;
   url: string;
 };
+
+const VIDEO_ACCEPT =
+  "video/mp4,video/quicktime,video/webm,video/x-m4v,video/3gpp";
+
+function formatMediaSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KiB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
+}
 
 export function GuestPage() {
   const { slug } = useParams();
@@ -19,6 +28,8 @@ export function GuestPage() {
   const [text, setText] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
   const [previews, setPreviews] = useState<PreviewItem[]>([]);
+  const [video, setVideo] = useState<File | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -30,6 +41,16 @@ export function GuestPage() {
       for (const item of next) URL.revokeObjectURL(item.url);
     };
   }, [photos]);
+
+  useEffect(() => {
+    if (!video) {
+      setVideoPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(video);
+    setVideoPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [video]);
 
   function onPhotosChange(fileList: FileList | null) {
     if (!fileList?.length) return;
@@ -46,6 +67,22 @@ export function GuestPage() {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
   }
 
+  function onVideoChange(fileList: FileList | null) {
+    if (!fileList?.length) return;
+    const file = fileList[0]!;
+    try {
+      validateGuestVideo(file);
+      setVideo(file);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn’t use that video.");
+    }
+  }
+
+  function removeVideo() {
+    setVideo(null);
+  }
+
   async function onSubmit(formEvent: FormEvent) {
     formEvent.preventDefault();
     if (!slug) return;
@@ -57,7 +94,10 @@ export function GuestPage() {
         guestName,
         text,
         photos,
+        video,
       });
+      setPhotos([]);
+      setVideo(null);
       setDone(true);
     } catch (err) {
       const fallback = event ? getEventCopy(event.eventType).submitErrorFallback : "Couldn’t send that message.";
@@ -87,6 +127,8 @@ export function GuestPage() {
   }
 
   const copy = getEventCopy(event.eventType);
+  const hasPhotos = photos.length > 0;
+  const hasVideo = video !== null;
 
   if (done) {
     return (
@@ -105,6 +147,7 @@ export function GuestPage() {
                 setDone(false);
                 setText("");
                 setPhotos([]);
+                setVideo(null);
               }}
             >
               {copy.leaveAnotherLabel}
@@ -142,16 +185,21 @@ export function GuestPage() {
               onChange={(e) => setText(e.target.value)}
             />
           </Field>
+          <p className="field-hint">Choose photos or one short video — not both.</p>
           <Field
             label="Photos"
-            hint={`Optional — up to ${MAX_PHOTOS}. We’ll shrink them before upload so venue wifi survives.`}
+            hint={
+              hasVideo
+                ? "Remove your video to add photos."
+                : `Optional — up to ${MAX_PHOTOS}. We’ll shrink them before upload so venue wifi survives.`
+            }
           >
             <input
               type="file"
               accept="image/*"
               capture="environment"
               multiple
-              disabled={photos.length >= MAX_PHOTOS}
+              disabled={hasVideo || photos.length >= MAX_PHOTOS}
               onChange={(e) => {
                 onPhotosChange(e.target.files);
                 e.target.value = "";
@@ -179,6 +227,46 @@ export function GuestPage() {
             <p className="field-hint">
               {photos.length} of {MAX_PHOTOS} photos
             </p>
+          ) : null}
+          <Field
+            label="Video"
+            hint={
+              hasPhotos
+                ? "Remove your photos to add a video."
+                : "Optional — one short video under 10 MiB (MP4, MOV, WebM, M4V, or 3GP)."
+            }
+          >
+            <input
+              type="file"
+              accept={VIDEO_ACCEPT}
+              disabled={hasPhotos || hasVideo}
+              onChange={(e) => {
+                onVideoChange(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </Field>
+          {video && videoPreviewUrl ? (
+            <div className="video-preview-wrap">
+              <video
+                className="video-preview"
+                src={videoPreviewUrl}
+                controls
+                playsInline
+                preload="metadata"
+              />
+              <button
+                className="photo-preview-remove"
+                type="button"
+                aria-label="Remove video"
+                onClick={removeVideo}
+              >
+                ×
+              </button>
+              <p className="video-preview-meta">
+                {video.name} · {formatMediaSize(video.size)}
+              </p>
+            </div>
           ) : null}
           {error ? <StatusNote tone="error">{error}</StatusNote> : null}
           <Button type="submit" disabled={busy}>

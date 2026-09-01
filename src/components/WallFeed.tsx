@@ -1,13 +1,93 @@
+import { useState } from "react";
 import { hideMessage } from "../lib/api.ts";
 import { formatEventDate } from "../lib/theme.ts";
 import type { MessageRecord } from "../lib/types.ts";
 import { PhotoGallery } from "./PhotoGallery.tsx";
+import { VideoLightbox } from "./VideoLightbox.tsx";
+import { VideoPlayer } from "./VideoPlayer.tsx";
 
 export type ModerationCopy = {
   hideConfirmLabel: string;
   hideButtonLabel: string;
   hideErrorFallback: string;
 };
+
+type VideoStatusPlaceholderProps = {
+  status: "processing" | "failed";
+};
+
+function VideoStatusPlaceholder({ status }: VideoStatusPlaceholderProps) {
+  const processing = status === "processing";
+  return (
+    <div
+      className={`toast-video-placeholder${processing ? " toast-video-placeholder-processing" : " toast-video-placeholder-failed"}`}
+      role="status"
+      aria-live={processing ? "polite" : undefined}
+    >
+      <p className="toast-video-placeholder-text">
+        {processing ? "Video processing" : "Video couldn't be processed"}
+      </p>
+      {processing ? (
+        <span className="toast-video-placeholder-spinner" aria-hidden="true" />
+      ) : null}
+    </div>
+  );
+}
+
+type VideoCardProps = {
+  url: string;
+};
+
+function VideoCard({ url }: VideoCardProps) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  if (!url) return null;
+
+  return (
+    <>
+      <div className="toast-video-frame">
+        <VideoPlayer src={url} className="toast-video" />
+        <button
+          className="toast-video-expand"
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          aria-label="Expand video"
+        >
+          Expand
+        </button>
+      </div>
+      {lightboxOpen ? (
+        <VideoLightbox url={url} onClose={() => setLightboxOpen(false)} />
+      ) : null}
+    </>
+  );
+}
+
+function MessageMedia({ message }: { message: MessageRecord }) {
+  if (message.photoUrls.length > 0) {
+    return <PhotoGallery urls={message.photoUrls} />;
+  }
+
+  const { videoStatus, videoUrl } = message;
+
+  if (videoStatus === "processing") {
+    return <VideoStatusPlaceholder status="processing" />;
+  }
+
+  if (videoStatus === "failed") {
+    return <VideoStatusPlaceholder status="failed" />;
+  }
+
+  if (videoStatus === "ready" && videoUrl) {
+    return <VideoCard url={videoUrl} />;
+  }
+
+  if (videoStatus === "ready" || videoStatus) {
+    return <VideoStatusPlaceholder status="failed" />;
+  }
+
+  return null;
+}
 
 type MessageCardProps = {
   message: MessageRecord;
@@ -32,7 +112,7 @@ export function MessageCard({ message, hostToken, slug, moderation, onHidden }: 
 
   return (
     <article className="toast-card">
-      <PhotoGallery urls={message.photoUrls} />
+      <MessageMedia message={message} />
       <div className="toast-body">
         {message.text ? <p className="toast-text">{message.text}</p> : null}
         <div className="toast-meta">

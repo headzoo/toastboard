@@ -6,9 +6,11 @@ import {
   shuffleEntries,
   SlideImageCache,
   isCurrentDeckCandidate,
+  mediaTargets,
   toDeckEntry,
   type ContentSlideSlot,
   type DeckEntry,
+  type SlideMediaTarget,
   type SlideSlot,
   type SlideshowPreferences,
 } from "../lib/slideshow.ts";
@@ -22,18 +24,17 @@ function emptySlot(cycle: number): SlideSlot {
 
 function contentSlot(
   entry: DeckEntry,
-  photoIndex: number | null,
+  media: SlideMediaTarget,
   cycle: number,
   dimensions?: { width: number; height: number },
 ): ContentSlideSlot {
   return {
     kind: "content",
-    cycleKey: `${entry.id}:${photoIndex ?? "text"}:${cycle}`,
+    cycleKey: `${entry.id}:${media.kind === "photo" ? media.index : media.kind}:${cycle}`,
     messageId: entry.id,
-    photoIndex,
     text: entry.text,
     guestName: entry.guestName,
-    photoUrl: photoIndex === null ? null : entry.photoUrls[photoIndex] ?? null,
+    media,
     ...(dimensions ? { dimensions } : {}),
   };
 }
@@ -94,11 +95,11 @@ export function useSlideshowDeck(
 
   const preloadNearFuture = useCallback(() => {
     const current = currentRef.current;
-    if (current.kind === "content" && current.photoUrl) cacheRef.current.preload(current.photoUrl);
+    if (current.kind === "content" && current.media.kind === "photo") cacheRef.current.preload(current.media.url);
     if (current.kind === "content") {
       const entry = liveRef.current.get(current.messageId);
-      if (entry && current.photoIndex !== null) {
-        entry.photoUrls.slice(current.photoIndex + 1).forEach((url) => cacheRef.current.preload(url));
+      if (entry && current.media.kind === "photo") {
+        entry.photoUrls.slice(current.media.index + 1).forEach((url) => cacheRef.current.preload(url));
       }
     }
     queueRef.current.slice(0, LOOKAHEAD_ENTRIES).forEach((entry) => {
@@ -125,32 +126,30 @@ export function useSlideshowDeck(
   );
 
   const promote = useCallback(
-    async (entry: DeckEntry, photoIndex: number | null): Promise<boolean> => {
-      if (photoIndex === null) {
+    async (entry: DeckEntry, media: SlideMediaTarget): Promise<boolean> => {
+      if (media.kind !== "photo") {
         const liveEntry = liveRef.current.get(entry.id);
-        if (!isCurrentDeckCandidate(liveEntry, entry, null, undefined)) return false;
+        if (!isCurrentDeckCandidate(liveEntry, entry, media)) return false;
         cycleRef.current += 1;
-        updateSlot(contentSlot(liveEntry, null, cycleRef.current));
+        updateSlot(contentSlot(liveEntry, media, cycleRef.current));
         queueRef.current = queueRef.current.filter((queued) => queued.id !== liveEntry.id);
         setIsLoading(false);
         return true;
       }
-      const url = entry.photoUrls[photoIndex];
-      if (!url) return false;
       setIsLoading(true);
-      const dimensions = await cacheRef.current.preload(url);
+      const dimensions = await cacheRef.current.preload(media.url);
       if (unmountedRef.current) return false;
       if (!dimensions) {
         setIsLoading(false);
         return false;
       }
       const liveEntry = liveRef.current.get(entry.id);
-      if (!isCurrentDeckCandidate(liveEntry, entry, photoIndex, url)) {
+      if (!isCurrentDeckCandidate(liveEntry, entry, media)) {
         setIsLoading(false);
         return false;
       }
       cycleRef.current += 1;
-      updateSlot(contentSlot(liveEntry, photoIndex, cycleRef.current, dimensions));
+      updateSlot(contentSlot(liveEntry, media, cycleRef.current, dimensions));
       queueRef.current = queueRef.current.filter((queued) => queued.id !== liveEntry.id);
       setIsLoading(false);
       return true;
@@ -162,14 +161,15 @@ export function useSlideshowDeck(
     async (prior: SlideSlot, skipRemainingPhotos: boolean): Promise<boolean> => {
       const priorId = prior.kind === "content" ? prior.messageId : undefined;
       const liveCount = liveRef.current.size;
-      const visitLimit = Math.max(1, [...liveRef.current.values()].reduce((total, entry) => total + Math.max(1, entry.photoUrls.length), 0) + 1);
+      const visitLimit = Math.max(1, [...liveRef.current.values()].reduce((total, entry) => total + mediaTargets(entry).length, 0) + 1);
       let visits = 0;
-      let next: { entry: DeckEntry; photoIndex: number | null } | null = null;
+      let next: { entry: DeckEntry; media: SlideMediaTarget } | null = null;
 
       if (!skipRemainingPhotos && prior.kind === "content") {
         const currentLive = liveRef.current.get(prior.messageId);
-        if (currentLive && prior.photoIndex !== null && prior.photoIndex + 1 < currentLive.photoUrls.length) {
-          next = { entry: currentLive, photoIndex: prior.photoIndex + 1 };
+        if (currentLive && prior.media.kind === "photo" && prior.media.index + 1 < currentLive.photoUrls.length) {
+          const media = mediaTargets(currentLive)[prior.media.index + 1];
+          if (media?.kind === "photo") next = { entry: currentLive, media };
         }
       }
 
@@ -186,10 +186,12 @@ export function useSlideshowDeck(
             continue;
           }
           if (!candidate) break;
-          next = { entry: candidate, photoIndex: candidate.photoUrls.length ? 0 : null };
+          const media = mediaTargets(candidate)[0];
+          if (!media) continue;
+          next = { entry: candidate, media };
         }
 
-        if (await promote(next.entry, next.photoIndex)) {
+        if (await promote(next.entry, next.media)) {
           rememberLeftEntry(priorId, next.entry.id);
           preloadNearFuture();
           schedule(preferencesRef.current.duration);
@@ -200,11 +202,12 @@ export function useSlideshowDeck(
         // received while loading cannot advance a removed or changed candidate.
         const liveEntry = liveRef.current.get(next.entry.id);
         if (
-          next.photoIndex !== null
-          && isCurrentDeckCandidate(liveEntry, next.entry, next.photoIndex, next.entry.photoUrls[next.photoIndex])
-          && next.photoIndex + 1 < liveEntry.photoUrls.length
+          next.media.kind === "photo"
+          && isCurrentDeckCandidate(liveEntry, next.entry, next.media)
+          && next.media.index + 1 < liveEntry.photoUrls.length
         ) {
-          next = { entry: liveEntry, photoIndex: next.photoIndex + 1 };
+          const media = mediaTargets(liveEntry)[next.media.index + 1];
+          next = media?.kind === "photo" ? { entry: liveEntry, media } : null;
         } else {
           next = null;
         }
@@ -273,19 +276,21 @@ export function useSlideshowDeck(
         }
       }
 
-      const photoIndex = previous.photoUrls.length ? 0 : null;
-      if (await promote(previous, photoIndex)) {
+      const firstMedia = mediaTargets(previous)[0];
+      if (!firstMedia) return;
+      if (await promote(previous, firstMedia)) {
         preloadNearFuture();
         schedule(preferencesRef.current.duration);
         return;
       }
 
       // First photo failed — fall through remaining photos of that entry, then stop.
-      if (photoIndex !== null) {
+      if (firstMedia.kind === "photo") {
         for (let index = 1; index < previous.photoUrls.length; index += 1) {
           const liveEntry = liveRef.current.get(previous.id);
           if (!liveEntry) break;
-          if (await promote(liveEntry, index)) {
+          const media = mediaTargets(liveEntry)[index];
+          if (media?.kind === "photo" && await promote(liveEntry, media)) {
             preloadNearFuture();
             schedule(preferencesRef.current.duration);
             return;
@@ -308,7 +313,12 @@ export function useSlideshowDeck(
   }, [slug]);
 
   useEffect(() => {
-    liveRef.current = new Map(messages.map((message) => [message.id, toDeckEntry(message)]));
+    liveRef.current = new Map(
+      messages.flatMap((message) => {
+        const entry = toDeckEntry(message);
+        return entry ? [[entry.id, entry] as const] : [];
+      }),
+    );
     const activeId = currentRef.current.kind === "content" ? currentRef.current.messageId : undefined;
     queueRef.current = shuffleEntries(
       [...liveRef.current.values()].filter((entry) => entry.id !== activeId),

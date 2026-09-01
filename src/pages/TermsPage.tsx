@@ -18,7 +18,7 @@ export function TermsPage() {
       <article className={narrowClass}>
         <p className={kickerClass}>Legal</p>
         <h1>Terms and Conditions</h1>
-        <p className={ledeClass}>Effective date: 29 August 2026</p>
+        <p className={ledeClass}>Effective date: 31 August 2026</p>
 
         <section className="mt-8 space-y-4">
           <h2>1. Agreement</h2>
@@ -32,9 +32,11 @@ export function TermsPage() {
           <h2>2. The Service</h2>
           <p>
             Toastboard lets hosts create a digital guestbook without signing up for an account. Guests
-            scan a QR code or open a guest link, leave an optional name, a note, and photos, and that
-            content appears on a live wall. Hosts moderate with a private host link rather than a
-            username and password. There is no email-based account, login, or password reset.
+            scan a QR code or open a guest link, leave an optional name, a note, photos (up to ten),
+            or one short video (under 10 MiB), and that content appears on a live wall. Video uploads
+            may show a processing state until Cloud Functions prepare a browser-compatible display copy.
+            Hosts moderate with a private host link rather than a username and password. There is no
+            email-based account, login, or password reset.
           </p>
 
           <h2>3. Host credentials</h2>
@@ -46,10 +48,11 @@ export function TermsPage() {
 
           <h2>4. Guest content</h2>
           <p>
-            Guests may submit text and photos (“Guest Content”). Guest Content posted to a guestbook
-            may be shown on a public wall and in a slideshow for that event. You retain ownership of
-            content you submit, and you grant Toastboard a worldwide, non-exclusive license to host,
-            store, display, and transmit it as needed to operate the Service.
+            Guests may submit text, photos, and short videos (“Guest Content”). Guest Content posted
+            to a guestbook may be shown on a public wall and in a slideshow for that event. You retain
+            ownership of content you submit, and you grant Toastboard a worldwide, non-exclusive
+            license to host, store, display, transcode or remux video as needed, and transmit content
+            as needed to operate the Service.
           </p>
           <p>
             You must only submit content you have the right to share. Do not submit unlawful, abusive,

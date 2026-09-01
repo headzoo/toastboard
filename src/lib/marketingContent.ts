@@ -79,10 +79,10 @@ const WEDDING_MARKETING: MarketingContent = {
   themeColor: demoThemeFor("wedding"),
   hubTitle: "Weddings",
   hubDescription:
-    "A live guestbook for the reception — guests leave toasts and photos without signing in.",
+    "A live guestbook for the reception — guests leave toasts, photos, or one short video without signing in.",
   kicker: "Zero sign-up. Zero login. Zero email.",
   headline: "A wedding guestbook that doesn’t ask for an account.",
-  lede: "Guests scan a QR code, leave a toast or a photo, and it appears on a live wall. The host link is the login — no passwords, for anyone.",
+  lede: "Guests scan a QR code, leave a toast, photos, or one short video, and it appears on a live wall. The host link is the login — no passwords, for anyone.",
   steps: [
     {
       title: "Create once",
@@ -92,7 +92,7 @@ const WEDDING_MARKETING: MarketingContent = {
     {
       title: "Share the QR",
       description:
-        "Guests never sign in. Optional name, a note, a photo from their camera. That’s the whole form.",
+        "Guests never sign in. Optional name, a note, photos or one short video from their camera. That’s the whole form.",
     },
     {
       title: "Watch the wall",
@@ -159,10 +159,10 @@ const BIRTHDAY_MARKETING: MarketingContent = {
   themeColor: demoThemeFor("birthday"),
   hubTitle: "Birthdays",
   hubDescription:
-    "Collect wishes and party photos on a live wall — no app, no login, just a QR code on the table.",
+    "Collect wishes, party photos, or one short video on a live wall — no app, no login, just a QR code on the table.",
   kicker: "Zero sign-up. Zero login. Zero email.",
   headline: "A birthday guestbook that doesn’t ask for an account.",
-  lede: "Party guests scan a QR code, leave a wish or a photo, and it appears on a live wall. You keep the host link — that’s the only key you need.",
+  lede: "Party guests scan a QR code, leave a wish, photos, or one short video, and it appears on a live wall. You keep the host link — that’s the only key you need.",
   steps: [
     {
       title: "Create once",
@@ -172,7 +172,7 @@ const BIRTHDAY_MARKETING: MarketingContent = {
     {
       title: "Share the QR",
       description:
-        "Guests never sign in. Optional name, a wish, a photo from their camera. That’s the whole form.",
+        "Guests never sign in. Optional name, a wish, photos or one short video from their camera. That’s the whole form.",
     },
     {
       title: "Watch the wall",
@@ -211,7 +211,7 @@ const GRADUATION_MARKETING: MarketingContent = {
     "Gather congratulations, advice, and memories from family and friends on a live wall.",
   kicker: "Zero sign-up. Zero login. Zero email.",
   headline: "A graduation guestbook that doesn’t ask for an account.",
-  lede: "Guests scan a QR code, leave a wish or a photo, and it appears on a live wall. The host link is the login — no passwords, for anyone.",
+  lede: "Guests scan a QR code, leave a wish, photos, or one short video, and it appears on a live wall. The host link is the login — no passwords, for anyone.",
   steps: [
     {
       title: "Create once",
@@ -221,7 +221,7 @@ const GRADUATION_MARKETING: MarketingContent = {
     {
       title: "Share the QR",
       description:
-        "Family and friends never sign in. Optional name, a wish, a photo from the day. That’s the whole form.",
+        "Family and friends never sign in. Optional name, a wish, photos or one short video from the day. That’s the whole form.",
     },
     {
       title: "Watch the wall",
@@ -260,7 +260,7 @@ const RELIGIOUS_MILESTONE_MARKETING: MarketingContent = {
     "Bar mitzvah, bat mitzvah, confirmation, and similar celebrations — guests leave blessings on a live wall.",
   kicker: "Zero sign-up. Zero login. Zero email.",
   headline: "A milestone guestbook that doesn’t ask for an account.",
-  lede: "For bar mitzvah, bat mitzvah, confirmation, and similar milestones — guests scan a QR code, leave a blessing or note, and it appears on a live wall. The host link is the login — no passwords, for anyone.",
+  lede: "For bar mitzvah, bat mitzvah, confirmation, and similar milestones — guests scan a QR code, leave a blessing, note, photos, or one short video, and it appears on a live wall. The host link is the login — no passwords, for anyone.",
   steps: [
     {
       title: "Create once",
@@ -270,7 +270,7 @@ const RELIGIOUS_MILESTONE_MARKETING: MarketingContent = {
     {
       title: "Share the QR",
       description:
-        "Guests never sign in. Optional name, a note, a photo from the day. That’s the whole form.",
+        "Guests never sign in. Optional name, a note, photos or one short video from the day. That’s the whole form.",
     },
     {
       title: "Watch the wall",

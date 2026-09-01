@@ -87,13 +87,17 @@ service cloud.firestore {
             'guestName',
             'text',
             'photoUrls',
+            'videoUrl',
+            'videoStatus',
             'createdAt',
             'isHidden'
           ])
           && request.resource.data.createdAt == request.time
           && request.resource.data.isHidden == false
           && ('text' in request.resource.data
-            || ('photoUrls' in request.resource.data && request.resource.data.photoUrls.size() > 0))
+            || ('photoUrls' in request.resource.data && request.resource.data.photoUrls.size() > 0)
+            || ('videoStatus' in request.resource.data
+              && request.resource.data.videoStatus == 'processing'))
           && (!('guestName' in request.resource.data)
             || (request.resource.data.guestName is string
               && request.resource.data.guestName.size() > 0
@@ -103,7 +107,16 @@ service cloud.firestore {
               && request.resource.data.text.size() > 0
               && request.resource.data.text.size() <= 1000))
           && (!('photoUrls' in request.resource.data)
-            || isValidPhotoUrls(request.resource.data.photoUrls));
+            || isValidPhotoUrls(request.resource.data.photoUrls))
+          && (
+            (!('videoStatus' in request.resource.data)
+              && !('videoUrl' in request.resource.data))
+            || (
+              request.resource.data.videoStatus == 'processing'
+              && !('videoUrl' in request.resource.data)
+              && !('photoUrls' in request.resource.data)
+            )
+          );
         // Possession of the plaintext host token is the credential.
         // The client hashes it and rules compare against a write-only secret.
         allow update: if resource.data.isHidden == false

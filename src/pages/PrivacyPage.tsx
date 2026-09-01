@@ -18,7 +18,7 @@ export function PrivacyPage() {
       <article className={narrowClass}>
         <p className={kickerClass}>Legal</p>
         <h1>Privacy Policy</h1>
-        <p className={ledeClass}>Effective date: 29 August 2026</p>
+        <p className={ledeClass}>Effective date: 31 August 2026</p>
 
         <section className="mt-8 space-y-4">
           <h2>1. Overview</h2>
@@ -39,7 +39,7 @@ export function PrivacyPage() {
             </li>
             <li>
               <strong>Guest Content</strong> submitted to a guestbook: optional guest name, note text,
-              and photos.
+              photos, and short videos (under 10 MiB).
             </li>
             <li>
               <strong>Host credentials</strong>: a host token associated with your guestbook. We store
@@ -65,6 +65,10 @@ export function PrivacyPage() {
           <p>We use information to:</p>
           <ul className="mb-4 list-disc space-y-2 pl-5">
             <li>Operate guestbooks, guest forms, live walls, and slideshows</li>
+            <li>
+              Process uploaded videos into a browser-compatible display copy using Firebase Cloud
+              Functions (including transcoding or remuxing as needed)
+            </li>
             <li>Verify host links and allow hosts to hide or remove Guest Content</li>
             <li>Secure, maintain, and improve the Service</li>
             <li>Comply with law and enforce our Terms</li>
@@ -80,17 +84,21 @@ export function PrivacyPage() {
           <h2>5. Sharing and processors</h2>
           <p>
             We use Google Firebase (including Hosting, Firestore, Storage, and Cloud Functions) to
-            host and run the Service. We also load fonts from Google Fonts. These providers process
-            data on our behalf to deliver the Service. We do not sell your personal information.
+            host and run the Service. Video uploads are stored temporarily in Firebase Storage and
+            processed by Cloud Functions on Google’s infrastructure. We also load fonts from Google
+            Fonts. These providers process data on our behalf to deliver the Service. We do not sell
+            your personal information.
           </p>
 
           <h2>6. Retention and deletion</h2>
           <p>
             Event and Guest Content remain available while the guestbook exists, subject to host
             moderation and Service availability. When a host hides Guest Content, we mark it hidden and,
-            when possible, delete associated photos from storage. Browser keepsafe and slideshow settings
-            remain until you clear them. We may retain limited technical logs for security and
-            operations for a reasonable period.
+            when possible, delete associated photos, processed videos, and raw upload files from
+            storage. After a video is processed, we delete the original raw upload when possible and
+            keep the display copy needed to show the message on the wall. Browser keepsafe and
+            slideshow settings remain until you clear them. We may retain limited technical logs for
+            security and operations for a reasonable period.
           </p>
 
           <h2>7. Security</h2>
@@ -116,8 +124,8 @@ export function PrivacyPage() {
 
           <h2>10. Your choices</h2>
           <p>
-            Guests choose what name, text, and photos to submit. Hosts can hide Guest Content with the
-            host link. You can clear local keepsafe and slideshow data in your browser. Because there
+            Guests choose what name, text, photos, and videos to submit. Hosts can hide Guest Content
+            with the host link. You can clear local keepsafe and slideshow data in your browser. Because there
             are no accounts, access and deletion of server-stored guestbook data are handled through
             the host link and ordinary Service features.
           </p>

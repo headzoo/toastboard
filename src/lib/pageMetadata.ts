@@ -6,7 +6,7 @@ export type PageMetadata = {
 export const DEFAULT_PAGE_METADATA: PageMetadata = {
   title: "Toastboard — event guestbook with no login",
   description:
-    "A live guestbook for personal events with no sign-up, no login, and no email. Guests scan a QR code and leave a note or photo.",
+    "A live guestbook for personal events with no sign-up, no login, and no email. Guests scan a QR code and leave a note, photos, or one short video.",
 };
 
 export const HUB_PAGE_METADATA: PageMetadata = {

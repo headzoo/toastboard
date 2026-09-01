@@ -20,11 +20,15 @@ export type EventRecord = {
   signTheme: SignThemeId;
 };
 
+export type VideoStatus = "processing" | "ready" | "failed";
+
 export type MessageRecord = {
   id: string;
   guestName: string | null;
   text: string | null;
   photoUrls: string[];
+  videoUrl: string | null;
+  videoStatus: VideoStatus | null;
   createdAt: Date | null;
 };
 

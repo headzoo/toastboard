@@ -21,10 +21,9 @@ export type ContentSlideSlot = Readonly<{
   kind: "content";
   cycleKey: string;
   messageId: string;
-  photoIndex: number | null;
   text: string | null;
   guestName: string | null;
-  photoUrl: string | null;
+  media: SlideMediaTarget;
   dimensions?: SlideImageDimensions;
 }>;
 
@@ -35,11 +34,29 @@ export type EmptySlideSlot = Readonly<{
 
 export type SlideSlot = ContentSlideSlot | EmptySlideSlot;
 
+export type TextMediaTarget = Readonly<{
+  kind: "text";
+}>;
+
+export type PhotoMediaTarget = Readonly<{
+  kind: "photo";
+  index: number;
+  url: string;
+}>;
+
+export type VideoMediaTarget = Readonly<{
+  kind: "video";
+  url: string;
+}>;
+
+export type SlideMediaTarget = TextMediaTarget | PhotoMediaTarget | VideoMediaTarget;
+
 export type DeckEntry = Readonly<{
   id: string;
   guestName: string | null;
   text: string | null;
   photoUrls: readonly string[];
+  videoUrl: string | null;
 }>;
 
 /**
@@ -49,11 +66,12 @@ export type DeckEntry = Readonly<{
 export function isCurrentDeckCandidate(
   liveEntry: DeckEntry | undefined,
   candidate: DeckEntry,
-  photoIndex: number | null,
-  photoUrl: string | undefined,
+  media: SlideMediaTarget,
 ): liveEntry is DeckEntry {
   if (!liveEntry || liveEntry.id !== candidate.id) return false;
-  return photoIndex === null || liveEntry.photoUrls[photoIndex] === photoUrl;
+  if (media.kind === "text") return Boolean(liveEntry.text) && !liveEntry.photoUrls.length && !liveEntry.videoUrl;
+  if (media.kind === "photo") return liveEntry.photoUrls[media.index] === media.url && !liveEntry.videoUrl;
+  return liveEntry.videoUrl === media.url;
 }
 
 export const DEFAULT_SLIDESHOW_PREFERENCES: SlideshowPreferences = {
@@ -106,13 +124,26 @@ export function saveSlideshowPreferences(slug: string, preferences: SlideshowPre
   }
 }
 
-export function toDeckEntry(message: MessageRecord): DeckEntry {
+export function toDeckEntry(message: MessageRecord): DeckEntry | null {
+  const videoUrl = message.videoStatus === "ready" ? message.videoUrl?.trim() || null : null;
+  const photoUrls = message.photoUrls.filter(Boolean);
+  const text = message.text?.trim() || null;
+  // A ready video is the message's sole media target. Processing/failed videos
+  // only leave a candidate when the message also has text.
+  if (!videoUrl && !photoUrls.length && !text) return null;
   return {
     id: message.id,
     guestName: message.guestName,
-    text: message.text,
-    photoUrls: [...message.photoUrls],
+    text,
+    photoUrls,
+    videoUrl,
   };
+}
+
+export function mediaTargets(entry: DeckEntry): readonly SlideMediaTarget[] {
+  if (entry.videoUrl) return [{ kind: "video", url: entry.videoUrl }];
+  if (entry.photoUrls.length) return entry.photoUrls.map((url, index) => ({ kind: "photo", index, url }));
+  return entry.text ? [{ kind: "text" }] : [];
 }
 
 /** Fisher-Yates shuffle of entries, keeping a prior item away from the head when possible. */
