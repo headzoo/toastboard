@@ -150,7 +150,7 @@ function useHeroGuestbookSequence(
 export function CornerSprig({ className }: { className?: string }) {
   return (
     <img
-      src="/mock/anniversary_sprig_icon_transparent.png"
+      src="/images/anniversary_sprig_icon_transparent.png"
       alt=""
       className={className}
       aria-hidden="true"

@@ -1,4 +1,4 @@
-The Willow Book homepage mock asset pack
+The Willow Book homepage image asset pack
 
 These PNGs are cropped icons and decorative sprigs used on the live marketing
 site (homepage features, occasion tiles, footer accents, and hero preview).

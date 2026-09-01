@@ -39,12 +39,6 @@ export const HELP_PAGE_METADATA: PageMetadata = {
     "Short answers about guestbooks with no sign-up: QR codes, host links, photos, and short video.",
 };
 
-export const HOSTS_PAGE_METADATA: PageMetadata = {
-  title: "For hosts — The Willow Book",
-  description:
-    "The host link is the only key. How to create, save, and moderate a Willow Book guestbook.",
-};
-
 export const EXAMPLES_PAGE_METADATA: PageMetadata = {
   title: "Examples — The Willow Book",
   description:

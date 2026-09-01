@@ -5,7 +5,7 @@ import { GuestbookFeed } from "../components/GuestbookFeed.tsx";
 import { GuestbookSlideshow } from "../components/GuestbookSlideshow.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
-import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
+import { btnClass, btnRowClass, narrowClass, ledeClass } from "../lib/styles.ts";
 import { getSignTheme } from "../lib/signThemes.ts";
 import { getEventCopy } from "../lib/eventTypes.ts";
 import { formatEventDate } from "../lib/theme.ts";
@@ -30,7 +30,7 @@ export function GuestbookPage() {
 
   if (status === "loading") {
     return (
-      <Shell footer={false}>
+      <Shell headerLogo={false} footerLogo>
         <StatusNote>Loading the guestbook…</StatusNote>
       </Shell>
     );
@@ -38,7 +38,7 @@ export function GuestbookPage() {
 
   if (status !== "ready" || !event || !slug) {
     return (
-      <Shell footer={false}>
+      <Shell headerLogo={false} footerLogo>
         <section className={narrowClass}>
           <h1>This guestbook isn’t here yet</h1>
           <p>Create a guestbook first, then share the guest QR.</p>
@@ -83,15 +83,9 @@ export function GuestbookPage() {
           onExit={exitSlideshow}
         />
       ) : (
-        <Shell footer={false}>
+        <Shell headerLogo={false} footerLogo>
           <section className="mb-8 max-w-[760px]">
-            <p className={kickerClass}>
-              {live ? (
-                <span className="size-2.5 animate-live rounded-full bg-ok shadow-[0_0_0_0_color-mix(in_srgb,var(--color-ok)_60%,transparent)]" />
-              ) : null}
-              Live guestbook
-            </p>
-            <h1>{event.coupleNames}</h1>
+            <h1 className="mb-0">{event.coupleNames}</h1>
             {event.eventDate ? <p className={ledeClass}>{formatEventDate(event.eventDate)}</p> : null}
             <div className={`${btnRowClass} print:hidden`}>
               <Link className={btnClass("ghost")} to={`/e/${slug}`}>

@@ -11,7 +11,6 @@ const LEFT_NAV = [
   { label: "Occasions", to: { pathname: "/", hash: "occasions" }, hash: "occasions" },
   { label: "Examples", to: "/examples" },
   { label: "Pricing", to: "/pricing" },
-  { label: "Hosts", to: "/hosts" },
 ] as const;
 
 const FOOTER_LINKS = [
@@ -86,14 +85,14 @@ function MarketingFooter() {
           to="https://keepwellandbell.com"
         >
           <img
-            src="/mock/botanical_sprig_left.png"
+            src="/images/botanical_sprig_left.png"
             alt=""
             className="h-5 w-auto shrink-0 opacity-80"
             aria-hidden="true"
           />
           <span>The Willow Book is a product by Keepwell &amp; Bell</span>
           <img
-            src="/mock/botanical_sprig_right.png"
+            src="/images/botanical_sprig_right.png"
             alt=""
             className="h-5 w-auto shrink-0 opacity-80"
             aria-hidden="true"

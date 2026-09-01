@@ -81,25 +81,25 @@ export const HOME_FEATURES: HomeFeature[] = [
   {
     title: "No guest login",
     description: "Guests never create an account. They scan, write, add pictures and video and they're done.",
-    iconSrc: "/mock/feature_lock_icon_transparent.png",
+    iconSrc: "/images/feature_lock_icon_transparent.png",
     iconAlt: "",
   },
   {
     title: "Photos and videos",
     description: "Collect notes, photos, and one short video on a live guestbook. Watch for just about anywhere.",
-    iconSrc: "/mock/feature_media_icon_transparent.png",
+    iconSrc: "/images/feature_media_icon_transparent.png",
     iconAlt: "",
   },
   {
     title: "Yours to keep",
     description: "Create your guestbook once. Keep every word by revisiting your guestbook over and over.",
-    iconSrc: "/mock/feature_shield_icon_transparent.png",
+    iconSrc: "/images/feature_shield_icon_transparent.png",
     iconAlt: "",
   },
   {
     title: "Money back guarantee",
     description: "If you're not satisfied for any reason, we'll return your money. No questions asked.",
-    iconSrc: "/mock/feature_seal_icon_transparent.png",
+    iconSrc: "/images/feature_seal_icon_transparent.png",
     iconAlt: "",
   },
 ];
@@ -123,28 +123,28 @@ export const HOME_OCCASIONS: HomeOccasion[] = [
     description: "Collect messages from your ceremony, reception, or bridal shower.",
     cta: "Create a wedding guestbook →",
     path: "/weddings",
-    iconSrc: "/mock/wedding_rings_icon_transparent.png",
+    iconSrc: "/images/wedding_rings_icon_transparent.png",
   },
   {
     title: "Birthdays",
     description: "Gather birthday wishes, photos, and videos in one beautiful place.",
     cta: "Create a birthday guestbook →",
     path: "/birthdays",
-    iconSrc: "/mock/birthday_cake_icon_transparent.png",
+    iconSrc: "/images/birthday_cake_icon_transparent.png",
   },
   {
     title: "Graduations",
     description: "Celebrate the milestone with advice, memories, and words of encouragement.",
     cta: "Create a graduation guestbook →",
     path: "/graduations",
-    iconSrc: "/mock/graduation_cap_icon_transparent.png",
+    iconSrc: "/images/graduation_cap_icon_transparent.png",
   },
   {
     title: "Religious milestones",
     description: "Bar mitzvah, bat mitzvah, confirmation, and similar celebrations.",
     cta: "Create a milestone guestbook →",
     path: "/religious-milestones",
-    iconSrc: "/mock/anniversary_sprig_icon_transparent.png",
+    iconSrc: "/images/anniversary_sprig_icon_transparent.png",
   },
 ];
 
@@ -153,7 +153,7 @@ export const HOME_OCCASION_YOU_PICK: HomeOccasion = {
   description: "Reunion, farewell, baby shower, or anything else — name it yourself.",
   cta: "Create your guestbook →",
   path: "/create?type=other",
-  iconSrc: "/mock/you_pick_question_marks_icon_transparent.png",
+  iconSrc: "/images/you_pick_question_marks_icon_transparent.png",
 };
 
 export type HomeStep = {

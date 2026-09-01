@@ -34,7 +34,7 @@ function SectionHeading({ children }: { children: string }) {
     <div className="mb-8 flex items-center gap-3">
       <span className="h-px flex-1 bg-[color-mix(in_srgb,var(--color-ink)_18%,transparent)]" aria-hidden="true" />
       <img
-        src="/mock/botanical_sprig_left.png"
+        src="/images/botanical_sprig_left.png"
         alt=""
         className="h-5 w-auto shrink-0 opacity-80"
         aria-hidden="true"
@@ -43,7 +43,7 @@ function SectionHeading({ children }: { children: string }) {
         {children}
       </h2>
       <img
-        src="/mock/botanical_sprig_right.png"
+        src="/images/botanical_sprig_right.png"
         alt=""
         className="h-5 w-auto shrink-0 opacity-80"
         aria-hidden="true"

@@ -7,7 +7,6 @@ import { ExamplesPage } from "./pages/ExamplesPage.tsx";
 import { GuestPage } from "./pages/GuestPage.tsx";
 import { HelpPage } from "./pages/HelpPage.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
-import { HostsPage } from "./pages/HostsPage.tsx";
 import { ManagePage } from "./pages/ManagePage.tsx";
 import { PricingPage } from "./pages/PricingPage.tsx";
 import { PrivacyPage } from "./pages/PrivacyPage.tsx";
@@ -50,7 +49,6 @@ export default function App() {
         />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/help" element={<HelpPage />} />
-        <Route path="/hosts" element={<HostsPage />} />
         <Route path="/examples" element={<ExamplesPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/create" element={<CreatePage />} />
