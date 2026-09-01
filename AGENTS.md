@@ -4,7 +4,7 @@
 
 - **Product name:** The Willow Book — use this in UI copy, page titles, metadata, and legal text when referring to the service. Use “a Willow Book” (drop *The*) when the name takes an article or works as an adjective (“a Willow Book guestbook”).
 - **House brand:** Keepwell & Bell — appears in the logo lockup; do not use as the primary product name in UI copy.
-- **Logo asset:** `public/logo.png` — lockup reads "The Willow Book by Keepwell & Bell".
+- **Logo asset:** `public/images/logo.png` — lockup reads "The Willow Book by Keepwell & Bell".
 
 ## What not to rename
 

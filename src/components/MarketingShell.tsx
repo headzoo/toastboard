@@ -135,7 +135,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
 
             <Link className="inline-flex items-center no-underline" to="/" onClick={closeMenu}>
               <img
-                src="/logo.png"
+                src="/images/logo.png"
                 alt="The Willow Book by Keepwell & Bell"
                 className="h-auto w-[min(12.1rem,50.6vw)]"
               />

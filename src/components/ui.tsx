@@ -17,7 +17,7 @@ function SiteFooter({ showLogo = false }: { showLogo?: boolean }) {
         {showLogo ? (
           <Link className="mx-auto inline-flex items-center no-underline" to="/">
             <img
-              src="/logo.png"
+              src="/images/logo.png"
               alt="The Willow Book by Keepwell & Bell"
               className="h-auto w-[min(8.5rem,42vw)] opacity-90"
             />
@@ -52,7 +52,7 @@ export function Shell({
         <header className="flex justify-center px-[6vw] pt-5 print:hidden">
           <Link className="inline-flex items-center no-underline" to="/">
             <img
-              src="/logo.png"
+              src="/images/logo.png"
               alt="The Willow Book by Keepwell & Bell"
               className="h-auto w-[min(16.94rem,66.55vw)] sm:w-[min(19.36rem,48.4vw)]"
             />

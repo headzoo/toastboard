@@ -110,7 +110,7 @@ const WEDDING_MARKETING: MarketingContent = {
       {
         layout: "full",
         image: {
-          src: "/branding/family-table-wall.jpg",
+          src: "/images/family-table-wall.jpg",
           alt: "The bride, groom, and family sitting at the head table, with a TV to the left showing the Willow Book live guestbook, a dance floor in front, and guests at tables beyond",
           width: 1920,
           height: 1080,
@@ -120,7 +120,7 @@ const WEDDING_MARKETING: MarketingContent = {
       {
         layout: "grid-pair",
         image: {
-          src: "/branding/table-sign.jpg",
+          src: "/images/table-sign.jpg",
           alt: "Printed cream Willow Book table sign with a rose border, Maya and James, and a large QR code standing on a guest table among candles and flowers",
           width: 900,
           height: 1200,
@@ -131,7 +131,7 @@ const WEDDING_MARKETING: MarketingContent = {
       {
         layout: "grid-pair",
         image: {
-          src: "/branding/guest-scan.jpg",
+          src: "/images/guest-scan.jpg",
           alt: "A wedding guest holds a phone over a Willow Book table sign, scanning the QR code while the reception continues behind them",
           width: 1200,
           height: 900,
@@ -142,7 +142,7 @@ const WEDDING_MARKETING: MarketingContent = {
       {
         layout: "full",
         image: {
-          src: "/branding/reception-selfie.jpg",
+          src: "/images/reception-selfie.jpg",
           alt: "Guests take a selfie at a wedding reception with a Willow Book table sign and QR code visible on a nearby table",
           width: 1920,
           height: 1080,

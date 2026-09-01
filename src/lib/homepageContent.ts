@@ -37,7 +37,7 @@ export const HOME_HERO_GUESTBOOK = {
         attribution: "Priya",
         accent: "oxblood",
         photo: {
-          src: "/branding/guestbook-lena-neighbors.jpg",
+          src: "/images/guestbook-lena-neighbors.jpg",
           alt: "Two guests arriving with champagne, smiling in a doorway",
         },
       },
@@ -53,7 +53,7 @@ export const HOME_HERO_GUESTBOOK = {
         attribution: "Priya",
         accent: "olive",
         photo: {
-          src: "/branding/guestbook-priya-1.jpg",
+          src: "/images/guestbook-priya-1.jpg",
           alt: "A wedding guest smiling at an evening reception",
         },
       },
@@ -62,7 +62,7 @@ export const HOME_HERO_GUESTBOOK = {
         attribution: "Sam",
         accent: "oxblood",
         photo: {
-          src: "/branding/guestbook-sam.jpg",
+          src: "/images/guestbook-sam.jpg",
           alt: "A guest raising a glass at the reception",
         },
       },
@@ -175,7 +175,7 @@ export const HOME_STEPS: HomeStep[] = [
     title: "Create your guestbook",
     description:
       "Name your event, choose a few settings, and we’ll generate your QR code and link — plus images and PDFs you can print.",
-    imageSrc: "/branding/how-it-works-create.jpg",
+    imageSrc: "/images/how-it-works-create.jpg",
     imageAlt:
       "A couple fills in a cream Willow Book with names and date, surrounded by stationery and botanical sprigs",
     width: 1536,
@@ -185,7 +185,7 @@ export const HOME_STEPS: HomeStep[] = [
     title: "Share your QR code or link",
     description:
       "Put QR codes on the tables, display them anywhere, or share your link with guests.",
-    imageSrc: "/branding/how-it-works-share.jpg",
+    imageSrc: "/images/how-it-works-share.jpg",
     imageAlt:
       "A guest holds a phone to scan a printed cream QR code card standing on a reception table",
     width: 1536,
@@ -195,7 +195,7 @@ export const HOME_STEPS: HomeStep[] = [
     title: "Collect messages",
     description:
       "Watch messages appear in real time in your private guestbook — or as a slideshow on your phone, tablet, or even a TV.",
-    imageSrc: "/branding/how-it-works-collect.jpg",
+    imageSrc: "/images/how-it-works-collect.jpg",
     imageAlt:
       "A simplified Willow Book guestbook showing stacked guest message cards with gold, olive, and oxblood accent bars",
     width: 1536,
@@ -239,14 +239,14 @@ export const HOME_ON_THE_BIG_DAY = {
       quote: "Still can’t believe you two met over the last samosa. Please never stop telling that story.",
       attribution: "Priya",
       photo: {
-        src: "/branding/guestbook-priya-1.jpg",
+        src: "/images/guestbook-priya-1.jpg",
         alt: "A wedding guest smiling at an evening reception",
       },
     },
     {
       kind: "scene",
       span: "full",
-      src: "/branding/family-table-wall.jpg",
+      src: "/images/family-table-wall.jpg",
       alt: "The bride, groom, and family sitting at the head table, with a TV to the left showing the Willow Book live guestbook, a dance floor in front, and guests at tables beyond",
       width: 1920,
       height: 1080,
@@ -254,7 +254,7 @@ export const HOME_ON_THE_BIG_DAY = {
     {
       kind: "scene",
       span: "half",
-      src: "/branding/family-table-guestbook-tv.jpg",
+      src: "/images/family-table-guestbook-tv.jpg",
       alt: "A closer view of the family table, with a TV beside it showing the live Willow Book guestbook wall of guest photos and notes",
       width: 1024,
       height: 1536,
@@ -263,7 +263,7 @@ export const HOME_ON_THE_BIG_DAY = {
     {
       kind: "scene",
       span: "half",
-      src: "/branding/table-sign.jpg",
+      src: "/images/table-sign.jpg",
       alt: "Printed cream Willow Book table sign with a rose border, Maya and James, and a large QR code standing on a guest table among candles and flowers",
       width: 900,
       height: 1200,
@@ -278,7 +278,7 @@ export const HOME_ON_THE_BIG_DAY = {
     {
       kind: "scene",
       span: "half",
-      src: "/branding/guest-scan.jpg",
+      src: "/images/guest-scan.jpg",
       alt: "A wedding guest holds a phone over a Willow Book table sign, scanning the QR code while the reception continues behind them",
       width: 1200,
       height: 900,
@@ -290,7 +290,7 @@ export const HOME_ON_THE_BIG_DAY = {
       quote: "The guestbook is already prettier than our Slack channel. Congratulations, you two.",
       attribution: "Sam from work",
       photo: {
-        src: "/branding/guestbook-sam.jpg",
+        src: "/images/guestbook-sam.jpg",
         alt: "A guest raising a glass at the reception",
       },
     },
@@ -306,14 +306,14 @@ export const HOME_ON_THE_BIG_DAY = {
       quote: "I was asked to be profound. Instead: don’t forget to eat cake. Also I love you both.",
       attribution: "Best man, theoretically",
       photo: {
-        src: "/branding/guestbook-best-man-3.jpg",
+        src: "/images/guestbook-best-man-3.jpg",
         alt: "The best man smiling at the reception",
       },
     },
     {
       kind: "scene",
       span: "full",
-      src: "/branding/reception-selfie.jpg",
+      src: "/images/reception-selfie.jpg",
       alt: "Guests take a selfie at a wedding reception with a Willow Book table sign and QR code visible on a nearby table",
       width: 1920,
       height: 1080,
@@ -342,7 +342,7 @@ export const HOME_COME_BACK_AGAIN = {
     {
       layout: "full",
       caption: "The next morning",
-      imageSrc: "/branding/come-back-next-morning.jpg",
+      imageSrc: "/images/come-back-next-morning.jpg",
       imageAlt:
         "Maya and James in casual clothes at a kitchen table the morning after their wedding, scrolling through their Willow Book guestbook on a tablet beside a mason jar of leftover flowers",
       width: 1920,
@@ -351,7 +351,7 @@ export const HOME_COME_BACK_AGAIN = {
     {
       layout: "half",
       caption: "A year later",
-      imageSrc: "/branding/come-back-year-later.jpg",
+      imageSrc: "/images/come-back-year-later.jpg",
       imageAlt:
         "Maya and James at home on their first anniversary, looking at the same Willow Book guestbook on a tablet beside a small cake and a few flowers",
       width: 1024,
@@ -361,7 +361,7 @@ export const HOME_COME_BACK_AGAIN = {
     {
       layout: "half",
       caption: "Years later",
-      imageSrc: "/branding/come-back-years-later.jpg",
+      imageSrc: "/images/come-back-years-later.jpg",
       imageAlt:
         "Maya and James on a sofa with a small child, all three looking at the Willow Book guestbook on a tablet together",
       width: 1024,
