@@ -1,4 +1,4 @@
-import { Shell } from "../components/ui.tsx";
+import { MarketingShell } from "../components/MarketingShell.tsx";
 import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { TERMS_PAGE_METADATA } from "../lib/pageMetadata.ts";
 import { applyTheme } from "../lib/theme.ts";
@@ -14,7 +14,7 @@ export function TermsPage() {
   }, []);
 
   return (
-    <Shell>
+    <MarketingShell>
       <article className={narrowClass}>
         <p className={kickerClass}>Legal</p>
         <h1>Terms and Conditions</h1>
@@ -124,6 +124,6 @@ export function TermsPage() {
           </p>
         </section>
       </article>
-    </Shell>
+    </MarketingShell>
   );
 }

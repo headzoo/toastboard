@@ -1,9 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AboutPage } from "./pages/AboutPage.tsx";
 import { CreatePage } from "./pages/CreatePage.tsx";
 import { EventLandingPage } from "./pages/EventLandingPage.tsx";
+import { ExamplesPage } from "./pages/ExamplesPage.tsx";
 import { GuestPage } from "./pages/GuestPage.tsx";
+import { HelpPage } from "./pages/HelpPage.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
+import { HostsPage } from "./pages/HostsPage.tsx";
 import { ManagePage } from "./pages/ManagePage.tsx";
+import { PricingPage } from "./pages/PricingPage.tsx";
 import { PrivacyPage } from "./pages/PrivacyPage.tsx";
 import { TermsPage } from "./pages/TermsPage.tsx";
 import { WallPage } from "./pages/WallPage.tsx";
@@ -41,6 +46,11 @@ export default function App() {
           path="/religious-milestones"
           element={<EventLandingPage content={MARKETING_CONTENT["religious-milestone"]} />}
         />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/help" element={<HelpPage />} />
+        <Route path="/hosts" element={<HostsPage />} />
+        <Route path="/examples" element={<ExamplesPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
         <Route path="/create" element={<CreatePage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />

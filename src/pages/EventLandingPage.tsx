@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Shell } from "../components/ui.tsx";
+import { MarketingShell } from "../components/MarketingShell.tsx";
 import { usePageMetadata } from "../hooks/usePageMetadata.ts";
 import type { MarketingContent, MarketingVisualFigure } from "../lib/marketingContent.ts";
 import { loadKeepsafe } from "../lib/session.ts";
@@ -97,8 +97,8 @@ export function EventLandingPage({ content }: EventLandingPageProps) {
   }, [content.themeColor]);
 
   return (
-    <Shell>
-      <section className="max-w-[760px] pb-16 pt-[7vh]">
+    <MarketingShell>
+      <section className="max-w-[760px] pb-16 pt-8">
         <p className={kickerClass}>{content.kicker}</p>
         <h1>{content.headline}</h1>
         <p className={ledeClass}>{content.lede}</p>
@@ -135,6 +135,6 @@ export function EventLandingPage({ content }: EventLandingPageProps) {
 
       {content.visualStory ? <VisualStory story={content.visualStory} /> : null}
       {content.highlights ? <Highlights highlights={content.highlights} /> : null}
-    </Shell>
+    </MarketingShell>
   );
 }

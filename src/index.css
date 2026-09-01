@@ -3,6 +3,8 @@
 :root {
   --accent: #c45c67;
   --accent-deep: color-mix(in srgb, var(--accent) 78%, #2a2118);
+  --marketing-oxblood: #7a1b24;
+  --marketing-gold: #b0894f;
 }
 
 @theme {
@@ -15,6 +17,8 @@
   --color-cream: #fffcf7;
   --color-warn: #8f3a48;
   --color-ok: #6e7f63;
+  --color-oxblood: var(--marketing-oxblood);
+  --color-gold: var(--marketing-gold);
   --font-sans: "Figtree", system-ui, sans-serif;
   --font-serif: "Fraunces", "Times New Roman", serif;
   --shadow-soft: 0 18px 50px rgba(42, 33, 24, 0.08);

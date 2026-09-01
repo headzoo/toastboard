@@ -21,3 +21,13 @@ export const ledeClass = "max-w-2xl text-[1.15rem] text-ink-soft";
 export const btnRowClass = "mt-6 flex flex-wrap gap-3";
 
 export const narrowClass = "max-w-[760px]";
+
+/** Marketing CTAs — slightly rounded rectangle, oxblood (homepage mock). */
+export const marketingBtnClass =
+  "inline-flex appearance-none items-center justify-center rounded-md border-0 bg-oxblood px-5 py-3 font-serif text-[1rem] font-medium leading-none text-cream no-underline cursor-pointer hover:brightness-[0.95]";
+
+export const marketingKickerClass =
+  "mb-3 text-[0.72rem] font-bold uppercase tracking-[0.16em] text-oxblood";
+
+export const marketingLinkClass =
+  "font-serif text-[1rem] text-oxblood no-underline hover:underline";

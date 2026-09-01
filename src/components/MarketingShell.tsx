@@ -1,0 +1,180 @@
+import { useState, type ReactNode } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { marketingBtnClass } from "../lib/styles.ts";
+
+type MarketingShellProps = {
+  children: ReactNode;
+};
+
+const LEFT_NAV = [
+  { label: "How it works", to: { pathname: "/", hash: "how-it-works" }, hash: "how-it-works" },
+  { label: "Occasions", to: { pathname: "/", hash: "occasions" }, hash: "occasions" },
+  { label: "Examples", to: "/examples" },
+  { label: "Pricing", to: "/pricing" },
+  { label: "Hosts", to: "/hosts" },
+] as const;
+
+const FOOTER_LINKS = [
+  { label: "About", to: "/about" },
+  { label: "Help Center", to: "/help" },
+  { label: "Privacy", to: "/privacy" },
+  { label: "Terms", to: "/terms" },
+] as const;
+
+function navLinkClass({ isActive }: { isActive: boolean }) {
+  return `text-[0.82rem] tracking-[0.02em] no-underline transition-colors ${isActive ? "text-ink" : "text-ink-soft hover:text-ink"
+    }`;
+}
+
+function HashNavLink({
+  to,
+  hash,
+  label,
+  onNavigate,
+}: {
+  to: { pathname: string; hash: string };
+  hash: string;
+  label: string;
+  onNavigate?: () => void;
+}) {
+  const location = useLocation();
+  const isActive = location.pathname === "/" && location.hash === `#${hash}`;
+  return (
+    <Link className={navLinkClass({ isActive })} to={to} onClick={onNavigate}>
+      {label}
+    </Link>
+  );
+}
+
+function LeftNavLinks({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <>
+      {LEFT_NAV.map((item) =>
+        "hash" in item && item.hash ? (
+          <HashNavLink
+            key={item.label}
+            to={item.to}
+            hash={item.hash}
+            label={item.label}
+            onNavigate={onNavigate}
+          />
+        ) : (
+          <NavLink key={item.label} className={navLinkClass} to={item.to} onClick={onNavigate} end>
+            {item.label}
+          </NavLink>
+        ),
+      )}
+    </>
+  );
+}
+
+function MarketingFooter() {
+  const year = new Date().getFullYear();
+  return (
+    <footer className="mt-auto border-t border-[color-mix(in_srgb,var(--color-ink)_12%,transparent)] px-[4vw] py-10 print:hidden">
+      <div className="mx-auto grid max-w-[1180px] gap-8 text-[0.85rem] text-ink-soft min-[900px]:grid-cols-[1fr_auto_1fr] min-[900px]:items-center">
+        <nav className="flex flex-wrap gap-x-5 gap-y-2 min-[900px]:justify-start" aria-label="Site">
+          {FOOTER_LINKS.map((link) => (
+            <Link key={link.to} className="text-ink-soft no-underline hover:text-ink" to={link.to}>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <Link
+          className="flex items-center justify-center gap-3 font-serif text-[0.95rem] text-ink no-underline hover:text-oxblood"
+          to="/about"
+        >
+          <img
+            src="/mock/botanical_sprig_left.png"
+            alt=""
+            className="h-5 w-auto opacity-80"
+            aria-hidden="true"
+          />
+          <span>Wishing Wall is a product by Keepwell &amp; Bell →</span>
+          <img
+            src="/mock/botanical_sprig_right.png"
+            alt=""
+            className="h-5 w-auto opacity-80"
+            aria-hidden="true"
+          />
+        </Link>
+
+        <p className="m-0 text-center min-[900px]:text-right">© {year} Wishing Wall</p>
+      </div>
+    </footer>
+  );
+}
+
+export function MarketingShell({ children }: MarketingShellProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
+  return (
+    <div className="relative flex min-h-svh flex-col">
+      <div className="paper-grain" aria-hidden="true" />
+
+      <header className="relative z-20 px-[4vw] pt-5 print:hidden">
+        <div className="mx-auto grid max-w-[1180px] items-center gap-3 min-[960px]:grid-cols-[1fr_auto_1fr]">
+          <nav
+            className="hidden flex-wrap items-center gap-x-5 gap-y-2 min-[960px]:flex"
+            aria-label="Primary"
+          >
+            <LeftNavLinks />
+          </nav>
+
+          <div className="flex items-center justify-between min-[960px]:justify-center">
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md border border-ink/15 bg-cream px-3 py-2 text-[0.8rem] font-semibold text-ink min-[960px]:hidden"
+              aria-expanded={menuOpen}
+              aria-controls="marketing-mobile-nav"
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {menuOpen ? "Close" : "Menu"}
+            </button>
+
+            <Link className="inline-flex items-center no-underline" to="/" onClick={closeMenu}>
+              <img
+                src="/branding/mock-3.png"
+                alt="Wishing Wall by Keepwell & Bell"
+                className="h-auto w-[min(10rem,42vw)]"
+              />
+            </Link>
+
+            <span className="w-[3.5rem] min-[960px]:hidden" aria-hidden="true" />
+          </div>
+
+          <div className="hidden items-center justify-end gap-4 min-[960px]:flex">
+            <Link className="text-[0.85rem] text-ink-soft no-underline hover:text-ink" to="/create">
+              Sign in
+            </Link>
+            <Link className={marketingBtnClass} to="/create">
+              Create a guestbook
+            </Link>
+          </div>
+        </div>
+
+        {menuOpen ? (
+          <nav
+            id="marketing-mobile-nav"
+            className="mx-auto mt-4 flex max-w-[1180px] flex-col gap-3 rounded-xl border border-ink/10 bg-cream/95 px-4 py-4 shadow-soft min-[960px]:hidden"
+            aria-label="Mobile"
+          >
+            <LeftNavLinks onNavigate={closeMenu} />
+            <hr className="border-ink/10" />
+            <Link className="text-[0.9rem] text-ink no-underline" to="/create" onClick={closeMenu}>
+              Sign in
+            </Link>
+            <Link className={marketingBtnClass} to="/create" onClick={closeMenu}>
+              Create a guestbook
+            </Link>
+          </nav>
+        ) : null}
+      </header>
+
+      <main className="mx-auto w-full max-w-[1180px] flex-1 px-[4vw] pb-20 pt-4">{children}</main>
+      <MarketingFooter />
+    </div>
+  );
+}
