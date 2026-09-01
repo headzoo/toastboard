@@ -19,13 +19,7 @@ import {
 } from "../lib/styles.ts";
 import { applyTheme } from "../lib/theme.ts";
 
-function SectionHeading({
-  children,
-  nowrapDesktop = false,
-}: {
-  children: string;
-  nowrapDesktop?: boolean;
-}) {
+function SectionHeading({ children }: { children: string }) {
   return (
     <div className="mb-12 flex items-center gap-3">
       <span className="h-px flex-1 bg-[color-mix(in_srgb,var(--color-ink)_18%,transparent)]" aria-hidden="true" />
@@ -35,12 +29,7 @@ function SectionHeading({
         className="h-5 w-auto shrink-0 opacity-80"
         aria-hidden="true"
       />
-      <h2
-        className={`m-0 shrink text-center font-serif text-[clamp(1.7rem,3.5vw,2.3rem)] font-medium tracking-[-0.03em] ${nowrapDesktop
-          ? "max-w-[min(32rem,72vw)] text-balance min-[900px]:max-w-none min-[900px]:whitespace-nowrap"
-          : "max-w-[min(32rem,72vw)] text-balance"
-          }`}
-      >
+      <h2 className="m-0 max-w-[min(32rem,72vw)] shrink text-balance text-center font-serif text-[clamp(1.7rem,3.5vw,2.3rem)] font-medium tracking-[-0.03em]">
         {children}
       </h2>
       <img
@@ -86,35 +75,29 @@ function StoryFigure({ figure }: { figure: HomeStoryFigure }) {
   );
 }
 
-function InTheRoom() {
+function HowItWorksFigures() {
   const [first, ...rest] = HOME_IN_THE_ROOM.figures;
   const pair = rest.filter((figure) => figure.layout === "grid-pair");
   const trailing = rest.filter((figure) => figure.layout === "full");
 
   return (
-    <section className="relative left-1/2 w-screen max-w-none -translate-x-1/2 py-12" aria-label={HOME_IN_THE_ROOM.headline}>
-      <div className="px-[4vw] lg:px-[5vw]">
-        <SectionHeading nowrapDesktop>{HOME_IN_THE_ROOM.headline}</SectionHeading>
+    <div className="mx-auto max-w-[900px]">
+      {first ? <StoryFigure figure={first} /> : null}
 
-        <div className="mx-auto max-w-[900px]">
-          {first ? <StoryFigure figure={first} /> : null}
-
-          {pair.length > 0 ? (
-            <div className="mt-8 grid gap-6 min-[700px]:grid-cols-2">
-              {pair.map((figure) => (
-                <StoryFigure key={figure.src} figure={figure} />
-              ))}
-            </div>
-          ) : null}
-
-          {trailing.map((figure) => (
-            <div key={figure.src} className="mt-8">
-              <StoryFigure figure={figure} />
-            </div>
+      {pair.length > 0 ? (
+        <div className="mt-8 grid gap-6 min-[700px]:grid-cols-2">
+          {pair.map((figure) => (
+            <StoryFigure key={figure.src} figure={figure} />
           ))}
         </div>
-      </div>
-    </section>
+      ) : null}
+
+      {trailing.map((figure) => (
+        <div key={figure.src} className="mt-8">
+          <StoryFigure figure={figure} />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -179,29 +162,42 @@ export function HomePage() {
         <div className="px-[4vw] lg:px-[5vw]">
           <SectionHeading>How it works</SectionHeading>
 
-          <ol className="m-0 grid list-none gap-8 p-0 min-[900px]:grid-cols-3 min-[900px]:gap-0">
+          <ol className="m-0 grid list-none gap-10 p-0 min-[900px]:grid-cols-3 min-[900px]:gap-0">
             {HOME_STEPS.map((step, index) => (
               <li
                 key={step.title}
-                className={`flex items-start gap-4 min-[900px]:px-8 ${index > 0
+                className={`flex flex-col gap-5 min-[900px]:px-8 ${index > 0
                   ? "min-[900px]:border-l min-[900px]:border-dotted min-[900px]:border-[color-mix(in_srgb,var(--color-ink)_28%,transparent)]"
                   : ""
                   }`}
               >
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gold font-serif text-[1.15rem] font-medium text-cream">
-                  {index + 1}
-                </span>
-                <div className="min-w-0 pt-0.5">
-                  <h3 className="mb-1.5 font-serif text-[1.2rem] font-medium leading-tight">{step.title}</h3>
-                  <p className="mb-0 font-serif text-[0.95rem] leading-snug text-ink-soft">{step.description}</p>
+                <img
+                  src={step.imageSrc}
+                  alt={step.imageAlt}
+                  width={step.width}
+                  height={step.height}
+                  className="aspect-[4/3] w-full rounded-[1.2rem] object-contain"
+                  loading="lazy"
+                />
+                <div className="flex items-start gap-4">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gold font-serif text-[1.15rem] font-medium text-cream">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0 pt-0.5">
+                    <h3 className="mb-1.5 font-serif text-[1.2rem] font-medium leading-tight">{step.title}</h3>
+                    <p className="mb-0 font-serif text-[0.95rem] leading-snug text-ink-soft">{step.description}</p>
+                  </div>
                 </div>
               </li>
             ))}
           </ol>
+
+          <div className="mt-14">
+            <SectionHeading>In the room</SectionHeading>
+            <HowItWorksFigures />
+          </div>
         </div>
       </section>
-
-      <InTheRoom />
 
       <section
         id="occasions"

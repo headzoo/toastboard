@@ -4,13 +4,13 @@ export type PageMetadata = {
 };
 
 export const DEFAULT_PAGE_METADATA: PageMetadata = {
-  title: "Wishing Wall — event guestbook with no login",
+  title: "Wishing Wall — a guestbook guests never log into",
   description:
-    "A live guestbook for personal events with no sign-up, no login, and no email. Guests scan a QR code and leave a note, photos, or one short video.",
+    "A live guestbook for personal events. Guests scan a QR code and leave a note, photos, or short video — no account, no app, no email.",
 };
 
 export const HUB_PAGE_METADATA: PageMetadata = {
-  title: "Wishing Wall — event guestbook with no login",
+  title: "Wishing Wall — a guestbook guests never log into",
   description:
     "Live guestbooks for weddings, birthdays, graduations, religious milestones, and more. Guests scan a QR code — no account needed.",
 };

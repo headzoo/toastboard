@@ -1,7 +1,7 @@
 export const HOME_HERO = {
-  kicker: "Zero sign-up. Zero login. Zero email.",
-  headline: "A guestbook that doesn’t ask for an account.",
-  lede: "Guests scan a QR code to leave a note, photo, or one short video. It appears on your private wall in real time. The host link is the login — no passwords or accounts.",
+  kicker: "Zero sign-up for your guests. That’s the whole point.",
+  headline: "A guestbook your guests never have to log into.",
+  lede: "Guests scan a QR code to leave a note, photo, or short video — no account, no app, no email, ever. You create your guestbook once, and it’s yours to keep.",
   primaryCta: "Create your guestbook",
   secondaryCta: "See how it works",
 } as const;
@@ -27,8 +27,8 @@ export const HOME_FEATURES: HomeFeature[] = [
     iconAlt: "",
   },
   {
-    title: "Private host link",
-    description: "Your link is the key. Anyone with it can moderate the wall.",
+    title: "Yours to keep",
+    description: "Create your guestbook once. Moderate it, revisit it, and keep every word.",
     iconSrc: "/mock/feature_shield_icon_transparent.png",
     iconAlt: "",
   },
@@ -76,20 +76,42 @@ export const HOME_OCCASIONS: HomeOccasion[] = [
 export type HomeStep = {
   title: string;
   description: string;
+  imageSrc: string;
+  imageAlt: string;
+  width: number;
+  height: number;
 };
 
 export const HOME_STEPS: HomeStep[] = [
   {
-    title: "Create your wall",
-    description: "Name your event, choose a few settings, and we’ll generate your QR code and link.",
+    title: "Create your guestbook",
+    description:
+      "Name your event, choose a few settings, and we’ll generate your QR code and link — plus images and PDFs you can print.",
+    imageSrc: "/branding/how-it-works-create.jpg",
+    imageAlt:
+      "A couple fills in a cream Wishing Wall form with names and date, surrounded by stationery and botanical sprigs",
+    width: 1536,
+    height: 1024,
   },
   {
     title: "Share your QR code or link",
-    description: "Display your QR code at your event or share your link with guests.",
+    description:
+      "Put QR codes on the tables, display them anywhere, or share your link with guests.",
+    imageSrc: "/branding/how-it-works-share.jpg",
+    imageAlt:
+      "A guest holds a phone to scan a printed cream QR code card standing on a reception table",
+    width: 1536,
+    height: 1024,
   },
   {
     title: "Collect messages",
-    description: "Watch messages appear in real time on your private wall.",
+    description:
+      "Watch messages appear in real time on your private wall — or as a slideshow on your phone, tablet, or even a TV.",
+    imageSrc: "/branding/how-it-works-collect.jpg",
+    imageAlt:
+      "A simplified Wishing Wall showing stacked guest message cards with gold, olive, and oxblood accent bars",
+    width: 1536,
+    height: 1024,
   },
 ];
 
@@ -104,13 +126,11 @@ export type HomeStoryFigure = {
 };
 
 export type HomeStory = {
-  headline: string;
   figures: HomeStoryFigure[];
 };
 
-/** Photo story after How it works — same shape as the live “In the room” section. */
+/** Photo story inside How it works — same shape as the live “In the room” gallery. */
 export const HOME_IN_THE_ROOM: HomeStory = {
-  headline: "The guestbook that sits with the party.",
   figures: [
     {
       layout: "full",
