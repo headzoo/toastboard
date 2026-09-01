@@ -12,8 +12,8 @@ const FAQS = [
     a: "No. Guests scan a QR code or open a guest link, leave an optional name, a note, photos, or one short video, and they’re done. There is no sign-up and no email.",
   },
   {
-    q: "How does the host moderate the wall?",
-    a: "When you create a guestbook, Wishing Wall gives you a private host link. Anyone with that link can hide messages. Guests never see moderation tools.",
+    q: "How does the host moderate the guestbook?",
+    a: "When you create a guestbook, The Willow Book gives you a private host link. Anyone with that link can hide messages. Guests never see moderation tools.",
   },
   {
     q: "What if I lose the host link?",

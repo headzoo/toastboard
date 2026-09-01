@@ -126,7 +126,7 @@ export function listenMessages(
       onChange(messages);
     },
     (error: FirestoreError) => {
-      onError(error.message || "Couldn’t load the guestbook wall.");
+      onError(error.message || "Couldn’t load the guestbook.");
     },
   );
 }

@@ -47,7 +47,7 @@ function transitionFor(slotKey: string, preference: MotionStyle, reduced: boolea
   return transitions[preference === "random" ? styles[stableNumber(slotKey) % styles.length] : preference];
 }
 
-export function WallSlideshow({ event, messages, ready, slug, onExit }: Props) {
+export function GuestbookSlideshow({ event, messages, ready, slug, onExit }: Props) {
   const deck = useSlideshowDeck(slug, messages, ready);
   const effectiveSignTheme = deck.preferences.signTheme ?? event.signTheme;
   const palette = getSignTheme(effectiveSignTheme);

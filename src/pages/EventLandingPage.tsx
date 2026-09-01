@@ -63,7 +63,7 @@ function VisualStory({ story }: { story: NonNullable<MarketingContent["visualSto
 
 function Highlights({ highlights }: { highlights: NonNullable<MarketingContent["highlights"]> }) {
   return (
-    <section className="mt-16 pb-8" aria-label="Why Wishing Wall works">
+    <section className="mt-16 pb-8" aria-label="Why The Willow Book works">
       <p className={kickerClass}>Why it works</p>
       <h2 className="mb-6 max-w-[28rem] font-serif text-[clamp(1.6rem,3.5vw,2.2rem)] font-medium tracking-[-0.03em]">
         Built for the celebration, not the signup form.
@@ -88,7 +88,7 @@ export function EventLandingPage({ content }: EventLandingPageProps) {
   const createPath = `/create?type=${content.eventType}`;
 
   usePageMetadata({
-    title: `${content.hubTitle} guestbook — Wishing Wall`,
+    title: `${content.hubTitle} guestbook — The Willow Book`,
     description: content.hubDescription,
   });
 
@@ -117,7 +117,7 @@ export function EventLandingPage({ content }: EventLandingPageProps) {
               {content.createCtaLabel}
             </Link>
           )}
-          <Link className={btnClass("ghost")} to={`/e/${content.demoSlug}/wall`}>
+          <Link className={btnClass("ghost")} to={`/e/${content.demoSlug}/guestbook`}>
             {content.demoCtaLabel}
           </Link>
         </div>

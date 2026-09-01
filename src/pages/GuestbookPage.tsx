@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Shell, StatusNote } from "../components/ui.tsx";
-import { WallFeed } from "../components/WallFeed.tsx";
-import { WallSlideshow } from "../components/WallSlideshow.tsx";
+import { GuestbookFeed } from "../components/GuestbookFeed.tsx";
+import { GuestbookSlideshow } from "../components/GuestbookSlideshow.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
 import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
@@ -10,7 +10,7 @@ import { getSignTheme } from "../lib/signThemes.ts";
 import { getEventCopy } from "../lib/eventTypes.ts";
 import { formatEventDate } from "../lib/theme.ts";
 
-export function WallPage() {
+export function GuestbookPage() {
   const { slug } = useParams();
   const { event, status } = useEvent(slug);
   const { messages, error, live } = useMessages(slug, status === "ready");
@@ -31,7 +31,7 @@ export function WallPage() {
   if (status === "loading") {
     return (
       <Shell footer={false}>
-        <StatusNote>Loading the wall…</StatusNote>
+        <StatusNote>Loading the guestbook…</StatusNote>
       </Shell>
     );
   }
@@ -40,7 +40,7 @@ export function WallPage() {
     return (
       <Shell footer={false}>
         <section className={narrowClass}>
-          <h1>This wall isn’t here yet</h1>
+          <h1>This guestbook isn’t here yet</h1>
           <p>Create a guestbook first, then share the guest QR.</p>
         </section>
       </Shell>
@@ -75,7 +75,7 @@ export function WallPage() {
   return (
     <div ref={fullscreenRootRef}>
       {slideshowActive ? (
-        <WallSlideshow
+        <GuestbookSlideshow
           event={event}
           messages={messages}
           ready={live}
@@ -95,7 +95,7 @@ export function WallPage() {
             {event.eventDate ? <p className={ledeClass}>{formatEventDate(event.eventDate)}</p> : null}
             <div className={`${btnRowClass} print:hidden`}>
               <Link className={btnClass("ghost")} to={`/e/${slug}`}>
-                {copy.wallCtaLabel}
+                {copy.guestbookCtaLabel}
               </Link>
               <button
                 className={btnClass("ghost")}
@@ -108,9 +108,9 @@ export function WallPage() {
             </div>
           </section>
           {error || fullscreenError ? <StatusNote tone="error">{error ?? fullscreenError}</StatusNote> : null}
-          <WallFeed
+          <GuestbookFeed
             messages={messages}
-            emptyLabel={copy.wallEmptyLabel}
+            emptyLabel={copy.guestbookEmptyLabel}
           />
         </Shell>
       )}

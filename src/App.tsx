@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ScrollToTop } from "./components/ScrollToTop.tsx";
 import { AboutPage } from "./pages/AboutPage.tsx";
 import { CreatePage } from "./pages/CreatePage.tsx";
 import { EventLandingPage } from "./pages/EventLandingPage.tsx";
@@ -11,7 +12,7 @@ import { ManagePage } from "./pages/ManagePage.tsx";
 import { PricingPage } from "./pages/PricingPage.tsx";
 import { PrivacyPage } from "./pages/PrivacyPage.tsx";
 import { TermsPage } from "./pages/TermsPage.tsx";
-import { WallPage } from "./pages/WallPage.tsx";
+import { GuestbookPage } from "./pages/GuestbookPage.tsx";
 import { Shell } from "./components/ui.tsx";
 import { MARKETING_CONTENT } from "./lib/marketingContent.ts";
 
@@ -28,6 +29,7 @@ function NotFound() {
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
@@ -55,7 +57,7 @@ export default function App() {
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/e/:slug" element={<GuestPage />} />
-        <Route path="/e/:slug/wall" element={<WallPage />} />
+        <Route path="/e/:slug/guestbook" element={<GuestbookPage />} />
         <Route path="/e/:slug/manage" element={<ManagePage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

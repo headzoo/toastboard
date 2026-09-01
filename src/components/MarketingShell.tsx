@@ -82,25 +82,25 @@ function MarketingFooter() {
         </nav>
 
         <Link
-          className="flex items-center justify-center gap-3 font-serif text-[0.95rem] text-ink no-underline hover:text-oxblood"
-          to="/about"
+          className="flex items-center justify-center gap-3 font-serif text-[0.95rem] leading-none text-ink no-underline hover:text-oxblood"
+          to="https://keepwellandbell.com"
         >
           <img
             src="/mock/botanical_sprig_left.png"
             alt=""
-            className="h-5 w-auto opacity-80"
+            className="h-5 w-auto shrink-0 opacity-80"
             aria-hidden="true"
           />
-          <span>Wishing Wall is a product by Keepwell &amp; Bell →</span>
+          <span>The Willow Book is a product by Keepwell &amp; Bell</span>
           <img
             src="/mock/botanical_sprig_right.png"
             alt=""
-            className="h-5 w-auto opacity-80"
+            className="h-5 w-auto shrink-0 opacity-80"
             aria-hidden="true"
           />
         </Link>
 
-        <p className="m-0 text-center min-[900px]:text-right">© {year} Wishing Wall</p>
+        <p className="m-0 text-center min-[900px]:text-right">© {year} The Willow Book</p>
       </div>
     </footer>
   );
@@ -111,7 +111,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="relative flex min-h-svh flex-col">
+    <div className="@container relative flex min-h-svh flex-col">
       <div className="paper-grain" aria-hidden="true" />
 
       <header className="relative z-20 px-[4vw] pt-5 print:hidden">
@@ -136,9 +136,9 @@ export function MarketingShell({ children }: MarketingShellProps) {
 
             <Link className="inline-flex items-center no-underline" to="/" onClick={closeMenu}>
               <img
-                src="/branding/mock-3.png"
-                alt="Wishing Wall by Keepwell & Bell"
-                className="h-auto w-[min(10rem,42vw)]"
+                src="/logo.png"
+                alt="The Willow Book by Keepwell & Bell"
+                className="h-auto w-[min(12.1rem,50.6vw)]"
               />
             </Link>
 
@@ -150,7 +150,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
               Sign in
             </Link>
             <Link className={marketingBtnClass} to="/create">
-              Create a guestbook
+              14-day Free Trial
             </Link>
           </div>
         </div>
@@ -167,13 +167,13 @@ export function MarketingShell({ children }: MarketingShellProps) {
               Sign in
             </Link>
             <Link className={marketingBtnClass} to="/create" onClick={closeMenu}>
-              Create a guestbook
+              14-day Free Trial
             </Link>
           </nav>
         ) : null}
       </header>
 
-      <main className="mx-auto w-full max-w-[1180px] flex-1 px-[4vw] pb-20 pt-4">{children}</main>
+      <main className="mx-auto w-full max-w-[1180px] flex-1 px-[4vw] pb-20">{children}</main>
       <MarketingFooter />
     </div>
   );

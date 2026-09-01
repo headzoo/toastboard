@@ -12,7 +12,7 @@ function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-[color-mix(in_srgb,var(--color-ink)_12%,transparent)] px-[6vw] py-8 print:hidden">
       <div className="mx-auto flex max-w-[1180px] flex-col gap-3 text-[0.85rem] text-ink-soft min-[700px]:flex-row min-[700px]:items-center min-[700px]:justify-between">
-        <p className="m-0">© {year} Wishing Wall. All rights reserved.</p>
+        <p className="m-0">© {year} The Willow Book. All rights reserved.</p>
         <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Legal">
           <Link className="text-ink-soft no-underline hover:text-ink" to="/terms">
             Terms and Conditions
@@ -33,9 +33,9 @@ export function Shell({ children, footer = true }: ShellProps) {
       <header className="flex justify-center px-[6vw] pt-5 print:hidden">
         <Link className="inline-flex items-center no-underline" to="/">
           <img
-            src="/branding/mock-3.png"
-            alt="Wishing Wall by Keepwell & Bell"
-            className="h-auto w-[min(14rem,55vw)] sm:w-[min(16rem,40vw)]"
+            src="/logo.png"
+            alt="The Willow Book by Keepwell & Bell"
+            className="h-auto w-[min(16.94rem,66.55vw)] sm:w-[min(19.36rem,48.4vw)]"
           />
         </Link>
       </header>

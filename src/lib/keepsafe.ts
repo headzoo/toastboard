@@ -32,7 +32,7 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
   ctx.fillStyle = palette.ink;
   ctx.font = "600 42px 'Fraunces', serif";
   ctx.textAlign = "center";
-  ctx.fillText("Wishing Wall", width / 2, 160);
+  ctx.fillText("The Willow Book", width / 2, 160);
 
   ctx.font = "italic 300 72px 'Fraunces', serif";
   wrapText(ctx, input.coupleNames, width / 2, 270, width - 200, 82);

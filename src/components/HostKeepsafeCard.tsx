@@ -13,7 +13,7 @@ import {
 import { btnClass, ledeClass, narrowClass } from "../lib/styles.ts";
 import { formatEventDate } from "../lib/theme.ts";
 import { formatKeepsafeLede, getEventCopy } from "../lib/eventTypes.ts";
-import { copyText, downloadDataUrl, guestUrl, manageUrl, wallUrl } from "../lib/urls.ts";
+import { copyText, downloadDataUrl, guestUrl, guestbookUrl, manageUrl } from "../lib/urls.ts";
 import { DEFAULT_THEME } from "../lib/types.ts";
 import type { HostKeepsafe } from "../lib/types.ts";
 
@@ -138,11 +138,11 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
         <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Guest page</span>
         <code className="break-all text-[0.82rem] text-ink-soft">{guestLink}</code>
-        <Button variant="primary" href={wallUrl(keepsafe.slug)}>
-          Open the wall
+        <Button variant="primary" href={guestbookUrl(keepsafe.slug)}>
+          Open the guestbook
         </Button>
         <Button variant="ghost" onClick={() => void copy("guest")}>
-          {copied === "guest" ? "Copied" : "Copy wall link"}
+          {copied === "guest" ? "Copied" : "Copy guestbook link"}
         </Button>
       </div>
 

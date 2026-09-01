@@ -40,7 +40,7 @@ function contentSlot(
 }
 
 /**
- * A frozen-slot controller for the fullscreen wall. Changing `messages` only
+ * A frozen-slot controller for the fullscreen guestbook. Changing `messages` only
  * replaces its upcoming work; it never rewrites the slot currently on screen.
  *
  * `ready` should become true after the initial live snapshot. This lets a deck

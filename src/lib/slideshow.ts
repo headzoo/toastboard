@@ -166,7 +166,7 @@ export type ImageCacheEntry = Readonly<{
   dimensions?: SlideImageDimensions;
 }>;
 
-/** Thin wrapper around the shared image-dimension cache (same URL keys as wall photos). */
+/** Thin wrapper around the shared image-dimension cache (same URL keys as guestbook photos). */
 export class SlideImageCache {
   preload(url: string): Promise<SlideImageDimensions | null> {
     return this.get(url).promise;

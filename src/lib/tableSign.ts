@@ -167,10 +167,17 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
     font: (size) => `400 ${size}px "Figtree", sans-serif`,
   });
 
-  drawToastMark(ctx, cx - P(52), height - P(56), P(8), accent);
-  ctx.fillStyle = palette.ink;
+  const brandLabel = "The Willow Book";
+  const markSize = P(8);
+  const gap = P(10);
   ctx.font = `500 ${P(11)}px "Fraunces", serif`;
-  ctx.fillText("Wishing Wall", cx + P(6), height - P(52));
+  const brandWidth = ctx.measureText(brandLabel).width;
+  const clusterLeft = cx - (markSize + gap + brandWidth) / 2;
+  drawToastMark(ctx, clusterLeft + markSize / 2, height - P(56), markSize, accent);
+  ctx.fillStyle = palette.ink;
+  ctx.textAlign = "left";
+  ctx.fillText(brandLabel, clusterLeft + markSize + gap, height - P(52));
+  ctx.textAlign = "center";
 
   return canvas;
 }

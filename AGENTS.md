@@ -1,10 +1,10 @@
-# Wishing Wall — agent branding guide
+# The Willow Book — agent branding guide
 
 ## Product vs house brand
 
-- **Product name:** Wishing Wall — use this in UI copy, page titles, metadata, and legal text when referring to the service.
+- **Product name:** The Willow Book — use this in UI copy, page titles, metadata, and legal text when referring to the service. Use “a Willow Book” (drop *The*) when the name takes an article or works as an adjective (“a Willow Book guestbook”).
 - **House brand:** Keepwell & Bell — appears in the logo lockup; do not use as the primary product name in UI copy.
-- **Logo asset:** `public/branding/mock-3.png` — lockup reads "Wishing Wall by Keepwell & Bell".
+- **Logo asset:** `public/logo.png` — lockup reads "The Willow Book by Keepwell & Bell".
 
 ## What not to rename
 
@@ -62,17 +62,17 @@ Keepwell & Bell is presented the way Betty Crocker, Uncle Ben's, Sara Lee, or Dr
 > A quiet place to keep the words a moment deserves.
 
 **About / "Our Standards" (replaces a founder bio page)**
-> At Keepwell & Bell, we set high standards. Every wall we build is meant to be read again — at the gathering, the next morning, years later. We hold every detail, from a single toast to a full celebration, to one measure: simple to use, built to last, worth returning to.
+> At Keepwell & Bell, we set high standards. Every guestbook we build is meant to be read again — at the gathering, the next morning, years later. We hold every detail, from a single toast to a full celebration, to one measure: simple to use, built to last, worth returning to.
 >
-> Keepwell & Bell seeks fine craftsmanship in the smallest details — a card, a wall, a keepsake. We believe no memory should need a password to be kept safe.
+> Keepwell & Bell seeks fine craftsmanship in the smallest details — a card, a guestbook, a keepsake. We believe no memory should need a password to be kept safe.
 
-**Product intro (Wishing Wall)**
-> Wishing Wall is our answer to a simple question: how do you keep the words people say at your table, without asking them to sign in to say them?
+**Product intro (The Willow Book)**
+> The Willow Book is our answer to a simple question: how do you keep the words people say at your table, without asking them to sign in to say them?
 
 **Footer**
 > Keepwell & Bell — quietly, carefully made.
 
-**Empty state (no messages yet on a wall)**
+**Empty state (no messages yet in a guestbook)**
 > Nothing kept here yet. The first word is always the best one.
 
 **Error / 404 page**

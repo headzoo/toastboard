@@ -136,10 +136,10 @@ export function GuestPage() {
         <section className="narrow thanks">
           <p className="kicker">Sent</p>
           <h1>{copy.thankYouHeadline}</h1>
-          <p className="lede">It should appear on the wall in a moment.</p>
+          <p className="lede">It should appear in the guestbook in a moment.</p>
           <div className="btn-row">
-            <Link className="btn btn-primary" to={`/e/${slug}/wall`}>
-              See the wall
+            <Link className="btn btn-primary" to={`/e/${slug}/guestbook`}>
+              See the guestbook
             </Link>
             <Button
               variant="ghost"

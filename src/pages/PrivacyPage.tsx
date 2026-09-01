@@ -23,9 +23,9 @@ export function PrivacyPage() {
         <section className="mt-8 space-y-4">
           <h2>1. Overview</h2>
           <p>
-            This Privacy Policy explains how Wishing Wall (“we,” “us”) collects, uses, and shares
+            This Privacy Policy explains how The Willow Book (“we,” “us”) collects, uses, and shares
             information when you use the personal event guestbook service at toastboard.web.app (the
-            “Service”). Wishing Wall does not require accounts, email addresses, or passwords. The host
+            “Service”). The Willow Book does not require accounts, email addresses, or passwords. The host
             link is the credential for moderating a guestbook.
           </p>
 
@@ -52,7 +52,7 @@ export function PrivacyPage() {
             </li>
             <li>
               <strong>Browser storage</strong> on your device: a local “keepsafe” copy of host details
-              and optional slideshow preferences for a wall. This stays in your browser unless you
+              and optional slideshow preferences for a guestbook. This stays in your browser unless you
               clear site data.
             </li>
           </ul>
@@ -64,7 +64,7 @@ export function PrivacyPage() {
           <h2>3. How we use information</h2>
           <p>We use information to:</p>
           <ul className="mb-4 list-disc space-y-2 pl-5">
-            <li>Operate guestbooks, guest forms, live walls, and slideshows</li>
+            <li>Operate guestbooks, guest forms, live guestbooks, and slideshows</li>
             <li>
               Process uploaded videos into a browser-compatible display copy using Firebase Cloud
               Functions (including transcoding or remuxing as needed)
@@ -76,8 +76,8 @@ export function PrivacyPage() {
 
           <h2>4. Public guestbook content</h2>
           <p>
-            Guest Content posted to a guestbook is intended to appear on that event’s public wall and
-            may appear in a slideshow. Anyone with the guest or wall link can view it. Do not submit
+            Guest Content posted to a guestbook is intended to appear on that event’s public guestbook and
+            may appear in a slideshow. Anyone with the guest or guestbook link can view it. Do not submit
             information you do not want shown publicly for that event.
           </p>
 
@@ -96,7 +96,7 @@ export function PrivacyPage() {
             moderation and Service availability. When a host hides Guest Content, we mark it hidden and,
             when possible, delete associated photos, processed videos, and raw upload files from
             storage. After a video is processed, we delete the original raw upload when possible and
-            keep the display copy needed to show the message on the wall. Browser keepsafe and
+            keep the display copy needed to show the message in the guestbook. Browser keepsafe and
             slideshow settings remain until you clear them. We may retain limited technical logs for
             security and operations for a reasonable period.
           </p>
@@ -118,7 +118,7 @@ export function PrivacyPage() {
           <h2>9. International processing</h2>
           <p>
             The Service is hosted on infrastructure that may process data in the United States or other
-            countries where our providers operate. By using Wishing Wall, you understand that information
+            countries where our providers operate. By using The Willow Book, you understand that information
             may be transferred to and processed in those locations.
           </p>
 
@@ -144,7 +144,7 @@ export function PrivacyPage() {
 
           <h2>13. Contact</h2>
           <p>
-            Privacy questions may be directed to Wishing Wall through the site at toastboard.web.app.
+            Privacy questions may be directed to The Willow Book through the site at toastboard.web.app.
           </p>
         </section>
       </article>

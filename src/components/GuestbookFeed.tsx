@@ -129,7 +129,7 @@ export function MessageCard({ message, hostToken, slug, moderation, onHidden }: 
   );
 }
 
-type WallFeedProps = {
+type GuestbookFeedProps = {
   messages: MessageRecord[];
   hostToken?: string;
   slug?: string;
@@ -137,17 +137,17 @@ type WallFeedProps = {
   moderation?: ModerationCopy;
 };
 
-export function WallFeed({ messages, hostToken, slug, emptyLabel, moderation }: WallFeedProps) {
+export function GuestbookFeed({ messages, hostToken, slug, emptyLabel, moderation }: GuestbookFeedProps) {
   if (messages.length === 0) {
     return (
-      <div className="empty-wall">
+      <div className="empty-guestbook">
         <p>{emptyLabel}</p>
       </div>
     );
   }
 
   return (
-    <div className="wall-grid">
+    <div className="guestbook-grid">
       {messages.map((message) => (
         <MessageCard
           key={message.id}

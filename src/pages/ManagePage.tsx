@@ -3,7 +3,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { TableSignCard } from "../components/TableSignCard.tsx";
 import { SignThemePicker } from "../components/SignThemePicker.tsx";
 import { Shell, StatusNote } from "../components/ui.tsx";
-import { WallFeed } from "../components/WallFeed.tsx";
+import { GuestbookFeed } from "../components/GuestbookFeed.tsx";
 import { useEvent } from "../hooks/useEvent.ts";
 import { useMessages } from "../hooks/useMessages.ts";
 import { updateEventSignTheme } from "../lib/api.ts";
@@ -69,7 +69,7 @@ export function ManagePage() {
         <section className={narrowClass}>
           <h1>This page needs the host link</h1>
           <p>
-            Wishing Wall doesn’t have accounts. If you still have the original “save this link” page, that’s the
+            The Willow Book doesn’t have accounts. If you still have the original “save this link” page, that’s the
             credential.
           </p>
         </section>
@@ -110,8 +110,8 @@ export function ManagePage() {
         <h1>{event.coupleNames}</h1>
         <p className={ledeClass}>{copy.moderationIntro}</p>
         <div className={btnRowClass}>
-          <Link className={btnClass("ghost")} to={`/e/${slug}/wall`}>
-            Public wall
+          <Link className={btnClass("ghost")} to={`/e/${slug}/guestbook`}>
+            Public guestbook
           </Link>
           <Link className={btnClass("ghost")} to={`/e/${slug}`}>
             Guest form
@@ -140,7 +140,7 @@ export function ManagePage() {
       </div>
 
       {error ? <StatusNote tone="error">{error}</StatusNote> : null}
-      <WallFeed
+      <GuestbookFeed
         messages={messages}
         slug={slug}
         hostToken={token}

@@ -18,9 +18,9 @@ export function ExamplesPage() {
     <MarketingShell>
       <article className="mx-auto max-w-[900px]">
         <p className={kickerClass}>Examples</p>
-        <h1>See a wall in the room</h1>
+        <h1>See a guestbook in the room</h1>
         <p className={`${ledeClass} max-w-[40rem]`}>
-          Each occasion has a short landing page and a live demo wall you can open without creating
+          Each occasion has a short landing page and a live demo guestbook you can open without creating
           anything. No accounts. No checkout.
         </p>
 
@@ -38,7 +38,7 @@ export function ExamplesPage() {
                   <Link className={marketingLinkClass} to={content.path}>
                     Learn more →
                   </Link>
-                  <Link className={marketingLinkClass} to={`/e/${content.demoSlug}/wall`}>
+                  <Link className={marketingLinkClass} to={`/e/${content.demoSlug}/guestbook`}>
                     {content.demoCtaLabel} →
                   </Link>
                 </div>

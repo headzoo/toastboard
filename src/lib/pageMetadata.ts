@@ -4,57 +4,57 @@ export type PageMetadata = {
 };
 
 export const DEFAULT_PAGE_METADATA: PageMetadata = {
-  title: "Wishing Wall — a guestbook guests never log into",
+  title: "The Willow Book — a guestbook guests never log into",
   description:
     "A live guestbook for personal events. Guests scan a QR code and leave a note, photos, or short video — no account, no app, no email.",
 };
 
 export const HUB_PAGE_METADATA: PageMetadata = {
-  title: "Wishing Wall — a guestbook guests never log into",
+  title: "The Willow Book — a guestbook guests never log into",
   description:
     "Live guestbooks for weddings, birthdays, graduations, religious milestones, and more. Guests scan a QR code — no account needed.",
 };
 
 export const TERMS_PAGE_METADATA: PageMetadata = {
-  title: "Terms and Conditions — Wishing Wall",
+  title: "Terms and Conditions — The Willow Book",
   description:
-    "Terms governing use of Wishing Wall, a personal event guestbook service with no accounts or passwords.",
+    "Terms governing use of The Willow Book, a personal event guestbook service with no accounts or passwords.",
 };
 
 export const PRIVACY_PAGE_METADATA: PageMetadata = {
-  title: "Privacy Policy — Wishing Wall",
+  title: "Privacy Policy — The Willow Book",
   description:
-    "How Wishing Wall collects and uses information for personal event guestbooks without accounts or email.",
+    "How The Willow Book collects and uses information for personal event guestbooks without accounts or email.",
 };
 
 export const ABOUT_PAGE_METADATA: PageMetadata = {
-  title: "About — Wishing Wall by Keepwell & Bell",
+  title: "About — The Willow Book by Keepwell & Bell",
   description:
     "Our standards: simple to use, built to last, worth returning to. No accounts required to keep a kind word safe.",
 };
 
 export const HELP_PAGE_METADATA: PageMetadata = {
-  title: "Help Center — Wishing Wall",
+  title: "Help Center — The Willow Book",
   description:
     "Short answers about guestbooks with no sign-up: QR codes, host links, photos, and short video.",
 };
 
 export const HOSTS_PAGE_METADATA: PageMetadata = {
-  title: "For hosts — Wishing Wall",
+  title: "For hosts — The Willow Book",
   description:
-    "The host link is the only key. How to create, save, and moderate a Wishing Wall guestbook.",
+    "The host link is the only key. How to create, save, and moderate a Willow Book guestbook.",
 };
 
 export const EXAMPLES_PAGE_METADATA: PageMetadata = {
-  title: "Examples — Wishing Wall",
+  title: "Examples — The Willow Book",
   description:
     "See wedding, birthday, graduation, and milestone guestbook demos — no account needed.",
 };
 
 export const PRICING_PAGE_METADATA: PageMetadata = {
-  title: "Pricing — Wishing Wall",
+  title: "Pricing — The Willow Book",
   description:
-    "Creating a Wishing Wall does not go through a checkout today. No payment card required for ordinary use.",
+    "Creating a Willow Book does not go through a checkout today. No payment card required for ordinary use.",
 };
 
 export function setPageMetadata(metadata: PageMetadata) {

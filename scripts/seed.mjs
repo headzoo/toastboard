@@ -400,7 +400,7 @@ function printDemoUrls(origin, demo) {
   const manage = `${origin}/e/${demo.slug}/manage?token=${demo.hostToken}`;
   console.log(`${demo.coupleNames}`);
   console.log(`  Guest: ${origin}/e/${demo.slug}`);
-  console.log(`  Wall: ${origin}/e/${demo.slug}/wall`);
+  console.log(`  Guestbook: ${origin}/e/${demo.slug}/guestbook`);
   console.log(`  Host: ${manage}`);
   return manage;
 }

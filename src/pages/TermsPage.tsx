@@ -23,17 +23,17 @@ export function TermsPage() {
         <section className="mt-8 space-y-4">
           <h2>1. Agreement</h2>
           <p>
-            These Terms and Conditions (“Terms”) govern your use of Wishing Wall, a personal event
+            These Terms and Conditions (“Terms”) govern your use of The Willow Book, a personal event
             guestbook service available at toastboard.web.app (the “Service”). By creating a guestbook,
-            submitting Guest Content, viewing a wall, or otherwise using the Service, you agree to these
+            submitting Guest Content, viewing a guestbook, or otherwise using the Service, you agree to these
             Terms. If you do not agree, do not use the Service.
           </p>
 
           <h2>2. The Service</h2>
           <p>
-            Wishing Wall lets hosts create a digital guestbook without signing up for an account. Guests
+            The Willow Book lets hosts create a digital guestbook without signing up for an account. Guests
             scan a QR code or open a guest link, leave an optional name, a note, photos (up to ten),
-            or one short video (under 10 MiB), and that content appears on a live wall. Video uploads
+            or one short video (under 10 MiB), and that content appears on a live guestbook. Video uploads
             may show a processing state until Cloud Functions prepare a browser-compatible display copy.
             Hosts moderate with a private host link rather than a username and password. There is no
             email-based account, login, or password reset.
@@ -41,23 +41,23 @@ export function TermsPage() {
 
           <h2>3. Host credentials</h2>
           <p>
-            When you create a guestbook, Wishing Wall gives you a host link that acts as the credential
-            for that event. Anyone who has the host link can moderate the guestbook. Wishing Wall cannot
+            When you create a guestbook, The Willow Book gives you a host link that acts as the credential
+            for that event. Anyone who has the host link can moderate the guestbook. The Willow Book cannot
             recover a lost host link. You are responsible for saving and protecting it.
           </p>
 
           <h2>4. Guest content</h2>
           <p>
             Guests may submit text, photos, and short videos (“Guest Content”). Guest Content posted
-            to a guestbook may be shown on a public wall and in a slideshow for that event. You retain
-            ownership of content you submit, and you grant Wishing Wall a worldwide, non-exclusive
+            to a guestbook may be shown on a public guestbook and in a slideshow for that event. You retain
+            ownership of content you submit, and you grant The Willow Book a worldwide, non-exclusive
             license to host, store, display, transcode or remux video as needed, and transmit content
             as needed to operate the Service.
           </p>
           <p>
             You must only submit content you have the right to share. Do not submit unlawful, abusive,
             harassing, defamatory, infringing, or otherwise inappropriate material. Hosts may hide or
-            remove Guest Content. Wishing Wall may remove content or disable access that violates these
+            remove Guest Content. The Willow Book may remove content or disable access that violates these
             Terms or harms the Service.
           </p>
 
@@ -70,14 +70,14 @@ export function TermsPage() {
 
           <h2>6. Intellectual property</h2>
           <p>
-            Wishing Wall’s name, branding, design, and software are owned by Wishing Wall or its licensors.
+            The Willow Book’s name, branding, design, and software are owned by The Willow Book or its licensors.
             These Terms do not grant you rights to copy, modify, or redistribute the Service except as
             needed for ordinary use.
           </p>
 
           <h2>7. Availability and changes</h2>
           <p>
-            The Service is provided as-is. Features may change, and Wishing Wall may suspend or
+            The Service is provided as-is. Features may change, and The Willow Book may suspend or
             discontinue parts of the Service. We may update these Terms by posting a revised version
             with an updated effective date. Continued use after changes means you accept the revised
             Terms.
@@ -87,14 +87,14 @@ export function TermsPage() {
           <p>
             TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SERVICE IS PROVIDED “AS IS” AND “AS AVAILABLE”
             WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY,
-            FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. Wishing Wall does not warrant that
+            FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. The Willow Book does not warrant that
             the Service will be uninterrupted, secure, or error-free, or that Guest Content will be
             preserved indefinitely.
           </p>
 
           <h2>9. Limitation of liability</h2>
           <p>
-            TO THE MAXIMUM EXTENT PERMITTED BY LAW, WISHING WALL AND ITS OPERATORS WILL NOT BE LIABLE FOR
+            TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE WILLOW BOOK AND ITS OPERATORS WILL NOT BE LIABLE FOR
             INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR FOR LOSS OF DATA,
             PROFITS, OR GOODWILL, ARISING FROM YOUR USE OF THE SERVICE. OUR TOTAL LIABILITY FOR ANY
             CLAIM RELATED TO THE SERVICE WILL NOT EXCEED ONE HUNDRED U.S. DOLLARS (US $100) OR THE
@@ -111,7 +111,7 @@ export function TermsPage() {
 
           <h2>11. Governing law</h2>
           <p>
-            These Terms are governed by the laws applicable where Wishing Wall operates, without regard
+            These Terms are governed by the laws applicable where The Willow Book operates, without regard
             to conflict-of-law principles. Courts in that jurisdiction will have exclusive venue for
             disputes that cannot be resolved informally, except where mandatory consumer protections
             require otherwise.
@@ -119,7 +119,7 @@ export function TermsPage() {
 
           <h2>12. Contact</h2>
           <p>
-            Questions about these Terms may be directed to Wishing Wall through the site at
+            Questions about these Terms may be directed to The Willow Book through the site at
             toastboard.web.app.
           </p>
         </section>

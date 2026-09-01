@@ -32,7 +32,7 @@
         },
         {
           "guestName": "Sam from work",
-          "text": "The wall is already prettier than our Slack channel. Congratulations, you two.",
+          "text": "The guestbook is already prettier than our Slack channel. Congratulations, you two.",
           "photos": ["guestbook-sam.jpg"]
         },
         {
@@ -58,7 +58,7 @@
         },
         {
           "guestName": "Mateo",
-          "text": "You once said you’d never throw a party. Look at this wall. Happy birthday, you wonderful hypocrite.",
+          "text": "You once said you’d never throw a party. Look at this guestbook. Happy birthday, you wonderful hypocrite.",
           "photos": ["guestbook-lena-mateo.jpg"]
         },
         {

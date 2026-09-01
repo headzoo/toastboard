@@ -18,7 +18,7 @@ export function AboutPage() {
         <p className={kickerClass}>Our standards</p>
         <h1>About Keepwell &amp; Bell</h1>
         <p className={ledeClass}>
-          At Keepwell &amp; Bell, we set high standards. Every wall we build is meant to be read again
+          At Keepwell &amp; Bell, we set high standards. Every guestbook we build is meant to be read again
           — at the gathering, the next morning, years later.
         </p>
 
@@ -28,11 +28,11 @@ export function AboutPage() {
             use, built to last, worth returning to.
           </p>
           <p>
-            Keepwell &amp; Bell seeks fine craftsmanship in the smallest details — a card, a wall, a
+            Keepwell &amp; Bell seeks fine craftsmanship in the smallest details — a card, a guestbook, a
             keepsake. We believe no memory should need a password to be kept safe.
           </p>
           <p>
-            Wishing Wall is our answer to a simple question: how do you keep the words people say at
+            The Willow Book is our answer to a simple question: how do you keep the words people say at
             your table, without asking them to sign in to say them?
           </p>
         </section>

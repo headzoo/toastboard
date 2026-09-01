@@ -65,8 +65,8 @@ export function guestUrl(slug: string) {
   return new URL(`/e/${slug}`, window.location.origin).toString();
 }
 
-export function wallUrl(slug: string) {
-  return new URL(`/e/${slug}/wall`, window.location.origin).toString();
+export function guestbookUrl(slug: string) {
+  return new URL(`/e/${slug}/guestbook`, window.location.origin).toString();
 }
 
 export function manageUrl(slug: string, token: string) {

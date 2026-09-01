@@ -19,7 +19,7 @@ export function PricingPage() {
         <p className={kickerClass}>Pricing</p>
         <h1>No checkout today</h1>
         <p className={ledeClass}>
-          Creating a Wishing Wall does not go through a payment form. There is no price list on this
+          Creating a Willow Book does not go through a payment form. There is no price list on this
           page because we are not collecting payment card details as part of ordinary use.
         </p>
 

@@ -22,13 +22,13 @@ export function HostsPage() {
         <p className={kickerClass}>For hosts</p>
         <h1>Your link is the only key</h1>
         <p className={ledeClass}>
-          Wishing Wall does not ask for an email or a password. When you create a guestbook, we give
+          The Willow Book does not ask for an email or a password. When you create a guestbook, we give
           you a host link once. Keep it safe — it’s the only key we’ll ever give you.
         </p>
 
         <section className="mt-8 space-y-4 text-ink-soft">
           <p>
-            Anyone who has the host link can moderate the wall: hide a toast, change the table-sign
+            Anyone who has the host link can moderate the guestbook: hide a toast, change the table-sign
             look, or open the live display. Guests never see those tools.
           </p>
           <p>
