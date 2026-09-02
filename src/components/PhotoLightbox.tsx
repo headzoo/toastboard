@@ -1,6 +1,6 @@
-import { motion, useReducedMotion } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { downloadRemoteUrl } from "../lib/urls";
+import { motion, useReducedMotion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { downloadRemoteUrl } from '../lib/urls';
 
 const SWIPE_THRESHOLD = 80;
 const FOCUSABLE =
@@ -30,7 +30,7 @@ export function PhotoLightbox({ urls, index, onIndexChange, onClose }: Props) {
   const reducedMotion = useReducedMotion();
   const count = urls.length;
   const safeIndex = wrapIndex(index, count);
-  const currentUrl = urls[safeIndex] ?? "";
+  const currentUrl = urls[safeIndex] ?? '';
   const multi = count > 1;
 
   const goPrev = useCallback(() => {
@@ -44,11 +44,12 @@ export function PhotoLightbox({ urls, index, onIndexChange, onClose }: Props) {
   }, [count, multi, onIndexChange, safeIndex]);
 
   useEffect(() => {
-    restoreFocusRef.current = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null;
+    restoreFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
     closeRef.current?.focus();
 
     return () => {
@@ -59,24 +60,26 @@ export function PhotoLightbox({ urls, index, onIndexChange, onClose }: Props) {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         event.preventDefault();
         event.stopPropagation();
         onClose();
         return;
       }
-      if (event.key === "ArrowLeft") {
+      if (event.key === 'ArrowLeft') {
         event.preventDefault();
         goPrev();
         return;
       }
-      if (event.key === "ArrowRight") {
+      if (event.key === 'ArrowRight') {
         event.preventDefault();
         goNext();
         return;
       }
-      if (event.key !== "Tab") return;
-      const controls = [...(dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])];
+      if (event.key !== 'Tab') return;
+      const controls = [
+        ...(dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []),
+      ];
       if (!controls.length) return;
       const first = controls[0]!;
       const last = controls[controls.length - 1]!;
@@ -88,8 +91,8 @@ export function PhotoLightbox({ urls, index, onIndexChange, onClose }: Props) {
         first.focus();
       }
     };
-    document.addEventListener("keydown", onKeyDown, true);
-    return () => document.removeEventListener("keydown", onKeyDown, true);
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
   }, [goNext, goPrev, onClose]);
 
   async function onDownload() {
@@ -106,53 +109,53 @@ export function PhotoLightbox({ urls, index, onIndexChange, onClose }: Props) {
 
   return (
     <div
-      className="photo-lightbox-backdrop"
-      role="presentation"
+      className='photo-lightbox-backdrop'
+      role='presentation'
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
       <div
         ref={dialogRef}
-        className="photo-lightbox"
-        role="dialog"
-        aria-modal="true"
+        className='photo-lightbox'
+        role='dialog'
+        aria-modal='true'
         aria-label={`Photo ${safeIndex + 1} of ${count}`}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="photo-lightbox-toolbar">
-          <span className="photo-lightbox-counter" aria-live="polite">
+        <div className='photo-lightbox-toolbar'>
+          <span className='photo-lightbox-counter' aria-live='polite'>
             {safeIndex + 1} / {count}
           </span>
-          <div className="photo-lightbox-actions">
+          <div className='photo-lightbox-actions'>
             <button
-              className="photo-lightbox-button"
-              type="button"
+              className='photo-lightbox-button'
+              type='button'
               onClick={() => void onDownload()}
               disabled={downloading}
-              aria-label="Download photo"
+              aria-label='Download photo'
             >
               Download
             </button>
             <button
               ref={closeRef}
-              className="photo-lightbox-button photo-lightbox-close"
-              type="button"
+              className='photo-lightbox-button photo-lightbox-close'
+              type='button'
               onClick={onClose}
-              aria-label="Close photo"
+              aria-label='Close photo'
             >
               ×
             </button>
           </div>
         </div>
 
-        <div className="photo-lightbox-stage">
+        <div className='photo-lightbox-stage'>
           {multi ? (
             <button
-              className="photo-lightbox-nav photo-lightbox-prev"
-              type="button"
+              className='photo-lightbox-nav photo-lightbox-prev'
+              type='button'
               onClick={goPrev}
-              aria-label="Previous photo"
+              aria-label='Previous photo'
             >
               ‹
             </button>
@@ -160,10 +163,10 @@ export function PhotoLightbox({ urls, index, onIndexChange, onClose }: Props) {
 
           <motion.img
             key={currentUrl}
-            className="photo-lightbox-image"
+            className='photo-lightbox-image'
             src={currentUrl}
-            alt=""
-            drag={multi && !reducedMotion ? "x" : false}
+            alt=''
+            drag={multi && !reducedMotion ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.2}
             onDragEnd={(_event, info) => {
@@ -178,10 +181,10 @@ export function PhotoLightbox({ urls, index, onIndexChange, onClose }: Props) {
 
           {multi ? (
             <button
-              className="photo-lightbox-nav photo-lightbox-next"
-              type="button"
+              className='photo-lightbox-nav photo-lightbox-next'
+              type='button'
               onClick={goNext}
-              aria-label="Next photo"
+              aria-label='Next photo'
             >
               ›
             </button>

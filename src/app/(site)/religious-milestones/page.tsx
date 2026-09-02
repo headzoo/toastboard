@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
-import { EventLandingPage } from "@/components/EventLandingPage";
-import { MARKETING_CONTENT } from "@/lib/marketingContent";
+import type { Metadata } from 'next';
+import { EventLandingPage } from '@/components/EventLandingPage';
+import { MARKETING_CONTENT } from '@/lib/marketingContent';
 
-const content = MARKETING_CONTENT["religious-milestone"];
+const content = MARKETING_CONTENT['religious-milestone'];
 
 export const metadata: Metadata = {
   title: `${content.hubTitle} guestbook — The Willow Book`,

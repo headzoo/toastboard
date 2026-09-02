@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import { Suspense, type ReactNode } from "react";
-import { kickerClass, narrowClass } from "@/lib/styles";
+import type { Metadata } from 'next';
+import { Suspense, type ReactNode } from 'react';
+import { kickerClass, narrowClass } from '@/lib/styles';
 
 export const metadata: Metadata = {
-  title: "Sign in — The Willow Book",
-  description: "Sign in to create and manage your Willow Book guestbooks.",
+  title: 'Sign in — The Willow Book',
+  description: 'Sign in to create and manage your Willow Book guestbooks.',
 };
 
 function LoginFallback() {

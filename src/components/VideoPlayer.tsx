@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { RefObject } from 'react';
 
 type VideoPlayerProps = {
   src: string;
@@ -10,7 +10,7 @@ type VideoPlayerProps = {
 export function VideoPlayer({
   src,
   className,
-  label = "Guest video",
+  label = 'Guest video',
   videoRef,
 }: VideoPlayerProps) {
   if (!src) return null;
@@ -22,7 +22,7 @@ export function VideoPlayer({
       src={src}
       controls
       playsInline
-      preload="metadata"
+      preload='metadata'
       aria-label={label}
     />
   );

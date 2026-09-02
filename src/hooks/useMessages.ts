@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { listenMessages } from "../lib/api";
-import type { MessageRecord } from "../lib/types";
+import { useEffect, useState } from 'react';
+import { listenMessages } from '../lib/api';
+import type { MessageRecord } from '../lib/types';
 
 export function useMessages(slug: string | undefined, enabled = true) {
   const [messages, setMessages] = useState<MessageRecord[]>([]);

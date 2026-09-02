@@ -1,8 +1,8 @@
-import { normalizeEventType } from "./eventTypes";
-import { isSignThemeId } from "./signThemes";
-import type { HostKeepsafe } from "./types";
+import { normalizeEventType } from './eventTypes';
+import { isSignThemeId } from './signThemes';
+import type { HostKeepsafe } from './types';
 
-const KEY = "toastboard:host-keepsafe";
+const KEY = 'toastboard:host-keepsafe';
 
 export function saveKeepsafe(value: HostKeepsafe) {
   sessionStorage.setItem(KEY, JSON.stringify(value));

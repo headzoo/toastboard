@@ -5,10 +5,15 @@ import {
   loadImage,
   roundRect,
   waitForPrintFonts,
-} from "./canvas";
-import { canvasToLetterPdf } from "./pdf";
-import { DEFAULT_SIGN_THEME, getSignTheme, type SignTheme, type SignThemeId } from "./signThemes";
-import { qrDataUrl } from "./urls";
+} from './canvas';
+import { canvasToLetterPdf } from './pdf';
+import {
+  DEFAULT_SIGN_THEME,
+  getSignTheme,
+  type SignTheme,
+  type SignThemeId,
+} from './signThemes';
+import { qrDataUrl } from './urls';
 
 export type TableSignInput = {
   coupleNames: string;
@@ -35,7 +40,10 @@ type DrawCtx = {
 const LETTER_IN_W = 8.5;
 const LETTER_IN_H = 11;
 
-export async function renderTableSignCanvas(input: TableSignInput, preview = false) {
+export async function renderTableSignCanvas(
+  input: TableSignInput,
+  preview = false,
+) {
   await waitForPrintFonts();
   const dpi = preview ? 96 : 300;
   const width = Math.round(LETTER_IN_W * dpi);
@@ -43,19 +51,19 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
   const pt = dpi / 72;
   const P = (n: number) => n * pt;
 
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Couldn’t draw the table sign.");
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Couldn’t draw the table sign.');
 
   const palette = getSignTheme(input.themeId ?? DEFAULT_SIGN_THEME);
   const accent = input.themeColor;
   const cx = width / 2;
   const d: DrawCtx = { ctx, width, height, cx, P, accent, palette };
 
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
 
   drawBackground(d);
   drawFrame(d);
@@ -63,23 +71,31 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
 
   drawToastMark(ctx, cx, P(78), P(15), accent);
 
-  const kickerTracking = palette.id === "art-deco" ? P(5.5) : P(3.2);
+  const kickerTracking = palette.id === 'art-deco' ? P(5.5) : P(3.2);
   ctx.fillStyle = accent;
   ctx.font = `700 ${P(10)}px "Figtree", sans-serif`;
   fillTextSpaced(ctx, input.signKicker, cx, P(108), kickerTracking);
 
   const nameFont =
-    palette.id === "modern"
+    palette.id === 'modern'
       ? (size: number) => `500 ${size}px "Figtree", sans-serif`
       : (size: number) => `italic 400 ${size}px "Fraunces", serif`;
 
   ctx.fillStyle = palette.ink;
-  let y = fitWrappedText(ctx, input.coupleNames, cx, P(168), width - P(120), 2, {
-    maxSize: P(46),
-    minSize: P(22),
-    lineHeight: 1.12,
-    font: nameFont,
-  });
+  let y = fitWrappedText(
+    ctx,
+    input.coupleNames,
+    cx,
+    P(168),
+    width - P(120),
+    2,
+    {
+      maxSize: P(46),
+      minSize: P(22),
+      lineHeight: 1.12,
+      font: nameFont,
+    },
+  );
 
   if (input.eventDateLabel) {
     ctx.fillStyle = palette.inkSoft;
@@ -90,15 +106,23 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
 
   if (input.welcomeMessage) {
     ctx.fillStyle = palette.inkSoft;
-    y = fitWrappedText(ctx, input.welcomeMessage, cx, y + P(22), width - P(140), 2, {
-      maxSize: P(14),
-      minSize: P(11),
-      lineHeight: 1.28,
-      font: (size) =>
-        palette.id === "modern"
-          ? `400 ${size}px "Figtree", sans-serif`
-          : `italic 400 ${size}px "Fraunces", serif`,
-    });
+    y = fitWrappedText(
+      ctx,
+      input.welcomeMessage,
+      cx,
+      y + P(22),
+      width - P(140),
+      2,
+      {
+        maxSize: P(14),
+        minSize: P(11),
+        lineHeight: 1.28,
+        font: (size) =>
+          palette.id === 'modern'
+            ? `400 ${size}px "Figtree", sans-serif`
+            : `italic 400 ${size}px "Fraunces", serif`,
+      },
+    );
   }
 
   y += P(22);
@@ -114,13 +138,18 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
   const cardX = (width - card) / 2;
   const cardY = y;
 
-  if (palette.id === "art-deco") {
+  if (palette.id === 'art-deco') {
     drawSunburst(d, cardX + card / 2, cardY + card / 2, card * 0.72);
   }
 
   ctx.fillStyle = palette.cream;
-  const qrRadius = palette.id === "modern" ? P(2) : palette.id === "coastal" ? card / 2 : P(10);
-  if (palette.id === "coastal") {
+  const qrRadius =
+    palette.id === 'modern'
+      ? P(2)
+      : palette.id === 'coastal'
+        ? card / 2
+        : P(10);
+  if (palette.id === 'coastal') {
     ctx.beginPath();
     ctx.arc(cardX + card / 2, cardY + card / 2, card / 2, 0, Math.PI * 2);
     ctx.fill();
@@ -137,7 +166,7 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
 
   const qr = await qrDataUrl(input.guestUrl, {
     width: preview ? 480 : 1200,
-    errorCorrectionLevel: preview ? "M" : "H",
+    errorCorrectionLevel: preview ? 'M' : 'H',
   });
   const qrImage = await loadImage(qr);
   ctx.drawImage(qrImage, cardX + cardPad, cardY + cardPad, qrSize, qrSize);
@@ -149,7 +178,7 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
     minSize: P(13),
     lineHeight: 1.2,
     font: (size) =>
-      palette.id === "modern"
+      palette.id === 'modern'
         ? `500 ${size}px "Figtree", sans-serif`
         : `500 ${size}px "Fraunces", serif`,
   });
@@ -167,24 +196,33 @@ export async function renderTableSignCanvas(input: TableSignInput, preview = fal
     font: (size) => `400 ${size}px "Figtree", sans-serif`,
   });
 
-  const brandLabel = "The Willow Book";
+  const brandLabel = 'The Willow Book';
   const markSize = P(8);
   const gap = P(10);
   ctx.font = `500 ${P(11)}px "Fraunces", serif`;
   const brandWidth = ctx.measureText(brandLabel).width;
   const clusterLeft = cx - (markSize + gap + brandWidth) / 2;
-  drawToastMark(ctx, clusterLeft + markSize / 2, height - P(56), markSize, accent);
+  drawToastMark(
+    ctx,
+    clusterLeft + markSize / 2,
+    height - P(56),
+    markSize,
+    accent,
+  );
   ctx.fillStyle = palette.ink;
-  ctx.textAlign = "left";
+  ctx.textAlign = 'left';
   ctx.fillText(brandLabel, clusterLeft + markSize + gap, height - P(52));
-  ctx.textAlign = "center";
+  ctx.textAlign = 'center';
 
   return canvas;
 }
 
-export async function renderTableSignPng(input: TableSignInput, preview = false) {
+export async function renderTableSignPng(
+  input: TableSignInput,
+  preview = false,
+) {
   const canvas = await renderTableSignCanvas(input, preview);
-  return canvas.toDataURL("image/png");
+  return canvas.toDataURL('image/png');
 }
 
 export async function renderTableSignPdf(input: TableSignInput) {
@@ -192,11 +230,19 @@ export async function renderTableSignPdf(input: TableSignInput) {
   return canvasToLetterPdf(canvas);
 }
 
-function drawBackground({ ctx, width, height, cx, P, accent, palette }: DrawCtx) {
+function drawBackground({
+  ctx,
+  width,
+  height,
+  cx,
+  P,
+  accent,
+  palette,
+}: DrawCtx) {
   ctx.fillStyle = palette.paper;
   ctx.fillRect(0, 0, width, height);
 
-  if (palette.id === "midnight") {
+  if (palette.id === 'midnight') {
     const wash = ctx.createRadialGradient(cx, 0, 0, cx, 0, P(480));
     wash.addColorStop(0, hexAlpha(accent, 0.22));
     wash.addColorStop(1, hexAlpha(accent, 0));
@@ -205,8 +251,15 @@ function drawBackground({ ctx, width, height, cx, P, accent, palette }: DrawCtx)
     return;
   }
 
-  if (palette.id === "coastal") {
-    const wash = ctx.createRadialGradient(cx, height * 0.15, 0, cx, height * 0.15, P(500));
+  if (palette.id === 'coastal') {
+    const wash = ctx.createRadialGradient(
+      cx,
+      height * 0.15,
+      0,
+      cx,
+      height * 0.15,
+      P(500),
+    );
     wash.addColorStop(0, hexAlpha(accent, 0.12));
     wash.addColorStop(1, hexAlpha(accent, 0));
     ctx.fillStyle = wash;
@@ -214,20 +267,30 @@ function drawBackground({ ctx, width, height, cx, P, accent, palette }: DrawCtx)
     return;
   }
 
-  if (palette.id === "modern") {
+  if (palette.id === 'modern') {
     return;
   }
 
   const wash = ctx.createRadialGradient(cx, 0, 0, cx, 0, P(420));
-  wash.addColorStop(0, hexAlpha(accent, palette.id === "botanical" ? 0.14 : 0.2));
+  wash.addColorStop(
+    0,
+    hexAlpha(accent, palette.id === 'botanical' ? 0.14 : 0.2),
+  );
   wash.addColorStop(1, hexAlpha(accent, 0));
   ctx.fillStyle = wash;
   ctx.fillRect(0, 0, width, height);
 
-  if (palette.id === "classic" || palette.id === "art-deco") {
-    const gold = ctx.createRadialGradient(width, height, 0, width, height, P(360));
-    gold.addColorStop(0, "rgba(176, 137, 79, 0.12)");
-    gold.addColorStop(1, "rgba(176, 137, 79, 0)");
+  if (palette.id === 'classic' || palette.id === 'art-deco') {
+    const gold = ctx.createRadialGradient(
+      width,
+      height,
+      0,
+      width,
+      height,
+      P(360),
+    );
+    gold.addColorStop(0, 'rgba(176, 137, 79, 0.12)');
+    gold.addColorStop(1, 'rgba(176, 137, 79, 0)');
     ctx.fillStyle = gold;
     ctx.fillRect(0, 0, width, height);
   }
@@ -235,7 +298,7 @@ function drawBackground({ ctx, width, height, cx, P, accent, palette }: DrawCtx)
 
 function drawFrame({ ctx, width, height, P, accent, palette }: DrawCtx) {
   switch (palette.id) {
-    case "modern": {
+    case 'modern': {
       ctx.strokeStyle = accent;
       ctx.lineWidth = P(1.1);
       ctx.strokeRect(P(36), P(36), width - P(72), height - P(72));
@@ -244,7 +307,7 @@ function drawFrame({ ctx, width, height, P, accent, palette }: DrawCtx) {
       ctx.strokeRect(P(44), P(44), width - P(88), height - P(88));
       break;
     }
-    case "art-deco": {
+    case 'art-deco': {
       ctx.strokeStyle = accent;
       ctx.lineWidth = P(2.2);
       roundRect(ctx, P(28), P(28), width - P(56), height - P(56), P(4));
@@ -255,18 +318,30 @@ function drawFrame({ ctx, width, height, P, accent, palette }: DrawCtx) {
       ctx.stroke();
       break;
     }
-    case "coastal": {
+    case 'coastal': {
       ctx.strokeStyle = accent;
       ctx.lineWidth = P(2);
-      ellipsePath(ctx, width / 2, height / 2, (width - P(56)) / 2, (height - P(56)) / 2);
+      ellipsePath(
+        ctx,
+        width / 2,
+        height / 2,
+        (width - P(56)) / 2,
+        (height - P(56)) / 2,
+      );
       ctx.stroke();
       ctx.lineWidth = P(0.65);
       ctx.strokeStyle = hexAlpha(accent, 0.5);
-      ellipsePath(ctx, width / 2, height / 2, (width - P(80)) / 2, (height - P(80)) / 2);
+      ellipsePath(
+        ctx,
+        width / 2,
+        height / 2,
+        (width - P(80)) / 2,
+        (height - P(80)) / 2,
+      );
       ctx.stroke();
       break;
     }
-    case "midnight": {
+    case 'midnight': {
       ctx.strokeStyle = accent;
       ctx.lineWidth = P(1.2);
       roundRect(ctx, P(28), P(28), width - P(56), height - P(56), P(16));
@@ -277,7 +352,7 @@ function drawFrame({ ctx, width, height, P, accent, palette }: DrawCtx) {
       ctx.stroke();
       break;
     }
-    case "botanical": {
+    case 'botanical': {
       ctx.strokeStyle = hexAlpha(accent, 0.75);
       ctx.lineWidth = P(1.6);
       roundRect(ctx, P(30), P(30), width - P(60), height - P(60), P(22));
@@ -312,38 +387,43 @@ function drawCorners({ ctx, width, height, P, accent, palette }: DrawCtx) {
   ];
 
   switch (palette.id) {
-    case "modern":
+    case 'modern':
       return;
-    case "botanical":
-      for (const [x, y, rot] of corners) drawVineCorner(ctx, x, y, size * 1.15, rot, accent);
+    case 'botanical':
+      for (const [x, y, rot] of corners)
+        drawVineCorner(ctx, x, y, size * 1.15, rot, accent);
       return;
-    case "art-deco":
-      for (const [x, y, rot] of corners) drawSteppedCorner(ctx, x, y, size * 0.95, rot, accent);
+    case 'art-deco':
+      for (const [x, y, rot] of corners)
+        drawSteppedCorner(ctx, x, y, size * 0.95, rot, accent);
       return;
-    case "coastal":
-      for (const [x, y, rot] of corners) drawWaveCorner(ctx, x, y, size, rot, accent);
+    case 'coastal':
+      for (const [x, y, rot] of corners)
+        drawWaveCorner(ctx, x, y, size, rot, accent);
       return;
-    case "midnight":
-      for (const [x, y, rot] of corners) drawCornerFlourish(ctx, x, y, size * 0.85, rot, accent);
+    case 'midnight':
+      for (const [x, y, rot] of corners)
+        drawCornerFlourish(ctx, x, y, size * 0.85, rot, accent);
       return;
     default:
-      for (const [x, y, rot] of corners) drawCornerFlourish(ctx, x, y, size, rot, accent);
+      for (const [x, y, rot] of corners)
+        drawCornerFlourish(ctx, x, y, size, rot, accent);
   }
 }
 
 function drawThemeDivider({ ctx, cx, P, accent, palette }: DrawCtx, y: number) {
   const half = P(150);
   switch (palette.id) {
-    case "botanical":
+    case 'botanical':
       drawLeafDivider(ctx, cx, y, half, accent);
       break;
-    case "modern":
+    case 'modern':
       drawModernDivider(ctx, cx, y, half, accent);
       break;
-    case "art-deco":
+    case 'art-deco':
       drawChevronDivider(ctx, cx, y, half, accent);
       break;
-    case "coastal":
+    case 'coastal':
       drawWaveDivider(ctx, cx, y, half, accent);
       break;
     default:
@@ -376,7 +456,10 @@ function drawSunburst(
   for (let i = 0; i < rays; i += 1) {
     const angle = (i / rays) * Math.PI * 2;
     ctx.beginPath();
-    ctx.moveTo(Math.cos(angle) * radius * 0.35, Math.sin(angle) * radius * 0.35);
+    ctx.moveTo(
+      Math.cos(angle) * radius * 0.35,
+      Math.sin(angle) * radius * 0.35,
+    );
     ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
     ctx.stroke();
   }
@@ -401,7 +484,13 @@ function drawToastMark(
   ctx.restore();
 }
 
-function drawDivider(ctx: CanvasRenderingContext2D, cx: number, y: number, half: number, color: string) {
+function drawDivider(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  y: number,
+  half: number,
+  color: string,
+) {
   ctx.save();
   ctx.strokeStyle = hexAlpha(color, 0.7);
   ctx.fillStyle = color;
@@ -447,7 +536,7 @@ function drawLeafDivider(
   ctx.strokeStyle = hexAlpha(color, 0.65);
   ctx.fillStyle = color;
   ctx.lineWidth = Math.max(1, half * 0.012);
-  ctx.lineCap = "round";
+  ctx.lineCap = 'round';
   ctx.beginPath();
   ctx.moveTo(cx - half, y);
   ctx.lineTo(cx - half * 0.18, y);
@@ -497,7 +586,7 @@ function drawWaveDivider(
   ctx.save();
   ctx.strokeStyle = hexAlpha(color, 0.65);
   ctx.lineWidth = Math.max(1.2, half * 0.014);
-  ctx.lineCap = "round";
+  ctx.lineCap = 'round';
   ctx.beginPath();
   const amp = half * 0.06;
   const start = cx - half * 0.7;
@@ -527,8 +616,8 @@ function drawCornerFlourish(
   ctx.translate(x, y);
   ctx.rotate(rotation);
   ctx.strokeStyle = color;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
   ctx.lineWidth = Math.max(1.4, size * 0.045);
 
   ctx.beginPath();
@@ -561,18 +650,32 @@ function drawVineCorner(
   ctx.translate(x, y);
   ctx.rotate(rotation);
   ctx.strokeStyle = color;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
   ctx.lineWidth = Math.max(1.3, size * 0.04);
 
   ctx.beginPath();
   ctx.moveTo(0, size * 0.05);
-  ctx.bezierCurveTo(size * 0.15, -size * 0.35, size * 0.55, -size * 0.15, size * 0.9, -size * 0.55);
+  ctx.bezierCurveTo(
+    size * 0.15,
+    -size * 0.35,
+    size * 0.55,
+    -size * 0.15,
+    size * 0.9,
+    -size * 0.55,
+  );
   ctx.stroke();
 
   ctx.beginPath();
   ctx.moveTo(size * 0.05, 0);
-  ctx.bezierCurveTo(-size * 0.35, size * 0.15, -size * 0.15, size * 0.55, -size * 0.55, size * 0.9);
+  ctx.bezierCurveTo(
+    -size * 0.35,
+    size * 0.15,
+    -size * 0.15,
+    size * 0.55,
+    -size * 0.55,
+    size * 0.9,
+  );
   ctx.stroke();
 
   ctx.lineWidth = Math.max(1, size * 0.032);
@@ -595,8 +698,8 @@ function drawSteppedCorner(
   ctx.translate(x, y);
   ctx.rotate(rotation);
   ctx.strokeStyle = color;
-  ctx.lineCap = "square";
-  ctx.lineJoin = "miter";
+  ctx.lineCap = 'square';
+  ctx.lineJoin = 'miter';
   ctx.lineWidth = Math.max(1.5, size * 0.05);
 
   const steps = 3;
@@ -631,7 +734,7 @@ function drawWaveCorner(
   ctx.translate(x, y);
   ctx.rotate(rotation);
   ctx.strokeStyle = color;
-  ctx.lineCap = "round";
+  ctx.lineCap = 'round';
   ctx.lineWidth = Math.max(1.3, size * 0.04);
 
   ctx.beginPath();
@@ -648,7 +751,13 @@ function drawWaveCorner(
   ctx.restore();
 }
 
-function drawLeaf(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, angle: number) {
+function drawLeaf(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number,
+  angle: number,
+) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(angle);

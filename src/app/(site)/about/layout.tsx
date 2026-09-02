@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import { ABOUT_PAGE_METADATA } from "@/lib/pageMetadata";
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import { ABOUT_PAGE_METADATA } from '@/lib/pageMetadata';
 
 export const metadata: Metadata = {
   title: ABOUT_PAGE_METADATA.title,

@@ -1,37 +1,50 @@
-"use client";
+'use client';
 
-import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
-import { TableSignCard } from "../../../components/TableSignCard";
-import { SignThemePicker } from "../../../components/SignThemePicker";
-import { Shell, StatusNote } from "../../../components/ui";
-import { GuestbookFeed } from "../../../components/GuestbookFeed";
-import { useEvent } from "../../../hooks/useEvent";
-import { useMessages } from "../../../hooks/useMessages";
-import { updateEventSignTheme } from "../../../lib/api";
-import { eventGuestPath, eventGuestbookPath } from "../../../lib/eventRoutes";
-import { getEventCopy } from "../../../lib/eventTypes";
-import { getSignTheme, type SignThemeId } from "../../../lib/signThemes";
-import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../../../lib/styles";
-import { formatEventDate } from "../../../lib/theme";
-import { DEFAULT_THEME } from "../../../lib/types";
+import { useSession } from 'next-auth/react';
+import { useEffect, useRef, useState } from 'react';
+import { TableSignCard } from '../../../components/TableSignCard';
+import { SignThemePicker } from '../../../components/SignThemePicker';
+import { Shell, StatusNote } from '../../../components/ui';
+import { GuestbookFeed } from '../../../components/GuestbookFeed';
+import { useEvent } from '../../../hooks/useEvent';
+import { useMessages } from '../../../hooks/useMessages';
+import { updateEventSignTheme } from '../../../lib/api';
+import { eventGuestPath, eventGuestbookPath } from '../../../lib/eventRoutes';
+import { getEventCopy } from '../../../lib/eventTypes';
+import { getSignTheme, type SignThemeId } from '../../../lib/signThemes';
+import {
+  btnClass,
+  btnRowClass,
+  kickerClass,
+  ledeClass,
+  narrowClass,
+} from '../../../lib/styles';
+import { formatEventDate } from '../../../lib/theme';
+import { DEFAULT_THEME } from '../../../lib/types';
 
 export function ManagePage({ slug, token }: { slug: string; token: string }) {
   const { data: session } = useSession();
   const { event, status } = useEvent(slug);
-  const isOwner = Boolean(session?.user?.id && event?.ownerUid === session.user.id);
+  const isOwner = Boolean(
+    session?.user?.id && event?.ownerUid === session.user.id,
+  );
   const canModerate = Boolean(token) || isOwner;
-  const { messages, error } = useMessages(slug, status === "ready" && canModerate);
-  const [signTheme, setSignTheme] = useState<SignThemeId>("classic");
+  const { messages, error } = useMessages(
+    slug,
+    status === 'ready' && canModerate,
+  );
+  const [signTheme, setSignTheme] = useState<SignThemeId>('classic');
   const [themeBusy, setThemeBusy] = useState(false);
-  const [themePendingId, setThemePendingId] = useState<SignThemeId | null>(null);
+  const [themePendingId, setThemePendingId] = useState<SignThemeId | null>(
+    null,
+  );
   const [themeError, setThemeError] = useState<string | null>(null);
   const themeRequestRef = useRef<SignThemeId | null>(null);
 
   useEffect(() => {
-    const robots = document.createElement("meta");
-    robots.name = "robots";
-    robots.content = "noindex, nofollow";
+    const robots = document.createElement('meta');
+    robots.name = 'robots';
+    robots.content = 'noindex, nofollow';
     document.head.appendChild(robots);
     return () => robots.remove();
   }, []);
@@ -56,7 +69,9 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
       setSignTheme(saved);
     } catch (err) {
       if (themeRequestRef.current !== id) return;
-      setThemeError(err instanceof Error ? err.message : "Couldn't save that design.");
+      setThemeError(
+        err instanceof Error ? err.message : "Couldn't save that design.",
+      );
     } finally {
       if (themeRequestRef.current === id) {
         setThemeBusy(false);
@@ -72,15 +87,15 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
         <section className={narrowClass}>
           <h1>This page needs the host link</h1>
           <p>
-            Sign in to open guestbooks you created with your account, or use the private host link we
-            gave you when the guestbook was made.
+            Sign in to open guestbooks you created with your account, or use the
+            private host link we gave you when the guestbook was made.
           </p>
         </section>
       </Shell>
     );
   }
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <Shell>
         <StatusNote>Opening host tools…</StatusNote>
@@ -88,7 +103,7 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
     );
   }
 
-  if (status !== "ready" || !event || !slug) {
+  if (status !== 'ready' || !event || !slug) {
     return (
       <Shell>
         <section className={narrowClass}>
@@ -108,21 +123,21 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
 
   return (
     <Shell>
-      <section className="mb-8 max-w-[760px]">
+      <section className='mb-8 max-w-[760px]'>
         <p className={kickerClass}>Host tools — keep this URL private</p>
         <h1>{event.coupleNames}</h1>
         <p className={ledeClass}>{copy.moderationIntro}</p>
         <div className={btnRowClass}>
-          <a className={btnClass("ghost")} href={eventGuestbookPath(slug)}>
+          <a className={btnClass('ghost')} href={eventGuestbookPath(slug)}>
             Public guestbook
           </a>
-          <a className={btnClass("ghost")} href={eventGuestPath(slug)}>
+          <a className={btnClass('ghost')} href={eventGuestPath(slug)}>
             Guest form
           </a>
         </div>
       </section>
 
-      <div className="mt-3 max-w-[760px]">
+      <div className='mt-3 max-w-[760px]'>
         <SignThemePicker
           selected={signTheme}
           accent={accent}
@@ -130,7 +145,7 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
           pendingId={themePendingId}
           onChange={(id) => void selectSignTheme(id)}
         />
-        {themeError ? <StatusNote tone="error">{themeError}</StatusNote> : null}
+        {themeError ? <StatusNote tone='error'>{themeError}</StatusNote> : null}
         <TableSignCard
           slug={slug}
           eventType={event.eventType}
@@ -142,7 +157,7 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
         />
       </div>
 
-      {error ? <StatusNote tone="error">{error}</StatusNote> : null}
+      {error ? <StatusNote tone='error'>{error}</StatusNote> : null}
       <GuestbookFeed
         messages={messages}
         slug={slug}

@@ -8,17 +8,17 @@ Live site: https://preview.thewillowbook.com/
 
 ## Routes
 
-| Path | Purpose |
-| --- | --- |
-| `/` | Neutral marketing hub |
-| `/login` | Host sign-in (Google or email) |
-| `/account` | Signed-in host’s guestbook list |
-| `/weddings`, `/birthdays`, `/graduations`, `/religious-milestones` | Type-specific landing pages |
-| `/create` | Create a guestbook (requires host sign-in; optional `?type=` for event type) |
-| `/e/:slug` | Guest submission page |
-| `/e/:slug/guestbook` | Live guestbook |
-| `/e/:slug/manage` | Host moderation (host link or signed-in owner) |
-| `/terms`, `/privacy` | Legal pages |
+| Path                                                               | Purpose                                                                      |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| `/`                                                                | Neutral marketing hub                                                        |
+| `/login`                                                           | Host sign-in (Google or email)                                               |
+| `/account`                                                         | Signed-in host’s guestbook list                                              |
+| `/weddings`, `/birthdays`, `/graduations`, `/religious-milestones` | Type-specific landing pages                                                  |
+| `/create`                                                          | Create a guestbook (requires host sign-in; optional `?type=` for event type) |
+| `/e/:slug`                                                         | Guest submission page                                                        |
+| `/e/:slug/guestbook`                                               | Live guestbook                                                               |
+| `/e/:slug/manage`                                                  | Host moderation (host link or signed-in owner)                               |
+| `/terms`, `/privacy`                                               | Legal pages                                                                  |
 
 ## Run locally
 
@@ -78,13 +78,13 @@ The Next.js app runs on **Vercel**. Firebase provides Auth, Firestore, Storage, 
 1. Import this repo in Vercel (framework: **Next.js**, package manager: **pnpm**).
 2. Set environment variables in the Vercel project (Production, and Preview if desired):
 
-| Variable | Production value |
-| --- | --- |
-| `AUTH_SECRET` | Random string (`openssl rand -base64 32`) |
-| `AUTH_TRUST_HOST` | `true` |
-| `AUTH_URL` | `https://preview.thewillowbook.com` |
-| `FIREBASE_CLIENT_EMAIL` | Service account `client_email` from Firebase |
-| `FIREBASE_PRIVATE_KEY` | Service account `private_key` (paste as one line; `\n` is fine) |
+| Variable                | Production value                                                |
+| ----------------------- | --------------------------------------------------------------- |
+| `AUTH_SECRET`           | Random string (`openssl rand -base64 32`)                       |
+| `AUTH_TRUST_HOST`       | `true`                                                          |
+| `AUTH_URL`              | `https://preview.thewillowbook.com`                             |
+| `FIREBASE_CLIENT_EMAIL` | Service account `client_email` from Firebase                    |
+| `FIREBASE_PRIVATE_KEY`  | Service account `private_key` (paste as one line; `\n` is fine) |
 
 3. Add custom domain **`preview.thewillowbook.com`** in Vercel → Domains and point DNS at Vercel (CNAME to `cname.vercel-dns.com` or A records per Vercel’s instructions).
 4. Deploy via git push or `vercel deploy`.

@@ -23,7 +23,11 @@
         {
           "guestName": "Best man, theoretically",
           "text": "I was asked to be profound. Instead: don’t forget to eat cake. Also I love you both.",
-          "photos": ["guestbook-best-man-1.jpg", "guestbook-best-man-2.jpg", "guestbook-best-man-3.jpg"]
+          "photos": [
+            "guestbook-best-man-1.jpg",
+            "guestbook-best-man-2.jpg",
+            "guestbook-best-man-3.jpg"
+          ]
         },
         {
           "guestName": "Grandad",
@@ -100,7 +104,10 @@
         {
           "guestName": "Samira, roommate",
           "text": "Four years of instant noodles and panic. You did the hard part. Now go nap, then change the world a little.",
-          "photos": ["guestbook-jordan-samira-1.jpg", "guestbook-jordan-samira-2.jpg"]
+          "photos": [
+            "guestbook-jordan-samira-1.jpg",
+            "guestbook-jordan-samira-2.jpg"
+          ]
         },
         {
           "guestName": "Dad",

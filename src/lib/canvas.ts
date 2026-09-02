@@ -1,7 +1,7 @@
-export const PAPER = "#F7F0E6";
-export const CREAM = "#FFFCF7";
-export const INK = "#2A2118";
-export const INK_SOFT = "#5C5146";
+export const PAPER = '#F7F0E6';
+export const CREAM = '#FFFCF7';
+export const INK = '#2A2118';
+export const INK_SOFT = '#5C5146';
 
 export async function waitForPrintFonts() {
   if (!document.fonts) return;
@@ -19,7 +19,7 @@ export async function waitForPrintFonts() {
 }
 
 export function hexAlpha(hex: string, alpha: number) {
-  const raw = hex.replace("#", "");
+  const raw = hex.replace('#', '');
   if (raw.length !== 6) return `rgba(196, 92, 103, ${alpha})`;
   const r = Number.parseInt(raw.slice(0, 2), 16);
   const g = Number.parseInt(raw.slice(2, 4), 16);
@@ -35,7 +35,7 @@ export function roundRect(
   h: number,
   r: number | [number, number, number, number],
 ) {
-  const [tl, tr, br, bl] = typeof r === "number" ? [r, r, r, r] : r;
+  const [tl, tr, br, bl] = typeof r === 'number' ? [r, r, r, r] : r;
   ctx.beginPath();
   ctx.moveTo(x + tl, y);
   ctx.arcTo(x + w, y, x + w, y + h, tr);
@@ -45,11 +45,15 @@ export function roundRect(
   ctx.closePath();
 }
 
-export function wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number) {
+export function wrapLines(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+) {
   const words = text.trim().split(/\s+/).filter(Boolean);
   if (!words.length) return [];
   const lines: string[] = [];
-  let line = "";
+  let line = '';
   for (const word of words) {
     const next = line ? `${line} ${word}` : word;
     if (line && ctx.measureText(next).width > maxWidth) {
@@ -83,18 +87,20 @@ export function fitWrappedText(
   while (size >= opts.minSize) {
     ctx.font = opts.font(size);
     lines = wrapLines(ctx, text, maxWidth);
-    const overflow = lines.some((line) => ctx.measureText(line).width > maxWidth);
+    const overflow = lines.some(
+      (line) => ctx.measureText(line).width > maxWidth,
+    );
     if (lines.length <= maxLines && !overflow) break;
     size -= 1;
   }
   ctx.font = opts.font(size);
   if (lines.length > maxLines) {
     lines = lines.slice(0, maxLines);
-    let last = lines[maxLines - 1] ?? "";
+    let last = lines[maxLines - 1] ?? '';
     while (last && ctx.measureText(`${last}\u2026`).width > maxWidth) {
       last = last.slice(0, -1).trimEnd();
     }
-    lines[maxLines - 1] = last ? `${last}\u2026` : "\u2026";
+    lines[maxLines - 1] = last ? `${last}\u2026` : '\u2026';
   }
   const lh = size * opts.lineHeight;
   for (let i = 0; i < lines.length; i += 1) {
@@ -112,10 +118,12 @@ export function fillTextSpaced(
 ) {
   const chars = [...text];
   const widths = chars.map((char) => ctx.measureText(char).width);
-  const total = widths.reduce((sum, width) => sum + width, 0) + tracking * Math.max(0, chars.length - 1);
+  const total =
+    widths.reduce((sum, width) => sum + width, 0) +
+    tracking * Math.max(0, chars.length - 1);
   let cursor = x - total / 2;
   const previous = ctx.textAlign;
-  ctx.textAlign = "left";
+  ctx.textAlign = 'left';
   for (let i = 0; i < chars.length; i += 1) {
     ctx.fillText(chars[i], cursor, y);
     cursor += widths[i] + tracking;
@@ -127,7 +135,7 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Couldn’t load QR image."));
+    image.onerror = () => reject(new Error('Couldn’t load QR image.'));
     image.src = src;
   });
 }

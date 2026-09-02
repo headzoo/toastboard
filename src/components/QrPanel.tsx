@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { copyText, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls";
-import { btnClass } from "../lib/styles";
+import { useEffect, useState } from 'react';
+import { copyText, downloadDataUrl, guestUrl, qrDataUrl } from '../lib/urls';
+import { btnClass } from '../lib/styles';
 
 type QrPanelProps = {
   slug: string;
   caption?: string;
 };
 
-export function QrPanel({ slug, caption = "Guest QR code" }: QrPanelProps) {
-  const [src, setSrc] = useState<string>("");
+export function QrPanel({ slug, caption = 'Guest QR code' }: QrPanelProps) {
+  const [src, setSrc] = useState<string>('');
   const url = guestUrl(slug);
 
   useEffect(() => {
@@ -22,20 +22,24 @@ export function QrPanel({ slug, caption = "Guest QR code" }: QrPanelProps) {
   }, [slug, url]);
 
   return (
-    <div className="my-6 w-full max-w-64">
+    <div className='my-6 w-full max-w-64'>
       {src ? (
-        <img className="block w-full rounded-2xl" src={src} alt={caption} />
+        <img className='block w-full rounded-2xl' src={src} alt={caption} />
       ) : (
-        <div className="aspect-square rounded-2xl bg-paper-2" />
+        <div className='aspect-square rounded-2xl bg-paper-2' />
       )}
-      <div className="mt-3 flex gap-3 print:hidden">
-        <button className={btnClass("ghost")} type="button" onClick={() => void copyText(url)}>
+      <div className='mt-3 flex gap-3 print:hidden'>
+        <button
+          className={btnClass('ghost')}
+          type='button'
+          onClick={() => void copyText(url)}
+        >
           Copy guestbook link
         </button>
         {src ? (
           <button
-            className={btnClass("ghost")}
-            type="button"
+            className={btnClass('ghost')}
+            type='button'
             onClick={() => downloadDataUrl(src, `${slug}-guest-qr.png`)}
           >
             Download QR

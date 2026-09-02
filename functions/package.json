@@ -9,7 +9,9 @@
     "test": "node --test"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["ffmpeg-static"]
+    "onlyBuiltDependencies": [
+      "ffmpeg-static"
+    ]
   },
   "private": true,
   "dependencies": {

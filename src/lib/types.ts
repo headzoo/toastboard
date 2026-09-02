@@ -1,14 +1,14 @@
-import type { EventType } from "./eventTypes";
-import type { SignThemeId } from "./signThemes";
+import type { EventType } from './eventTypes';
+import type { SignThemeId } from './signThemes';
 
-export const DEFAULT_THEME = "#C45C67";
+export const DEFAULT_THEME = '#C45C67';
 
 export const THEME_SWATCHES = [
-  { label: "Rose", value: "#C45C67" },
-  { label: "Sage", value: "#6E7F63" },
-  { label: "Champagne", value: "#B0894F" },
-  { label: "Slate", value: "#6B7C8A" },
-  { label: "Plum", value: "#7A4E6D" },
+  { label: 'Rose', value: '#C45C67' },
+  { label: 'Sage', value: '#6E7F63' },
+  { label: 'Champagne', value: '#B0894F' },
+  { label: 'Slate', value: '#6B7C8A' },
+  { label: 'Plum', value: '#7A4E6D' },
 ] as const;
 
 export type EventRecord = {
@@ -21,7 +21,7 @@ export type EventRecord = {
   ownerUid: string | null;
 };
 
-export type VideoStatus = "processing" | "ready" | "failed";
+export type VideoStatus = 'processing' | 'ready' | 'failed';
 
 export type MessageRecord = {
   id: string;

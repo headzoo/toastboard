@@ -12,23 +12,23 @@ import {
   type DocumentData,
   type FirestoreError,
   type Unsubscribe,
-} from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { compressGuestPhoto } from "./compress";
-import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from "./crypto";
-import { db, functions, storage } from "./firebase";
-import { waitForFirebaseAuth } from "./firebaseAuth";
-import { friendlyErrorMessage, toFriendlyError } from "./friendlyErrors";
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { compressGuestPhoto } from './compress';
+import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from './crypto';
+import { db, functions, storage } from './firebase';
+import { waitForFirebaseAuth } from './firebaseAuth';
+import { friendlyErrorMessage, toFriendlyError } from './friendlyErrors';
+import { getEventCopy, normalizeEventType, type EventType } from './eventTypes';
 import {
-  getEventCopy,
-  normalizeEventType,
-  type EventType,
-} from "./eventTypes";
-import { DEFAULT_SIGN_THEME, getSignTheme, type SignThemeId } from "./signThemes";
-import type { EventRecord, MessageRecord, VideoStatus } from "./types";
+  DEFAULT_SIGN_THEME,
+  getSignTheme,
+  type SignThemeId,
+} from './signThemes';
+import type { EventRecord, MessageRecord, VideoStatus } from './types';
 
-export const DEMO_SLUG = "maya-james-k8n2w4p9qx";
+export const DEMO_SLUG = 'maya-james-k8n2w4p9qx';
 
 const MAX_NAME = 80;
 const MAX_TEXT = 1000;
@@ -37,11 +37,11 @@ export const MAX_PHOTOS = 10;
 export const MAX_VIDEO_BYTES = 10 * 1024 * 1024;
 
 const SUPPORTED_VIDEO_FORMATS = [
-  { extension: "mp4", contentType: "video/mp4" },
-  { extension: "mov", contentType: "video/quicktime" },
-  { extension: "webm", contentType: "video/webm" },
-  { extension: "m4v", contentType: "video/x-m4v" },
-  { extension: "3gp", contentType: "video/3gpp" },
+  { extension: 'mp4', contentType: 'video/mp4' },
+  { extension: 'mov', contentType: 'video/quicktime' },
+  { extension: 'webm', contentType: 'video/webm' },
+  { extension: 'm4v', contentType: 'video/x-m4v' },
+  { extension: '3gp', contentType: 'video/3gpp' },
 ] as const;
 
 export type SupportedVideoFormat = (typeof SUPPORTED_VIDEO_FORMATS)[number];
@@ -61,10 +61,13 @@ export type OwnedEventSummary = {
 
 export async function listOwnedEvents(): Promise<OwnedEventSummary[]> {
   const user = await waitForFirebaseAuth();
-  if (!user) throw new Error("Sign in to view your guestbooks.");
+  if (!user) throw new Error('Sign in to view your guestbooks.');
 
   try {
-    const ownedQuery = query(collection(db, "events"), where("ownerUid", "==", user.uid));
+    const ownedQuery = query(
+      collection(db, 'events'),
+      where('ownerUid', '==', user.uid),
+    );
     const snap = await getDocs(ownedQuery);
 
     return snap.docs
@@ -72,9 +75,12 @@ export async function listOwnedEvents(): Promise<OwnedEventSummary[]> {
         const data = item.data();
         return {
           slug: item.id,
-          coupleNames: String(data.coupleNames ?? ""),
+          coupleNames: String(data.coupleNames ?? ''),
           eventType: normalizeEventType(data.eventType),
-          createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
+          createdAt:
+            data.createdAt instanceof Timestamp
+              ? data.createdAt.toDate()
+              : null,
         };
       })
       .sort((a, b) => {
@@ -83,7 +89,7 @@ export async function listOwnedEvents(): Promise<OwnedEventSummary[]> {
         return bTime - aTime;
       });
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t load your guestbooks.");
+    throw toFriendlyError(error, 'Couldn’t load your guestbooks.');
   }
 }
 
@@ -95,7 +101,7 @@ export async function createEvent(input: {
   themeColor: string;
 }): Promise<CreatedEvent> {
   const user = await waitForFirebaseAuth();
-  if (!user) throw new Error("Sign in to create a guestbook.");
+  if (!user) throw new Error('Sign in to create a guestbook.');
 
   const eventType = normalizeEventType(input.eventType);
   const copy = getEventCopy(eventType);
@@ -107,7 +113,7 @@ export async function createEvent(input: {
 
   for (let attempt = 0; attempt < 6; attempt += 1) {
     const slug = makeEventSlug(coupleNames);
-    const eventRef = doc(db, "events", slug);
+    const eventRef = doc(db, 'events', slug);
     const payload: DocumentData = {
       coupleNames,
       eventType,
@@ -116,7 +122,9 @@ export async function createEvent(input: {
       signTheme: DEFAULT_SIGN_THEME,
     };
     if (input.eventDate) {
-      payload.eventDate = Timestamp.fromDate(new Date(`${input.eventDate}T12:00:00`));
+      payload.eventDate = Timestamp.fromDate(
+        new Date(`${input.eventDate}T12:00:00`),
+      );
     }
     const welcome = sanitizeText(input.welcomeMessage, MAX_WELCOME);
     if (welcome) payload.welcomeMessage = welcome;
@@ -126,21 +134,25 @@ export async function createEvent(input: {
 
     const batch = writeBatch(db);
     batch.set(eventRef, payload);
-    batch.set(doc(db, "events", slug, "secrets", "host"), { hostTokenHash });
+    batch.set(doc(db, 'events', slug, 'secrets', 'host'), { hostTokenHash });
 
     try {
       await batch.commit();
       return { slug, hostToken, signTheme: DEFAULT_SIGN_THEME };
     } catch (error) {
-      if (attempt === 5) throw toFriendlyError(error, "Couldn’t create the guestbook. Please try again.");
+      if (attempt === 5)
+        throw toFriendlyError(
+          error,
+          'Couldn’t create the guestbook. Please try again.',
+        );
     }
   }
 
-  throw new Error("Couldn’t create the guestbook. Please try again.");
+  throw new Error('Couldn’t create the guestbook. Please try again.');
 }
 
 export async function getEvent(slug: string): Promise<EventRecord | null> {
-  const snap = await getDoc(doc(db, "events", slug));
+  const snap = await getDoc(doc(db, 'events', slug));
   if (!snap.exists()) return null;
   return mapEvent(snap.data());
 }
@@ -151,8 +163,8 @@ export function listenMessages(
   onError: (message: string) => void,
 ): Unsubscribe {
   const messagesQuery = query(
-    collection(db, "events", slug, "messages"),
-    where("isHidden", "==", false),
+    collection(db, 'events', slug, 'messages'),
+    where('isHidden', '==', false),
   );
 
   return onSnapshot(
@@ -168,7 +180,7 @@ export function listenMessages(
       onChange(messages);
     },
     (error: FirestoreError) => {
-      onError(friendlyErrorMessage(error, "Couldn’t load the guestbook."));
+      onError(friendlyErrorMessage(error, 'Couldn’t load the guestbook.'));
     },
   );
 }
@@ -187,11 +199,11 @@ export async function submitMessage(input: {
   }
   const photos = input.photos;
   if (photos.length > 0 && input.video) {
-    throw new Error("Choose photos or one video, not both.");
+    throw new Error('Choose photos or one video, not both.');
   }
   const videoFormat = input.video ? validateGuestVideo(input.video) : null;
   if (!text && photos.length === 0 && !input.video) {
-    throw new Error("Add a note, photo, or video.");
+    throw new Error('Add a note, photo, or video.');
   }
 
   const messageId = crypto.randomUUID();
@@ -207,15 +219,18 @@ export async function submitMessage(input: {
   }
   if (input.video && videoFormat) {
     await storeGuestVideo(input.slug, messageId, input.video, videoFormat);
-    payload.videoStatus = "processing";
+    payload.videoStatus = 'processing';
   }
 
   try {
     await writeBatch(db)
-      .set(doc(db, "events", input.slug, "messages", messageId), payload)
+      .set(doc(db, 'events', input.slug, 'messages', messageId), payload)
       .commit();
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t send that message. Please try again.");
+    throw toFriendlyError(
+      error,
+      'Couldn’t send that message. Please try again.',
+    );
   }
 }
 
@@ -228,14 +243,17 @@ export async function hideMessage(
     const deleteMessage = httpsCallable<
       { slug: string; messageId: string; hostToken?: string },
       { ok: true }
-    >(functions, "deleteMessage");
+    >(functions, 'deleteMessage');
     await deleteMessage({
       slug,
       messageId,
       ...(hostToken ? { hostToken } : {}),
     });
   } catch (error) {
-    throw toFriendlyError(error, "That host link isn’t valid for this guestbook.");
+    throw toFriendlyError(
+      error,
+      'That host link isn’t valid for this guestbook.',
+    );
   }
 }
 
@@ -248,7 +266,7 @@ export async function updateEventSignTheme(
     const updateSignTheme = httpsCallable<
       { slug: string; signTheme: SignThemeId; hostToken?: string },
       { ok: true; signTheme: SignThemeId }
-    >(functions, "updateSignTheme");
+    >(functions, 'updateSignTheme');
     const result = await updateSignTheme({
       slug,
       signTheme,
@@ -256,7 +274,10 @@ export async function updateEventSignTheme(
     });
     return getSignTheme(result.data.signTheme).id;
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t save that design. Please try again.");
+    throw toFriendlyError(
+      error,
+      'Couldn’t save that design. Please try again.',
+    );
   }
 }
 
@@ -266,62 +287,83 @@ function mapEvent(data: DocumentData): EventRecord {
   return {
     eventType,
     coupleNames: String(data.coupleNames ?? copy.displayNameFallback),
-    eventDate: data.eventDate instanceof Timestamp ? data.eventDate.toDate() : null,
-    welcomeMessage: typeof data.welcomeMessage === "string" ? data.welcomeMessage : null,
-    themeColor: typeof data.themeColor === "string" ? data.themeColor : null,
+    eventDate:
+      data.eventDate instanceof Timestamp ? data.eventDate.toDate() : null,
+    welcomeMessage:
+      typeof data.welcomeMessage === 'string' ? data.welcomeMessage : null,
+    themeColor: typeof data.themeColor === 'string' ? data.themeColor : null,
     signTheme: getSignTheme(data.signTheme).id,
-    ownerUid: typeof data.ownerUid === "string" ? data.ownerUid : null,
+    ownerUid: typeof data.ownerUid === 'string' ? data.ownerUid : null,
   };
 }
 
 function mapMessage(id: string, data: DocumentData): MessageRecord {
   return {
     id,
-    guestName: typeof data.guestName === "string" ? data.guestName : null,
-    text: typeof data.text === "string" ? data.text : null,
+    guestName: typeof data.guestName === 'string' ? data.guestName : null,
+    text: typeof data.text === 'string' ? data.text : null,
     photoUrls: normalizePhotoUrls(data),
-    videoUrl: typeof data.videoUrl === "string" ? data.videoUrl : null,
+    videoUrl: typeof data.videoUrl === 'string' ? data.videoUrl : null,
     videoStatus: normalizeVideoStatus(data.videoStatus),
-    createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
+    createdAt:
+      data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
   };
 }
 
 function normalizePhotoUrls(data: DocumentData): string[] {
   if (Array.isArray(data.photoUrls)) {
-    return data.photoUrls.filter((url): url is string => typeof url === "string");
+    return data.photoUrls.filter(
+      (url): url is string => typeof url === 'string',
+    );
   }
-  if (typeof data.photoUrl === "string") return [data.photoUrl];
+  if (typeof data.photoUrl === 'string') return [data.photoUrl];
   return [];
 }
 
 export function validateGuestVideo(video: File): SupportedVideoFormat {
   if (video.size === 0) {
-    throw new Error("Choose a video file with content.");
+    throw new Error('Choose a video file with content.');
   }
   if (video.size >= MAX_VIDEO_BYTES) {
-    throw new Error("Videos must be smaller than 10 MiB.");
+    throw new Error('Videos must be smaller than 10 MiB.');
   }
 
-  const extension = video.name.split(".").pop()?.toLowerCase() ?? "";
+  const extension = video.name.split('.').pop()?.toLowerCase() ?? '';
   const contentType = video.type.toLowerCase();
   const format = SUPPORTED_VIDEO_FORMATS.find(
-    (candidate) => candidate.extension === extension && candidate.contentType === contentType,
+    (candidate) =>
+      candidate.extension === extension &&
+      candidate.contentType === contentType,
   );
   if (!format) {
-    throw new Error("Use an MP4, MOV, WebM, M4V, or 3GP video file.");
+    throw new Error('Use an MP4, MOV, WebM, M4V, or 3GP video file.');
   }
   return format;
 }
 
 function normalizeVideoStatus(value: unknown): VideoStatus | null {
-  return value === "processing" || value === "ready" || value === "failed" ? value : null;
+  return value === 'processing' || value === 'ready' || value === 'failed'
+    ? value
+    : null;
 }
 
-async function storeGuestPhotos(slug: string, messageId: string, photos: File[]): Promise<string[]> {
+async function storeGuestPhotos(
+  slug: string,
+  messageId: string,
+  photos: File[],
+): Promise<string[]> {
   const allowDataUrlFallback = photos.length === 1;
   const urls: string[] = [];
   for (let index = 0; index < photos.length; index += 1) {
-    urls.push(await storeGuestPhoto(slug, messageId, photos[index]!, index, allowDataUrlFallback));
+    urls.push(
+      await storeGuestPhoto(
+        slug,
+        messageId,
+        photos[index]!,
+        index,
+        allowDataUrlFallback,
+      ),
+    );
   }
   return urls;
 }
@@ -335,16 +377,24 @@ async function storeGuestPhoto(
 ): Promise<string> {
   const compressed = await compressGuestPhoto(photo);
   try {
-    const photoRef = ref(storage, `events/${slug}/messages/${messageId}-${index}.jpg`);
-    await uploadBytes(photoRef, compressed, { contentType: "image/jpeg" });
+    const photoRef = ref(
+      storage,
+      `events/${slug}/messages/${messageId}-${index}.jpg`,
+    );
+    await uploadBytes(photoRef, compressed, { contentType: 'image/jpeg' });
     return await getDownloadURL(photoRef);
   } catch (error) {
     if (!allowDataUrlFallback) {
-      throw toFriendlyError(error, "Photo upload isn’t available yet. Try one photo, or send a note for now.");
+      throw toFriendlyError(
+        error,
+        'Photo upload isn’t available yet. Try one photo, or send a note for now.',
+      );
     }
     const dataUrl = await fileToDataUrl(compressed);
     if (dataUrl.length >= 900000) {
-      throw new Error("That photo is still a bit large after shrinking. Try a shorter note, or a smaller picture.");
+      throw new Error(
+        'That photo is still a bit large after shrinking. Try a shorter note, or a smaller picture.',
+      );
     }
     return dataUrl;
   }
@@ -357,10 +407,16 @@ async function storeGuestVideo(
   format: SupportedVideoFormat,
 ): Promise<void> {
   try {
-    const videoRef = ref(storage, `events/${slug}/messages/${messageId}-raw.${format.extension}`);
+    const videoRef = ref(
+      storage,
+      `events/${slug}/messages/${messageId}-raw.${format.extension}`,
+    );
     await uploadBytes(videoRef, video, { contentType: format.contentType });
   } catch (error) {
-    throw toFriendlyError(error, "Video upload isn’t available yet. Try again shortly.");
+    throw toFriendlyError(
+      error,
+      'Video upload isn’t available yet. Try again shortly.',
+    );
   }
 }
 
@@ -368,8 +424,7 @@ function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(new Error("Couldn’t read that photo."));
+    reader.onerror = () => reject(new Error('Couldn’t read that photo.'));
     reader.readAsDataURL(file);
   });
 }
-

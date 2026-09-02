@@ -1,0 +1,13 @@
+node_modules
+functions/node_modules
+.next
+out
+dist
+dist-ssr
+pnpm-lock.yaml
+functions/pnpm-lock.yaml
+.firebase
+.emulator-data
+*.local
+*.log
+next-env.d.ts

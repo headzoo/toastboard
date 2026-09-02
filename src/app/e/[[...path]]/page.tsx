@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Shell } from "@/components/ui";
-import { parseEventPathname, type EventRoute } from "@/lib/eventRoutes";
-import { GuestPage } from "./GuestPage";
-import { GuestbookPage } from "./GuestbookPage";
-import { ManagePage } from "./ManagePage";
+import { useEffect, useState } from 'react';
+import { Shell } from '@/components/ui';
+import { parseEventPathname, type EventRoute } from '@/lib/eventRoutes';
+import { GuestPage } from './GuestPage';
+import { GuestbookPage } from './GuestbookPage';
+import { ManagePage } from './ManagePage';
 
 function EventRouteView({ route }: { route: EventRoute }) {
   switch (route.kind) {
-    case "guest":
+    case 'guest':
       return <GuestPage slug={route.slug} />;
-    case "guestbook":
+    case 'guestbook':
       return <GuestbookPage slug={route.slug} />;
-    case "manage":
+    case 'manage':
       return <ManagePage slug={route.slug} token={route.token} />;
-    case "invalid":
+    case 'invalid':
       return (
         <Shell>
-          <section className="max-w-[760px]">
+          <section className='max-w-[760px]'>
             <h1>That guestbook isn&apos;t on the table</h1>
           </section>
         </Shell>
@@ -32,15 +32,15 @@ export default function Page() {
   useEffect(() => {
     const sync = () => setRoute(parseEventPathname(window.location.pathname));
     sync();
-    window.addEventListener("popstate", sync);
-    return () => window.removeEventListener("popstate", sync);
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
   }, []);
 
   if (!route) {
     return (
       <Shell>
-        <section className="max-w-[760px]">
-          <p className="kicker">Loading</p>
+        <section className='max-w-[760px]'>
+          <p className='kicker'>Loading</p>
         </section>
       </Shell>
     );

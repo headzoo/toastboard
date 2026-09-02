@@ -1,26 +1,32 @@
-import { useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { TableSignCard } from "./TableSignCard";
-import { SignThemePicker } from "./SignThemePicker";
-import { updateEventSignTheme } from "../lib/api";
-import { renderKeepsafePng } from "../lib/keepsafe";
-import { saveKeepsafe } from "../lib/session";
+import { useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
+import { TableSignCard } from './TableSignCard';
+import { SignThemePicker } from './SignThemePicker';
+import { updateEventSignTheme } from '../lib/api';
+import { renderKeepsafePng } from '../lib/keepsafe';
+import { saveKeepsafe } from '../lib/session';
 import {
   DEFAULT_SIGN_THEME,
   getSignTheme,
   type SignThemeId,
-} from "../lib/signThemes";
-import { btnClass, ledeClass, narrowClass } from "../lib/styles";
-import { formatEventDate } from "../lib/theme";
-import { formatKeepsafeLede, getEventCopy } from "../lib/eventTypes";
-import { copyText, downloadDataUrl, guestUrl, guestbookUrl, manageUrl } from "../lib/urls";
-import { DEFAULT_THEME } from "../lib/types";
-import type { HostKeepsafe } from "../lib/types";
+} from '../lib/signThemes';
+import { btnClass, ledeClass, narrowClass } from '../lib/styles';
+import { formatEventDate } from '../lib/theme';
+import { formatKeepsafeLede, getEventCopy } from '../lib/eventTypes';
+import {
+  copyText,
+  downloadDataUrl,
+  guestUrl,
+  guestbookUrl,
+  manageUrl,
+} from '../lib/urls';
+import { DEFAULT_THEME } from '../lib/types';
+import type { HostKeepsafe } from '../lib/types';
 
-import { Button, StatusNote } from "./ui";
+import { Button, StatusNote } from './ui';
 
 export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
-  const [copied, setCopied] = useState<"host" | "guest" | null>(null);
+  const [copied, setCopied] = useState<'host' | 'guest' | null>(null);
   const [signTheme, setSignTheme] = useState<SignThemeId>(
     () => getSignTheme(keepsafe.signTheme).id,
   );
@@ -46,14 +52,20 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
     setThemeBusy(true);
 
     try {
-      const saved = await updateEventSignTheme(keepsafe.slug, id, keepsafe.hostToken);
+      const saved = await updateEventSignTheme(
+        keepsafe.slug,
+        id,
+        keepsafe.hostToken,
+      );
       if (themeRequestRef.current !== id) return;
       setSignTheme(saved);
       saveKeepsafe({ ...keepsafe, signTheme: saved });
     } catch (err) {
       if (themeRequestRef.current !== id) return;
       setSignTheme(prior);
-      setThemeError(err instanceof Error ? err.message : "Couldn't save that design.");
+      setThemeError(
+        err instanceof Error ? err.message : "Couldn't save that design.",
+      );
     } finally {
       if (themeRequestRef.current === id) {
         setThemeBusy(false);
@@ -62,8 +74,8 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
     }
   }
 
-  async function copy(kind: "host" | "guest") {
-    const ok = await copyText(kind === "host" ? hostLink : guestLink);
+  async function copy(kind: 'host' | 'guest') {
+    const ok = await copyText(kind === 'host' ? hostLink : guestLink);
     if (ok) {
       setCopied(kind);
       window.setTimeout(() => setCopied(null), 1800);
@@ -83,37 +95,39 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
 
   return (
     <section className={narrowClass}>
-
-
-      <h1 className="mt-2.5 mb-1">Save your host link</h1>
+      <h1 className='mt-2.5 mb-1'>Save your host link</h1>
 
       <p className={ledeClass}>
         {formatKeepsafeLede(eventCopy, keepsafe.coupleNames)}
       </p>
 
-
-
-      <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
-        <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Private host link</span>
-        <StatusNote tone="warn">
-          Your guestbook is saved to your account. This host link is a spare key — keep it safe if you
-          share moderation with someone else.
+      <div className='my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4'>
+        <span className='text-[0.8rem] font-bold uppercase tracking-[0.04em]'>
+          Private host link
+        </span>
+        <StatusNote tone='warn'>
+          Your guestbook is saved to your account. This host link is a spare key
+          — keep it safe if you share moderation with someone else.
         </StatusNote>
-        <code className="break-all text-[0.82rem] text-ink-soft">{hostLink}</code>
-        <Button variant="primary" href={hostLink}>
+        <code className='break-all text-[0.82rem] text-ink-soft'>
+          {hostLink}
+        </code>
+        <Button variant='primary' href={hostLink}>
           Open host tools
         </Button>
-        <Button variant="ghost" onClick={() => void copy("host")}>
-          {copied === "host" ? "Copied" : "Copy host link"}
+        <Button variant='ghost' onClick={() => void copy('host')}>
+          {copied === 'host' ? 'Copied' : 'Copy host link'}
         </Button>
       </div>
 
-      <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
-        <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Host backup</span>
-        <p className="text-[0.92rem] leading-snug text-ink-soft">
+      <div className='my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4'>
+        <span className='text-[0.8rem] font-bold uppercase tracking-[0.04em]'>
+          Host backup
+        </span>
+        <p className='text-[0.92rem] leading-snug text-ink-soft'>
           {eventCopy.keepsafeBackupFolderHint}
         </p>
-        <Button variant="ghost" onClick={() => void downloadKeepsafe()}>
+        <Button variant='ghost' onClick={() => void downloadKeepsafe()}>
           Download host backup
         </Button>
       </div>
@@ -124,7 +138,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
         busy={themeBusy}
         onChange={(id) => void selectSignTheme(id)}
       />
-      {themeError ? <StatusNote tone="error">{themeError}</StatusNote> : null}
+      {themeError ? <StatusNote tone='error'>{themeError}</StatusNote> : null}
 
       <TableSignCard
         slug={keepsafe.slug}
@@ -136,19 +150,23 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
         welcomeMessage={keepsafe.welcomeMessage}
       />
 
-      <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
-        <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Guest page</span>
-        <code className="break-all text-[0.82rem] text-ink-soft">{guestLink}</code>
-        <Button variant="primary" href={guestbookUrl(keepsafe.slug)}>
+      <div className='my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4'>
+        <span className='text-[0.8rem] font-bold uppercase tracking-[0.04em]'>
+          Guest page
+        </span>
+        <code className='break-all text-[0.82rem] text-ink-soft'>
+          {guestLink}
+        </code>
+        <Button variant='primary' href={guestbookUrl(keepsafe.slug)}>
           Open the guestbook
         </Button>
-        <Button variant="ghost" onClick={() => void copy("guest")}>
-          {copied === "guest" ? "Copied" : "Copy guestbook link"}
+        <Button variant='ghost' onClick={() => void copy('guest')}>
+          {copied === 'guest' ? 'Copied' : 'Copy guestbook link'}
         </Button>
       </div>
 
-      <div className="mt-8 flex justify-center">
-        <Link className={btnClass("primary")} href={createAnotherHref}>
+      <div className='mt-8 flex justify-center'>
+        <Link className={btnClass('primary')} href={createAnotherHref}>
           Create another guestbook
         </Link>
       </div>

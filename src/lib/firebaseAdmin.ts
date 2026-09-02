@@ -1,20 +1,22 @@
-import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
-import { getAuth, type Auth } from "firebase-admin/auth";
+import { cert, getApps, initializeApp, type App } from 'firebase-admin/app';
+import { getAuth, type Auth } from 'firebase-admin/auth';
 
-const PROJECT_ID = "toastboard";
+const PROJECT_ID = 'toastboard';
 
 let adminApp: App | undefined;
 let adminAuth: Auth | undefined;
 
 function shouldUseEmulators() {
-  const value = String(process.env.NEXT_PUBLIC_TOASTBOARD_EMULATORS ?? "").trim().toLowerCase();
-  return value === "1" || value === "true" || value === "yes";
+  const value = String(process.env.NEXT_PUBLIC_TOASTBOARD_EMULATORS ?? '')
+    .trim()
+    .toLowerCase();
+  return value === '1' || value === 'true' || value === 'yes';
 }
 
 function ensureEmulatorEnv() {
   if (!shouldUseEmulators()) return;
   if (!process.env.FIREBASE_AUTH_EMULATOR_HOST) {
-    process.env.FIREBASE_AUTH_EMULATOR_HOST = "127.0.0.1:9099";
+    process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099';
   }
 }
 
@@ -25,7 +27,7 @@ export function getAdminAuth(): Auth {
 
   if (!getApps().length) {
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
     if (clientEmail && privateKey) {
       adminApp = initializeApp({

@@ -1,5 +1,5 @@
-import { getSignTheme } from "./signThemes";
-import { qrDataUrl } from "./urls";
+import { getSignTheme } from './signThemes';
+import { qrDataUrl } from './urls';
 
 type KeepsafeInput = {
   coupleNames: string;
@@ -13,11 +13,11 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
   const qr = await qrDataUrl(input.guestUrl);
   const width = 1080;
   const height = 1480;
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Couldn’t draw the keepsafe card.");
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Couldn’t draw the keepsafe card.');
 
   const palette = getSignTheme(input.themeId);
 
@@ -31,15 +31,15 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
 
   ctx.fillStyle = palette.ink;
   ctx.font = "600 42px 'Fraunces', serif";
-  ctx.textAlign = "center";
-  ctx.fillText("The Willow Book", width / 2, 160);
+  ctx.textAlign = 'center';
+  ctx.fillText('The Willow Book', width / 2, 160);
 
   ctx.font = "italic 300 72px 'Fraunces', serif";
   wrapText(ctx, input.coupleNames, width / 2, 270, width - 200, 82);
 
   ctx.font = "600 28px 'Figtree', sans-serif";
   ctx.fillStyle = input.themeColor;
-  ctx.fillText("SAVE THIS LINK — IT CANNOT BE RECOVERED", width / 2, 430);
+  ctx.fillText('SAVE THIS LINK — IT CANNOT BE RECOVERED', width / 2, 430);
 
   const qrImage = await loadImage(qr);
   const qrSize = 520;
@@ -47,21 +47,21 @@ export async function renderKeepsafePng(input: KeepsafeInput): Promise<string> {
 
   ctx.fillStyle = palette.inkSoft;
   ctx.font = "500 24px 'Figtree', sans-serif";
-  ctx.fillText("Guest QR", width / 2, 1040);
+  ctx.fillText('Guest QR', width / 2, 1040);
 
   ctx.fillStyle = palette.ink;
   ctx.font = "600 26px 'Figtree', sans-serif";
-  ctx.fillText("Private host link", width / 2, 1110);
+  ctx.fillText('Private host link', width / 2, 1110);
 
   ctx.font = "400 22px 'Figtree', sans-serif";
   wrapText(ctx, input.manageUrl, width / 2, 1160, width - 180, 34);
 
   ctx.fillStyle = palette.inkSoft;
   ctx.font = "400 22px 'Figtree', sans-serif";
-  ctx.fillText("Guest page", width / 2, 1336);
+  ctx.fillText('Guest page', width / 2, 1336);
   wrapText(ctx, input.guestUrl, width / 2, 1374, width - 180, 32);
 
-  return canvas.toDataURL("image/png");
+  return canvas.toDataURL('image/png');
 }
 
 function roundRect(
@@ -90,7 +90,7 @@ function wrapText(
   lineHeight: number,
 ) {
   const words = text.split(/\s+/);
-  let line = "";
+  let line = '';
   let cursor = y;
   for (const word of words) {
     const next = line ? `${line} ${word}` : word;
@@ -109,7 +109,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Couldn’t load QR image."));
+    image.onerror = () => reject(new Error('Couldn’t load QR image.'));
     image.src = src;
   });
 }

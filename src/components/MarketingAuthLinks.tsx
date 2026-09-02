@@ -1,12 +1,16 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { signOutAll } from "@/lib/firebaseAuth";
-import { marketingBtnClass } from "@/lib/styles";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { signOutAll } from '@/lib/firebaseAuth';
+import { marketingBtnClass } from '@/lib/styles';
 
-export function MarketingAuthLinks({ onNavigate }: { onNavigate?: () => void }) {
+export function MarketingAuthLinks({
+  onNavigate,
+}: {
+  onNavigate?: () => void;
+}) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -16,9 +20,9 @@ export function MarketingAuthLinks({ onNavigate }: { onNavigate?: () => void }) 
     router.refresh();
   }
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
-      <span className="text-[0.85rem] text-ink-soft" aria-hidden="true">
+      <span className='text-[0.85rem] text-ink-soft' aria-hidden='true'>
         …
       </span>
     );
@@ -28,20 +32,24 @@ export function MarketingAuthLinks({ onNavigate }: { onNavigate?: () => void }) 
     return (
       <>
         <Link
-          className="text-[0.85rem] text-ink-soft no-underline hover:text-ink"
-          href="/account/"
+          className='text-[0.85rem] text-ink-soft no-underline hover:text-ink'
+          href='/account/'
           onClick={onNavigate}
         >
           Your guestbooks
         </Link>
         <button
-          type="button"
-          className="text-[0.85rem] text-ink-soft underline-offset-2 hover:text-ink hover:underline"
+          type='button'
+          className='text-[0.85rem] text-ink-soft underline-offset-2 hover:text-ink hover:underline'
           onClick={() => void onSignOut()}
         >
           Sign out
         </button>
-        <Link className={marketingBtnClass} href="/create/" onClick={onNavigate}>
+        <Link
+          className={marketingBtnClass}
+          href='/create/'
+          onClick={onNavigate}
+        >
           14-Day Free Trial
         </Link>
       </>
@@ -51,13 +59,13 @@ export function MarketingAuthLinks({ onNavigate }: { onNavigate?: () => void }) 
   return (
     <>
       <Link
-        className="text-[0.85rem] text-ink-soft no-underline hover:text-ink"
-        href="/login/"
+        className='text-[0.85rem] text-ink-soft no-underline hover:text-ink'
+        href='/login/'
         onClick={onNavigate}
       >
         Sign in
       </Link>
-      <Link className={marketingBtnClass} href="/create/" onClick={onNavigate}>
+      <Link className={marketingBtnClass} href='/create/' onClick={onNavigate}>
         14-Day Free Trial
       </Link>
     </>

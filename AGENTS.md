@@ -2,7 +2,7 @@
 
 ## Product vs house brand
 
-- **Product name:** The Willow Book — use this in UI copy, page titles, metadata, and legal text when referring to the service. Use “a Willow Book” (drop *The*) when the name takes an article or works as an adjective (“a Willow Book guestbook”).
+- **Product name:** The Willow Book — use this in UI copy, page titles, metadata, and legal text when referring to the service. Use “a Willow Book” (drop _The_) when the name takes an article or works as an adjective (“a Willow Book guestbook”).
 - **House brand:** Keepwell & Bell — appears in the logo lockup; do not use as the primary product name in UI copy.
 - **Logo asset:** `public/images/logo.png` — lockup reads "The Willow Book by Keepwell & Bell".
 
@@ -22,9 +22,9 @@ Leave these as infrastructure identifiers (still say `toastboard` technically):
 
 ## The core principle
 
-Keepwell & Bell is presented the way Betty Crocker, Uncle Ben's, Sara Lee, or Dr. Bronner's are presented: a name that carries values and craft, not a biography. Nobody asks "who is Uncle Ben?" because the branding never opens that door. Our job is the same — every word on the site should describe a *standard*, never a *person* or a *history*. The moment copy implies a checkable fact (a year, a city, a face, a quote), we've invited scrutiny we don't want.
+Keepwell & Bell is presented the way Betty Crocker, Uncle Ben's, Sara Lee, or Dr. Bronner's are presented: a name that carries values and craft, not a biography. Nobody asks "who is Uncle Ben?" because the branding never opens that door. Our job is the same — every word on the site should describe a _standard_, never a _person_ or a _history_. The moment copy implies a checkable fact (a year, a city, a face, a quote), we've invited scrutiny we don't want.
 
-**One-line test before publishing any copy:** *Does this sentence describe what we value, or does it describe who we are and where we came from?* Only the first is allowed.
+**One-line test before publishing any copy:** _Does this sentence describe what we value, or does it describe who we are and where we came from?_ Only the first is allowed.
 
 ---
 
@@ -58,10 +58,12 @@ Keepwell & Bell is presented the way Betty Crocker, Uncle Ben's, Sara Lee, or Dr
 ## Sample lines by section
 
 **Homepage hero / tagline**
+
 > Every kind word, kept.
 > A quiet place to keep the words a moment deserves.
 
 **About page on this site (`/about`) — about The Willow Book, not the house brand**
+
 > The Willow Book is a live guestbook for a gathering. Guests leave a note, a photo, or a short video — without making an account to do it.
 >
 > The Willow Book is our answer to a simple question: how do you keep the words people say at your table, without asking them to sign in to say them?
@@ -69,18 +71,23 @@ Keepwell & Bell is presented the way Betty Crocker, Uncle Ben's, Sara Lee, or Dr
 > Close with Keepwell & Bell only as attribution/standard (“made the Keepwell & Bell way”), never as the page’s subject. House-brand “Our Standards” copy belongs on keepwellandbell.com, not here.
 
 **Product intro (The Willow Book)**
+
 > The Willow Book is our answer to a simple question: how do you keep the words people say at your table, without asking them to sign in to say them?
 
 **Footer**
+
 > Keepwell & Bell — quietly, carefully made.
 
 **Empty state (no messages yet in a guestbook)**
+
 > Nothing kept here yet. The first word is always the best one.
 
 **Error / 404 page**
+
 > This page wandered off. Everything else is right where we left it.
 
 **Host "save your link" screen**
+
 > Keep this safe — it's the only key we'll ever give you.
 
 ---

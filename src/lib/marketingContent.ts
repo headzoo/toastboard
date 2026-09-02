@@ -1,11 +1,11 @@
-import demoCatalog from "../content/demoCatalog.json";
-import type { EventType } from "./eventTypes";
+import demoCatalog from '../content/demoCatalog.json';
+import type { EventType } from './eventTypes';
 
 export const MARKETED_EVENT_TYPES = [
-  "wedding",
-  "birthday",
-  "graduation",
-  "religious-milestone",
+  'wedding',
+  'birthday',
+  'graduation',
+  'religious-milestone',
 ] as const;
 
 export type MarketedEventType = (typeof MARKETED_EVENT_TYPES)[number];
@@ -26,7 +26,7 @@ export type MarketingImage = {
 export type MarketingVisualFigure = {
   image: MarketingImage;
   caption: string;
-  layout: "full" | "half" | "grid-pair";
+  layout: 'full' | 'half' | 'grid-pair';
 };
 
 export type MarketingVisualStory = {
@@ -61,7 +61,9 @@ export type MarketingContent = {
 function demoSlugFor(eventType: MarketedEventType): string {
   const entry = demoCatalog.demos.find((demo) => demo.eventType === eventType);
   if (!entry) {
-    throw new Error(`demoCatalog.json is missing a demo for event type "${eventType}"`);
+    throw new Error(
+      `demoCatalog.json is missing a demo for event type "${eventType}"`,
+    );
   }
   return entry.slug;
 }
@@ -69,238 +71,240 @@ function demoSlugFor(eventType: MarketedEventType): string {
 function demoThemeFor(eventType: MarketedEventType): string {
   const entry = demoCatalog.demos.find((demo) => demo.eventType === eventType);
   if (!entry) {
-    throw new Error(`demoCatalog.json is missing a demo for event type "${eventType}"`);
+    throw new Error(
+      `demoCatalog.json is missing a demo for event type "${eventType}"`,
+    );
   }
   return entry.themeColor;
 }
 
 const WEDDING_MARKETING: MarketingContent = {
-  eventType: "wedding",
-  path: "/weddings",
-  themeColor: demoThemeFor("wedding"),
-  iconSrc: "/images/wedding_rings_icon_transparent.png",
-  hubTitle: "Weddings",
+  eventType: 'wedding',
+  path: '/weddings',
+  themeColor: demoThemeFor('wedding'),
+  iconSrc: '/images/wedding_rings_icon_transparent.png',
+  hubTitle: 'Weddings',
   hubDescription:
-    "A live guestbook for the reception — guests leave toasts, photos, or one short video without signing in.",
-  kicker: "Zero sign-up. Zero login. Zero email.",
-  headline: "A wedding guestbook that doesn’t ask for an account.",
-  lede: "Guests scan a QR code, leave a toast, photos, or one short video, and it appears on a live guestbook. The host link is the login — no passwords, for anyone.",
+    'A live guestbook for the reception — guests leave toasts, photos, or one short video without signing in.',
+  kicker: 'Zero sign-up. Zero login. Zero email.',
+  headline: 'A wedding guestbook that doesn’t ask for an account.',
+  lede: 'Guests scan a QR code, leave a toast, photos, or one short video, and it appears on a live guestbook. The host link is the login — no passwords, for anyone.',
   steps: [
     {
-      title: "Create once",
+      title: 'Create once',
       description:
-        "Enter the couple’s names. The Willow Book gives you a guest URL, a host link, and a QR code.",
+        'Enter the couple’s names. The Willow Book gives you a guest URL, a host link, and a QR code.',
     },
     {
-      title: "Share the QR",
+      title: 'Share the QR',
       description:
-        "Guests never sign in. Optional name, a note, photos or one short video from their camera. That’s the whole form.",
+        'Guests never sign in. Optional name, a note, photos or one short video from their camera. That’s the whole form.',
     },
     {
-      title: "Watch the guestbook",
+      title: 'Watch the guestbook',
       description:
-        "The reception screen updates live. Hide a toast later with the host link — possession is permission.",
+        'The reception screen updates live. Hide a toast later with the host link — possession is permission.',
     },
   ],
-  createCtaLabel: "Create a wedding guestbook",
-  demoCtaLabel: "See Maya & James live guestbook",
-  demoSlug: demoSlugFor("wedding"),
+  createCtaLabel: 'Create a wedding guestbook',
+  demoCtaLabel: 'See Maya & James live guestbook',
+  demoSlug: demoSlugFor('wedding'),
   visualStory: {
-    kicker: "In the room",
-    headline: "The guestbook that sits with the party.",
+    kicker: 'In the room',
+    headline: 'The guestbook that sits with the party.',
     figures: [
       {
-        layout: "full",
+        layout: 'full',
         image: {
-          src: "/images/family-table-wall.jpg",
-          alt: "The bride, groom, and family sitting at the head table, with a TV to the left showing the Willow Book live guestbook, a dance floor in front, and guests at tables beyond",
+          src: '/images/family-table-wall.jpg',
+          alt: 'The bride, groom, and family sitting at the head table, with a TV to the left showing the Willow Book live guestbook, a dance floor in front, and guests at tables beyond',
           width: 1920,
           height: 1080,
         },
-        caption: "The family table watches the guestbook fill.",
+        caption: 'The family table watches the guestbook fill.',
       },
       {
-        layout: "grid-pair",
+        layout: 'grid-pair',
         image: {
-          src: "/images/table-sign.jpg",
-          alt: "Printed cream Willow Book table sign with a rose border, Maya and James, and a large QR code standing on a guest table among candles and flowers",
+          src: '/images/table-sign.jpg',
+          alt: 'Printed cream Willow Book table sign with a rose border, Maya and James, and a large QR code standing on a guest table among candles and flowers',
           width: 900,
           height: 1200,
-          aspectClass: "aspect-[3/4]",
+          aspectClass: 'aspect-[3/4]',
         },
-        caption: "Print one card per table.",
+        caption: 'Print one card per table.',
       },
       {
-        layout: "grid-pair",
+        layout: 'grid-pair',
         image: {
-          src: "/images/guest-scan.jpg",
-          alt: "A wedding guest holds a phone over a Willow Book table sign, scanning the QR code while the reception continues behind them",
+          src: '/images/guest-scan.jpg',
+          alt: 'A wedding guest holds a phone over a Willow Book table sign, scanning the QR code while the reception continues behind them',
           width: 1200,
           height: 900,
-          aspectClass: "aspect-[4/3] min-[700px]:aspect-[3/4]",
+          aspectClass: 'aspect-[4/3] min-[700px]:aspect-[3/4]',
         },
-        caption: "Guests scan. No app.",
+        caption: 'Guests scan. No app.',
       },
       {
-        layout: "full",
+        layout: 'full',
         image: {
-          src: "/images/reception-selfie.jpg",
-          alt: "Guests take a selfie at a wedding reception with a Willow Book table sign and QR code visible on a nearby table",
+          src: '/images/reception-selfie.jpg',
+          alt: 'Guests take a selfie at a wedding reception with a Willow Book table sign and QR code visible on a nearby table',
           width: 1920,
           height: 1080,
         },
-        caption: "The party keeps going.",
+        caption: 'The party keeps going.',
       },
     ],
   },
 };
 
 const BIRTHDAY_MARKETING: MarketingContent = {
-  eventType: "birthday",
-  path: "/birthdays",
-  themeColor: demoThemeFor("birthday"),
-  iconSrc: "/images/birthday_cake_icon_transparent.png",
-  hubTitle: "Birthdays",
+  eventType: 'birthday',
+  path: '/birthdays',
+  themeColor: demoThemeFor('birthday'),
+  iconSrc: '/images/birthday_cake_icon_transparent.png',
+  hubTitle: 'Birthdays',
   hubDescription:
-    "Collect wishes, party photos, or one short video on a live guestbook — no app, no login, just a QR code on the table.",
-  kicker: "Zero sign-up. Zero login. Zero email.",
-  headline: "A birthday guestbook that doesn’t ask for an account.",
-  lede: "Party guests scan a QR code, leave a wish, photos, or one short video, and it appears on a live guestbook. You keep the host link — that’s the only key you need.",
+    'Collect wishes, party photos, or one short video on a live guestbook — no app, no login, just a QR code on the table.',
+  kicker: 'Zero sign-up. Zero login. Zero email.',
+  headline: 'A birthday guestbook that doesn’t ask for an account.',
+  lede: 'Party guests scan a QR code, leave a wish, photos, or one short video, and it appears on a live guestbook. You keep the host link — that’s the only key you need.',
   steps: [
     {
-      title: "Create once",
+      title: 'Create once',
       description:
-        "Add the celebrant’s name and party details. The Willow Book gives you a guest URL, a host link, and a QR code.",
+        'Add the celebrant’s name and party details. The Willow Book gives you a guest URL, a host link, and a QR code.',
     },
     {
-      title: "Share the QR",
+      title: 'Share the QR',
       description:
-        "Guests never sign in. Optional name, a wish, photos or one short video from their camera. That’s the whole form.",
+        'Guests never sign in. Optional name, a wish, photos or one short video from their camera. That’s the whole form.',
     },
     {
-      title: "Watch the guestbook",
+      title: 'Watch the guestbook',
       description:
-        "The party screen updates live. Hide a wish later with the host link — possession is permission.",
+        'The party screen updates live. Hide a wish later with the host link — possession is permission.',
     },
   ],
-  createCtaLabel: "Create a birthday guestbook",
-  demoCtaLabel: "See Lena’s live guestbook",
-  demoSlug: demoSlugFor("birthday"),
+  createCtaLabel: 'Create a birthday guestbook',
+  demoCtaLabel: 'See Lena’s live guestbook',
+  demoSlug: demoSlugFor('birthday'),
   highlights: [
     {
-      title: "Built for the room",
+      title: 'Built for the room',
       description:
-        "Put the QR on a table sign or project the guestbook on a TV. Guests contribute from their phones without downloading anything.",
+        'Put the QR on a table sign or project the guestbook on a TV. Guests contribute from their phones without downloading anything.',
     },
     {
-      title: "Wishes that last",
+      title: 'Wishes that last',
       description:
-        "Every note lands on a scrollable guestbook you can revisit after the candles are out.",
+        'Every note lands on a scrollable guestbook you can revisit after the candles are out.',
     },
     {
-      title: "You stay in control",
+      title: 'You stay in control',
       description:
-        "The host link lets you hide anything that shouldn’t stay up. Guests never see moderation tools.",
+        'The host link lets you hide anything that shouldn’t stay up. Guests never see moderation tools.',
     },
   ],
 };
 
 const GRADUATION_MARKETING: MarketingContent = {
-  eventType: "graduation",
-  path: "/graduations",
-  themeColor: demoThemeFor("graduation"),
-  iconSrc: "/images/graduation_cap_icon_transparent.png",
-  hubTitle: "Graduations",
+  eventType: 'graduation',
+  path: '/graduations',
+  themeColor: demoThemeFor('graduation'),
+  iconSrc: '/images/graduation_cap_icon_transparent.png',
+  hubTitle: 'Graduations',
   hubDescription:
-    "Gather congratulations, advice, and memories from family and friends on a live guestbook.",
-  kicker: "Zero sign-up. Zero login. Zero email.",
-  headline: "A graduation guestbook that doesn’t ask for an account.",
-  lede: "Guests scan a QR code, leave a wish, photos, or one short video, and it appears on a live guestbook. The host link is the login — no passwords, for anyone.",
+    'Gather congratulations, advice, and memories from family and friends on a live guestbook.',
+  kicker: 'Zero sign-up. Zero login. Zero email.',
+  headline: 'A graduation guestbook that doesn’t ask for an account.',
+  lede: 'Guests scan a QR code, leave a wish, photos, or one short video, and it appears on a live guestbook. The host link is the login — no passwords, for anyone.',
   steps: [
     {
-      title: "Create once",
+      title: 'Create once',
       description:
-        "Add the graduate’s name and celebration date. The Willow Book gives you a guest URL, a host link, and a QR code.",
+        'Add the graduate’s name and celebration date. The Willow Book gives you a guest URL, a host link, and a QR code.',
     },
     {
-      title: "Share the QR",
+      title: 'Share the QR',
       description:
-        "Family and friends never sign in. Optional name, a wish, photos or one short video from the day. That’s the whole form.",
+        'Family and friends never sign in. Optional name, a wish, photos or one short video from the day. That’s the whole form.',
     },
     {
-      title: "Watch the guestbook",
+      title: 'Watch the guestbook',
       description:
-        "The celebration screen updates live. Hide a wish later with the host link — possession is permission.",
+        'The celebration screen updates live. Hide a wish later with the host link — possession is permission.',
     },
   ],
-  createCtaLabel: "Create a graduation guestbook",
-  demoCtaLabel: "See Jordan’s live guestbook",
-  demoSlug: demoSlugFor("graduation"),
+  createCtaLabel: 'Create a graduation guestbook',
+  demoCtaLabel: 'See Jordan’s live guestbook',
+  demoSlug: demoSlugFor('graduation'),
   highlights: [
     {
-      title: "From ceremony to party",
+      title: 'From ceremony to party',
       description:
-        "One QR works at the reception, the backyard barbecue, or the open house — wherever people gather to celebrate.",
+        'One QR works at the reception, the backyard barbecue, or the open house — wherever people gather to celebrate.',
     },
     {
-      title: "Advice worth keeping",
+      title: 'Advice worth keeping',
       description:
-        "Professors, coaches, grandparents, and classmates can all leave words the graduate can read again later.",
+        'Professors, coaches, grandparents, and classmates can all leave words the graduate can read again later.',
     },
     {
-      title: "Simple for every guest",
+      title: 'Simple for every guest',
       description:
-        "No accounts, no app store, no “check your email.” Scan, write, done.",
+        'No accounts, no app store, no “check your email.” Scan, write, done.',
     },
   ],
 };
 
 const RELIGIOUS_MILESTONE_MARKETING: MarketingContent = {
-  eventType: "religious-milestone",
-  path: "/religious-milestones",
-  themeColor: demoThemeFor("religious-milestone"),
-  iconSrc: "/images/anniversary_sprig_icon_transparent.png",
-  hubTitle: "Religious milestones",
+  eventType: 'religious-milestone',
+  path: '/religious-milestones',
+  themeColor: demoThemeFor('religious-milestone'),
+  iconSrc: '/images/anniversary_sprig_icon_transparent.png',
+  hubTitle: 'Religious milestones',
   hubDescription:
-    "Bar mitzvah, bat mitzvah, confirmation, and similar celebrations — guests leave blessings on a live guestbook.",
-  kicker: "Zero sign-up. Zero login. Zero email.",
-  headline: "A milestone guestbook that doesn’t ask for an account.",
-  lede: "For bar mitzvah, bat mitzvah, confirmation, and similar milestones — guests scan a QR code, leave a blessing, note, photos, or one short video, and it appears on a live guestbook. The host link is the login — no passwords, for anyone.",
+    'Bar mitzvah, bat mitzvah, confirmation, and similar celebrations — guests leave blessings on a live guestbook.',
+  kicker: 'Zero sign-up. Zero login. Zero email.',
+  headline: 'A milestone guestbook that doesn’t ask for an account.',
+  lede: 'For bar mitzvah, bat mitzvah, confirmation, and similar milestones — guests scan a QR code, leave a blessing, note, photos, or one short video, and it appears on a live guestbook. The host link is the login — no passwords, for anyone.',
   steps: [
     {
-      title: "Create once",
+      title: 'Create once',
       description:
-        "Add the honoree’s name and celebration date. The Willow Book gives you a guest URL, a host link, and a QR code.",
+        'Add the honoree’s name and celebration date. The Willow Book gives you a guest URL, a host link, and a QR code.',
     },
     {
-      title: "Share the QR",
+      title: 'Share the QR',
       description:
-        "Guests never sign in. Optional name, a note, photos or one short video from the day. That’s the whole form.",
+        'Guests never sign in. Optional name, a note, photos or one short video from the day. That’s the whole form.',
     },
     {
-      title: "Watch the guestbook",
+      title: 'Watch the guestbook',
       description:
-        "The celebration screen updates live. Hide a note later with the host link — possession is permission.",
+        'The celebration screen updates live. Hide a note later with the host link — possession is permission.',
     },
   ],
-  createCtaLabel: "Create a milestone guestbook",
-  demoCtaLabel: "See Noah’s live guestbook",
-  demoSlug: demoSlugFor("religious-milestone"),
+  createCtaLabel: 'Create a milestone guestbook',
+  demoCtaLabel: 'See Noah’s live guestbook',
+  demoSlug: demoSlugFor('religious-milestone'),
   highlights: [
     {
-      title: "Honest and inclusive",
+      title: 'Honest and inclusive',
       description:
-        "Works for bar mitzvah, bat mitzvah, confirmation, and other faith milestones — you choose the language that fits your tradition.",
+        'Works for bar mitzvah, bat mitzvah, confirmation, and other faith milestones — you choose the language that fits your tradition.',
     },
     {
-      title: "Blessings from every table",
+      title: 'Blessings from every table',
       description:
-        "Family, friends, and community members contribute from their seats without leaving the celebration.",
+        'Family, friends, and community members contribute from their seats without leaving the celebration.',
     },
     {
-      title: "A keepsake after the day",
+      title: 'A keepsake after the day',
       description:
-        "Every note stays in the guestbook for the family to revisit long after the celebration ends.",
+        'Every note stays in the guestbook for the family to revisit long after the celebration ends.',
     },
   ],
 };
@@ -309,12 +313,16 @@ export const MARKETING_CONTENT: Record<MarketedEventType, MarketingContent> = {
   wedding: WEDDING_MARKETING,
   birthday: BIRTHDAY_MARKETING,
   graduation: GRADUATION_MARKETING,
-  "religious-milestone": RELIGIOUS_MILESTONE_MARKETING,
+  'religious-milestone': RELIGIOUS_MILESTONE_MARKETING,
 };
 
-export const MARKETING_BY_PATH: Record<string, MarketingContent> = Object.fromEntries(
-  MARKETED_EVENT_TYPES.map((eventType) => [MARKETING_CONTENT[eventType].path, MARKETING_CONTENT[eventType]]),
-);
+export const MARKETING_BY_PATH: Record<string, MarketingContent> =
+  Object.fromEntries(
+    MARKETED_EVENT_TYPES.map((eventType) => [
+      MARKETING_CONTENT[eventType].path,
+      MARKETING_CONTENT[eventType],
+    ]),
+  );
 
 export const HUB_USE_CASES = MARKETED_EVENT_TYPES.map((eventType) => {
   const content = MARKETING_CONTENT[eventType];
@@ -326,6 +334,8 @@ export const HUB_USE_CASES = MARKETED_EVENT_TYPES.map((eventType) => {
   };
 });
 
-export function isMarketedEventType(value: EventType): value is MarketedEventType {
+export function isMarketedEventType(
+  value: EventType,
+): value is MarketedEventType {
   return (MARKETED_EVENT_TYPES as readonly EventType[]).includes(value);
 }

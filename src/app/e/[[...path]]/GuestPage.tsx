@@ -1,12 +1,16 @@
-"use client";
+'use client';
 
-import { useEffect, useState, type FormEvent } from "react";
-import { Button, Field, Shell, StatusNote } from "../../../components/ui";
-import { useEvent } from "../../../hooks/useEvent";
-import { MAX_PHOTOS, submitMessage, validateGuestVideo } from "../../../lib/api";
-import { eventGuestbookPath } from "../../../lib/eventRoutes";
-import { getEventCopy } from "../../../lib/eventTypes";
-import { formatEventDate } from "../../../lib/theme";
+import { useEffect, useState, type FormEvent } from 'react';
+import { Button, Field, Shell, StatusNote } from '../../../components/ui';
+import { useEvent } from '../../../hooks/useEvent';
+import {
+  MAX_PHOTOS,
+  submitMessage,
+  validateGuestVideo,
+} from '../../../lib/api';
+import { eventGuestbookPath } from '../../../lib/eventRoutes';
+import { getEventCopy } from '../../../lib/eventTypes';
+import { formatEventDate } from '../../../lib/theme';
 
 type PreviewItem = {
   file: File;
@@ -14,7 +18,7 @@ type PreviewItem = {
 };
 
 const VIDEO_ACCEPT =
-  "video/mp4,video/quicktime,video/webm,video/x-m4v,video/3gpp";
+  'video/mp4,video/quicktime,video/webm,video/x-m4v,video/3gpp';
 
 function formatMediaSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -25,8 +29,8 @@ function formatMediaSize(bytes: number): string {
 export function GuestPage({ slug }: { slug: string }) {
   const { event, status } = useEvent(slug);
 
-  const [guestName, setGuestName] = useState("");
-  const [text, setText] = useState("");
+  const [guestName, setGuestName] = useState('');
+  const [text, setText] = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
   const [previews, setPreviews] = useState<PreviewItem[]>([]);
   const [video, setVideo] = useState<File | null>(null);
@@ -36,7 +40,10 @@ export function GuestPage({ slug }: { slug: string }) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const next = photos.map((file) => ({ file, url: URL.createObjectURL(file) }));
+    const next = photos.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+    }));
     setPreviews(next);
     return () => {
       for (const item of next) URL.revokeObjectURL(item.url);
@@ -55,7 +62,9 @@ export function GuestPage({ slug }: { slug: string }) {
 
   function onPhotosChange(fileList: FileList | null) {
     if (!fileList?.length) return;
-    const incoming = Array.from(fileList).filter((file) => file.type.startsWith("image/"));
+    const incoming = Array.from(fileList).filter((file) =>
+      file.type.startsWith('image/'),
+    );
     setPhotos((prev) => {
       const room = MAX_PHOTOS - prev.length;
       if (room <= 0) return prev;
@@ -76,7 +85,7 @@ export function GuestPage({ slug }: { slug: string }) {
       setVideo(file);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn’t use that video.");
+      setError(err instanceof Error ? err.message : 'Couldn’t use that video.');
     }
   }
 
@@ -101,14 +110,16 @@ export function GuestPage({ slug }: { slug: string }) {
       setVideo(null);
       setDone(true);
     } catch (err) {
-      const fallback = event ? getEventCopy(event.eventType).submitErrorFallback : "Couldn’t send that message.";
+      const fallback = event
+        ? getEventCopy(event.eventType).submitErrorFallback
+        : 'Couldn’t send that message.';
       setError(err instanceof Error ? err.message : fallback);
     } finally {
       setBusy(false);
     }
   }
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <Shell>
         <StatusNote>Opening the guestbook…</StatusNote>
@@ -116,12 +127,15 @@ export function GuestPage({ slug }: { slug: string }) {
     );
   }
 
-  if (status !== "ready" || !event || !slug) {
+  if (status !== 'ready' || !event || !slug) {
     return (
       <Shell>
-        <section className="narrow">
+        <section className='narrow'>
           <h1>This guestbook wasn’t found</h1>
-          <p>The QR code may be for a different event, or it hasn’t been created yet.</p>
+          <p>
+            The QR code may be for a different event, or it hasn’t been created
+            yet.
+          </p>
         </section>
       </Shell>
     );
@@ -134,19 +148,19 @@ export function GuestPage({ slug }: { slug: string }) {
   if (done) {
     return (
       <Shell>
-        <section className="narrow thanks">
-          <p className="kicker">Sent</p>
+        <section className='narrow thanks'>
+          <p className='kicker'>Sent</p>
           <h1>{copy.thankYouHeadline}</h1>
-          <p className="lede">It should appear in the guestbook in a moment.</p>
-          <div className="btn-row">
-            <a className="btn btn-primary" href={eventGuestbookPath(slug)}>
+          <p className='lede'>It should appear in the guestbook in a moment.</p>
+          <div className='btn-row'>
+            <a className='btn btn-primary' href={eventGuestbookPath(slug)}>
               See the guestbook
             </a>
             <Button
-              variant="ghost"
+              variant='ghost'
               onClick={() => {
                 setDone(false);
-                setText("");
+                setText('');
                 setPhotos([]);
                 setVideo(null);
               }}
@@ -161,18 +175,20 @@ export function GuestPage({ slug }: { slug: string }) {
 
   return (
     <Shell>
-      <section className="narrow guest">
-        <p className="kicker">{formatEventDate(event.eventDate) || copy.guestKickerFallback}</p>
+      <section className='narrow guest'>
+        <p className='kicker'>
+          {formatEventDate(event.eventDate) || copy.guestKickerFallback}
+        </p>
         <h1>{event.coupleNames}</h1>
-        <p className="lede">
+        <p className='lede'>
           {event.welcomeMessage || copy.defaultWelcomeMessage}
         </p>
 
-        <form className="stack" onSubmit={(e) => void onSubmit(e)}>
-          <Field label="Your name" hint="Optional">
+        <form className='stack' onSubmit={(e) => void onSubmit(e)}>
+          <Field label='Your name' hint='Optional'>
             <input
               maxLength={80}
-              placeholder="Auntie June"
+              placeholder='Auntie June'
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
             />
@@ -186,35 +202,44 @@ export function GuestPage({ slug }: { slug: string }) {
               onChange={(e) => setText(e.target.value)}
             />
           </Field>
-          <p className="field-hint">Choose photos or one short video — not both.</p>
+          <p className='field-hint'>
+            Choose photos or one short video — not both.
+          </p>
           <Field
-            label="Photos"
+            label='Photos'
             hint={
               hasVideo
-                ? "Remove your video to add photos."
+                ? 'Remove your video to add photos.'
                 : `Optional — up to ${MAX_PHOTOS}. We’ll shrink them before upload so venue wifi survives.`
             }
           >
             <input
-              type="file"
-              accept="image/*"
-              capture="environment"
+              type='file'
+              accept='image/*'
+              capture='environment'
               multiple
               disabled={hasVideo || photos.length >= MAX_PHOTOS}
               onChange={(e) => {
                 onPhotosChange(e.target.files);
-                e.target.value = "";
+                e.target.value = '';
               }}
             />
           </Field>
           {previews.length > 0 ? (
-            <div className="photo-preview-grid">
+            <div className='photo-preview-grid'>
               {previews.map((item, index) => (
-                <div className="photo-preview-item" key={`${item.file.name}-${item.file.size}-${index}`}>
-                  <img className="photo-preview" src={item.url} alt={`Selected photo ${index + 1}`} />
+                <div
+                  className='photo-preview-item'
+                  key={`${item.file.name}-${item.file.size}-${index}`}
+                >
+                  <img
+                    className='photo-preview'
+                    src={item.url}
+                    alt={`Selected photo ${index + 1}`}
+                  />
                   <button
-                    className="photo-preview-remove"
-                    type="button"
+                    className='photo-preview-remove'
+                    type='button'
                     aria-label={`Remove photo ${index + 1}`}
                     onClick={() => removePhoto(index)}
                   >
@@ -225,52 +250,52 @@ export function GuestPage({ slug }: { slug: string }) {
             </div>
           ) : null}
           {photos.length > 0 ? (
-            <p className="field-hint">
+            <p className='field-hint'>
               {photos.length} of {MAX_PHOTOS} photos
             </p>
           ) : null}
           <Field
-            label="Video"
+            label='Video'
             hint={
               hasPhotos
-                ? "Remove your photos to add a video."
-                : "Optional — one short video under 10 MiB (MP4, MOV, WebM, M4V, or 3GP)."
+                ? 'Remove your photos to add a video.'
+                : 'Optional — one short video under 10 MiB (MP4, MOV, WebM, M4V, or 3GP).'
             }
           >
             <input
-              type="file"
+              type='file'
               accept={VIDEO_ACCEPT}
               disabled={hasPhotos || hasVideo}
               onChange={(e) => {
                 onVideoChange(e.target.files);
-                e.target.value = "";
+                e.target.value = '';
               }}
             />
           </Field>
           {video && videoPreviewUrl ? (
-            <div className="video-preview-wrap">
+            <div className='video-preview-wrap'>
               <video
-                className="video-preview"
+                className='video-preview'
                 src={videoPreviewUrl}
                 controls
                 playsInline
-                preload="metadata"
+                preload='metadata'
               />
               <button
-                className="photo-preview-remove"
-                type="button"
-                aria-label="Remove video"
+                className='photo-preview-remove'
+                type='button'
+                aria-label='Remove video'
                 onClick={removeVideo}
               >
                 ×
               </button>
-              <p className="video-preview-meta">
+              <p className='video-preview-meta'>
                 {video.name} · {formatMediaSize(video.size)}
               </p>
             </div>
           ) : null}
-          {error ? <StatusNote tone="error">{error}</StatusNote> : null}
-          <Button type="submit" disabled={busy}>
+          {error ? <StatusNote tone='error'>{error}</StatusNote> : null}
+          <Button type='submit' disabled={busy}>
             {busy ? copy.submitBusyLabel : copy.submitButtonLabel}
           </Button>
         </form>

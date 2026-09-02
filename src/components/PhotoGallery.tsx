@@ -1,6 +1,12 @@
-import { useCallback, useRef, useState, type MouseEvent, type PointerEvent } from "react";
-import { useImageDimensions } from "../hooks/useImageDimensions";
-import { PhotoLightbox } from "./PhotoLightbox";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type MouseEvent,
+  type PointerEvent,
+} from 'react';
+import { useImageDimensions } from '../hooks/useImageDimensions';
+import { PhotoLightbox } from './PhotoLightbox';
 
 const CLICK_MOVE_THRESHOLD = 10;
 
@@ -27,7 +33,10 @@ export function PhotoGallery({ urls }: PhotoGalleryProps) {
     pointerStartRef.current = { x: event.clientX, y: event.clientY };
   };
 
-  const openIfClick = (photoIndex: number, event: PointerEvent | MouseEvent) => {
+  const openIfClick = (
+    photoIndex: number,
+    event: PointerEvent | MouseEvent,
+  ) => {
     const start = pointerStartRef.current;
     pointerStartRef.current = null;
     if (start) {
@@ -40,37 +49,40 @@ export function PhotoGallery({ urls }: PhotoGalleryProps) {
 
   if (urls.length === 0) return null;
 
-  const lightbox = lightboxIndex !== null ? (
-    <PhotoLightbox
-      urls={urls}
-      index={lightboxIndex}
-      onIndexChange={setLightboxIndex}
-      onClose={() => setLightboxIndex(null)}
-    />
-  ) : null;
+  const lightbox =
+    lightboxIndex !== null ? (
+      <PhotoLightbox
+        urls={urls}
+        index={lightboxIndex}
+        onIndexChange={setLightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+      />
+    ) : null;
 
   if (urls.length === 1) {
     const url = urls[0];
     return (
       <>
         <div
-          className="toast-photo-frame"
-          style={dimensions
-            ? { aspectRatio: `${dimensions.width} / ${dimensions.height}` }
-            : undefined}
+          className='toast-photo-frame'
+          style={
+            dimensions
+              ? { aspectRatio: `${dimensions.width} / ${dimensions.height}` }
+              : undefined
+          }
         >
           {dimensions ? (
             <button
-              className="toast-photo-button"
-              type="button"
+              className='toast-photo-button'
+              type='button'
               onPointerDown={onPointerDown}
               onClick={(event) => openIfClick(0, event)}
-              aria-label="View photo"
+              aria-label='View photo'
             >
               <img
-                className="toast-photo"
+                className='toast-photo'
                 src={url}
-                alt=""
+                alt=''
                 width={dimensions.width}
                 height={dimensions.height}
               />
@@ -83,29 +95,29 @@ export function PhotoGallery({ urls }: PhotoGalleryProps) {
   }
 
   return (
-    <div className="photo-gallery">
+    <div className='photo-gallery'>
       <div
-        className="photo-gallery-track"
+        className='photo-gallery-track'
         ref={trackRef}
         onScroll={onScroll}
-        role="region"
-        aria-label="Photo gallery"
+        role='region'
+        aria-label='Photo gallery'
       >
         {urls.map((url, i) => (
-          <div className="photo-gallery-slide" key={`${url}-${i}`}>
+          <div className='photo-gallery-slide' key={`${url}-${i}`}>
             <button
-              className="toast-photo-button"
-              type="button"
+              className='toast-photo-button'
+              type='button'
               onPointerDown={onPointerDown}
               onClick={(event) => openIfClick(i, event)}
               aria-label={`View photo ${i + 1} of ${urls.length}`}
             >
-              <img className="toast-photo" src={url} alt="" />
+              <img className='toast-photo' src={url} alt='' />
             </button>
           </div>
         ))}
       </div>
-      <span className="photo-gallery-counter" aria-live="polite">
+      <span className='photo-gallery-counter' aria-live='polite'>
         {index + 1} / {urls.length}
       </span>
       {lightbox}

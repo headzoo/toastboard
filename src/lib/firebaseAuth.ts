@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createUserWithEmailAndPassword,
@@ -9,19 +9,22 @@ import {
   signInWithPopup,
   signOut as firebaseSignOut,
   type User,
-} from "firebase/auth";
-import { signIn as nextAuthSignIn, signOut as nextAuthSignOut } from "next-auth/react";
-import { auth as firebaseAuthClient } from "./firebase";
-import { toFriendlyError } from "./friendlyErrors";
+} from 'firebase/auth';
+import {
+  signIn as nextAuthSignIn,
+  signOut as nextAuthSignOut,
+} from 'next-auth/react';
+import { auth as firebaseAuthClient } from './firebase';
+import { toFriendlyError } from './friendlyErrors';
 
 async function exchangeFirebaseTokenForSession(user: User) {
   const idToken = await user.getIdToken();
-  const result = await nextAuthSignIn("credentials", {
+  const result = await nextAuthSignIn('credentials', {
     idToken,
     redirect: false,
   });
   if (result?.error) {
-    throw new Error("Couldn’t sign you in. Please try again.");
+    throw new Error('Couldn’t sign you in. Please try again.');
   }
 }
 
@@ -41,25 +44,33 @@ export async function signInWithGoogle() {
     const credential = await signInWithPopup(firebaseAuthClient, provider);
     await exchangeFirebaseTokenForSession(credential.user);
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t sign you in with Google.");
+    throw toFriendlyError(error, 'Couldn’t sign you in with Google.');
   }
 }
 
 export async function signInWithEmail(email: string, password: string) {
   try {
-    const credential = await signInWithEmailAndPassword(firebaseAuthClient, email, password);
+    const credential = await signInWithEmailAndPassword(
+      firebaseAuthClient,
+      email,
+      password,
+    );
     await exchangeFirebaseTokenForSession(credential.user);
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t sign you in. Please try again.");
+    throw toFriendlyError(error, 'Couldn’t sign you in. Please try again.');
   }
 }
 
 export async function signUpWithEmail(email: string, password: string) {
   try {
-    const credential = await createUserWithEmailAndPassword(firebaseAuthClient, email, password);
+    const credential = await createUserWithEmailAndPassword(
+      firebaseAuthClient,
+      email,
+      password,
+    );
     await exchangeFirebaseTokenForSession(credential.user);
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t sign you in. Please try again.");
+    throw toFriendlyError(error, 'Couldn’t sign you in. Please try again.');
   }
 }
 
@@ -67,7 +78,10 @@ export async function sendPasswordReset(email: string) {
   try {
     await sendPasswordResetEmail(firebaseAuthClient, email);
   } catch (error) {
-    throw toFriendlyError(error, "Couldn’t send that reset link. Please try again.");
+    throw toFriendlyError(
+      error,
+      'Couldn’t send that reset link. Please try again.',
+    );
   }
 }
 

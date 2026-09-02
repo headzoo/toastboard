@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import { EventLandingPage } from "@/components/EventLandingPage";
-import { MARKETING_CONTENT } from "@/lib/marketingContent";
+import type { Metadata } from 'next';
+import { EventLandingPage } from '@/components/EventLandingPage';
+import { MARKETING_CONTENT } from '@/lib/marketingContent';
 
 const content = MARKETING_CONTENT.graduation;
 

@@ -4,7 +4,7 @@ export type ImageDimensions = Readonly<{
 }>;
 
 type CacheEntry = Readonly<{
-  status: "loading" | "loaded" | "failed";
+  status: 'loading' | 'loaded' | 'failed';
   promise: Promise<ImageDimensions | null>;
   dimensions?: ImageDimensions;
 }>;
@@ -12,7 +12,9 @@ type CacheEntry = Readonly<{
 const entries = new Map<string, CacheEntry>();
 
 /** Off-DOM preload that resolves natural width/height (or null on failure). Cached by URL. */
-export function preloadImageDimensions(url: string): Promise<ImageDimensions | null> {
+export function preloadImageDimensions(
+  url: string,
+): Promise<ImageDimensions | null> {
   return getImageDimensionsEntry(url).promise;
 }
 
@@ -24,23 +26,26 @@ export function getImageDimensionsEntry(url: string): CacheEntry {
   const promise = new Promise<ImageDimensions | null>((done) => {
     resolve = done;
   });
-  const loading: CacheEntry = { status: "loading", promise };
+  const loading: CacheEntry = { status: 'loading', promise };
   entries.set(url, loading);
 
-  if (typeof Image === "undefined") {
-    entries.set(url, { status: "failed", promise });
+  if (typeof Image === 'undefined') {
+    entries.set(url, { status: 'failed', promise });
     resolve(null);
     return entries.get(url)!;
   }
 
   const image = new Image();
   image.onload = () => {
-    const dimensions = { width: image.naturalWidth, height: image.naturalHeight };
-    entries.set(url, { status: "loaded", promise, dimensions });
+    const dimensions = {
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+    };
+    entries.set(url, { status: 'loaded', promise, dimensions });
     resolve(dimensions);
   };
   image.onerror = () => {
-    entries.set(url, { status: "failed", promise });
+    entries.set(url, { status: 'failed', promise });
     resolve(null);
   };
   image.src = url;

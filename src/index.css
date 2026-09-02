@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --accent: #c45c67;
@@ -19,8 +19,8 @@
   --color-ok: #6e7f63;
   --color-oxblood: var(--marketing-oxblood);
   --color-gold: var(--marketing-gold);
-  --font-sans: "Figtree", system-ui, sans-serif;
-  --font-serif: "Fraunces", "Times New Roman", serif;
+  --font-sans: 'Figtree', system-ui, sans-serif;
+  --font-serif: 'Fraunces', 'Times New Roman', serif;
   --shadow-soft: 0 18px 50px rgba(42, 33, 24, 0.08);
   --animate-live: live-pulse 1.8s infinite;
 }
@@ -41,8 +41,16 @@
     margin: 0;
     color: var(--color-ink);
     background:
-      radial-gradient(1200px 600px at 10% -10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
-      radial-gradient(900px 500px at 110% 10%, rgba(176, 137, 79, 0.16), transparent 50%),
+      radial-gradient(
+        1200px 600px at 10% -10%,
+        color-mix(in srgb, var(--accent) 18%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        900px 500px at 110% 10%,
+        rgba(176, 137, 79, 0.16),
+        transparent 50%
+      ),
       var(--color-paper);
     font: 18px/1.5 var(--font-sans);
   }
@@ -82,7 +90,8 @@
     background: var(--color-cream);
     color: var(--color-ink);
     font: inherit;
-    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-ink) 10%, transparent);
+    box-shadow: inset 0 0 0 1.5px
+      color-mix(in srgb, var(--color-ink) 10%, transparent);
   }
 
   textarea {
@@ -462,7 +471,8 @@
 .btn-ghost {
   background: transparent;
   color: var(--color-ink);
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-ink) 16%, transparent);
+  box-shadow: inset 0 0 0 1.5px
+    color-mix(in srgb, var(--color-ink) 16%, transparent);
 }
 
 .btn-danger {
@@ -515,7 +525,7 @@
   position: absolute;
   z-index: -1;
   inset: 0;
-  content: "";
+  content: '';
   opacity: 0.07;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.35'/></svg>");
 }
@@ -544,7 +554,11 @@
   background: var(--slideshow-cream);
   border: 1px solid var(--slideshow-frame-border);
   border-radius: 0.6rem;
-  box-shadow: inset -0.35rem 0.35rem 0 color-mix(in srgb, var(--slideshow-frame-highlight) 70%, transparent), 0 1.25rem 2.8rem color-mix(in srgb, var(--slideshow-shadow) 23%, transparent);
+  box-shadow:
+    inset -0.35rem 0.35rem 0
+      color-mix(in srgb, var(--slideshow-frame-highlight) 70%, transparent),
+    0 1.25rem 2.8rem
+      color-mix(in srgb, var(--slideshow-shadow) 23%, transparent);
 }
 
 .slideshow-photo-button {
@@ -575,7 +589,8 @@
   overflow: hidden;
   border-radius: 0.6rem;
   background: #1a1410;
-  box-shadow: 0 1.25rem 2.8rem color-mix(in srgb, var(--slideshow-shadow) 23%, transparent);
+  box-shadow: 0 1.25rem 2.8rem
+    color-mix(in srgb, var(--slideshow-shadow) 23%, transparent);
 }
 
 .slideshow-video {
@@ -624,7 +639,8 @@
   border: 0;
   border-radius: 2rem;
   background: var(--slideshow-cream);
-  box-shadow: 0 1.25rem 3.5rem color-mix(in srgb, var(--slideshow-shadow) 15%, transparent);
+  box-shadow: 0 1.25rem 3.5rem
+    color-mix(in srgb, var(--slideshow-shadow) 15%, transparent);
   color: inherit;
   font: inherit;
   text-align: center;
@@ -645,13 +661,13 @@ button.slideshow-quote-card {
 .slideshow-quote-card::before {
   top: 0.25rem;
   left: 1.1rem;
-  content: "“";
+  content: '“';
 }
 
 .slideshow-quote-card::after {
   right: 1.1rem;
   bottom: -1.8rem;
-  content: "”";
+  content: '”';
 }
 
 .slideshow-quote-card-empty::before,
@@ -750,7 +766,8 @@ button.slideshow-quote-card {
   border: 0;
   border-radius: 1.75rem;
   background: var(--color-cream);
-  box-shadow: 0 1rem 2.5rem color-mix(in srgb, var(--color-ink) 10%, transparent);
+  box-shadow: 0 1rem 2.5rem
+    color-mix(in srgb, var(--color-ink) 10%, transparent);
   text-align: center;
 }
 
@@ -770,13 +787,13 @@ button.slideshow-quote-card {
 .home-guestbook-card::before {
   top: 0.15rem;
   left: 0.85rem;
-  content: "“";
+  content: '“';
 }
 
 .home-guestbook-card::after {
   right: 0.85rem;
   bottom: -1.35rem;
-  content: "”";
+  content: '”';
 }
 
 .home-guestbook-quote {
@@ -803,10 +820,8 @@ button.slideshow-quote-card {
   inset: 0;
   display: grid;
   place-items: center;
-  padding:
-    max(1rem, env(safe-area-inset-top))
-    max(1rem, env(safe-area-inset-right))
-    max(1rem, env(safe-area-inset-bottom))
+  padding: max(1rem, env(safe-area-inset-top))
+    max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom))
     max(1rem, env(safe-area-inset-left));
   background: color-mix(in srgb, var(--slideshow-shadow) 45%, transparent);
   cursor: zoom-out;
@@ -821,7 +836,8 @@ button.slideshow-quote-card {
   border: 0;
   border-radius: 2rem;
   background: var(--slideshow-cream);
-  box-shadow: 0 1.5rem 4rem color-mix(in srgb, var(--slideshow-shadow) 28%, transparent);
+  box-shadow: 0 1.5rem 4rem
+    color-mix(in srgb, var(--slideshow-shadow) 28%, transparent);
   color: inherit;
   cursor: zoom-out;
   font: inherit;
@@ -853,7 +869,10 @@ button.slideshow-quote-card {
   background: var(--slideshow-cream);
   border: 1px solid var(--slideshow-frame-border);
   border-radius: 0.6rem;
-  box-shadow: inset -0.35rem 0.35rem 0 color-mix(in srgb, var(--slideshow-frame-highlight) 70%, transparent), 0 1.5rem 3.5rem color-mix(in srgb, var(--slideshow-shadow) 30%, transparent);
+  box-shadow:
+    inset -0.35rem 0.35rem 0
+      color-mix(in srgb, var(--slideshow-frame-highlight) 70%, transparent),
+    0 1.5rem 3.5rem color-mix(in srgb, var(--slideshow-shadow) 30%, transparent);
 }
 
 .slideshow-expand-photo-image {
@@ -877,7 +896,8 @@ button.slideshow-quote-card {
   max-height: calc(min(90svh, 56rem) - 3.5rem);
   border-radius: 0.6rem;
   background: #1a1410;
-  box-shadow: 0 1.5rem 3.5rem color-mix(in srgb, var(--slideshow-shadow) 30%, transparent);
+  box-shadow: 0 1.5rem 3.5rem
+    color-mix(in srgb, var(--slideshow-shadow) 30%, transparent);
 }
 
 .slideshow-expand-video-close {
@@ -897,7 +917,8 @@ button.slideshow-quote-card {
   border: 0;
   border-radius: 1rem;
   background: #fff;
-  box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--slideshow-shadow) 20%, transparent);
+  box-shadow: 0 0.75rem 2rem
+    color-mix(in srgb, var(--slideshow-shadow) 20%, transparent);
   color: #2a2118;
   cursor: pointer;
   font: 700 0.7rem/1.2 var(--font-sans);
@@ -943,7 +964,8 @@ button.slideshow-quote-card {
   min-height: 2.9rem;
   border-radius: 999px;
   background: var(--slideshow-cream);
-  box-shadow: 0 0.5rem 1.5rem color-mix(in srgb, var(--slideshow-shadow) 13%, transparent);
+  box-shadow: 0 0.5rem 1.5rem
+    color-mix(in srgb, var(--slideshow-shadow) 13%, transparent);
   font: 700 0.85rem/1 var(--font-sans);
 }
 
@@ -972,7 +994,8 @@ button.slideshow-quote-card {
   max-width: min(80vw, 34rem);
   max-height: min(82svh, 48rem);
   border: clamp(0.5rem, 1vw, 0.8rem) solid var(--slideshow-cream);
-  box-shadow: 0 1.25rem 3.5rem color-mix(in srgb, var(--slideshow-shadow) 22%, transparent);
+  box-shadow: 0 1.25rem 3.5rem
+    color-mix(in srgb, var(--slideshow-shadow) 22%, transparent);
 }
 
 .slideshow-dialog-backdrop {
@@ -990,7 +1013,8 @@ button.slideshow-quote-card {
   padding: clamp(1.35rem, 4vw, 2.5rem);
   border-radius: 1.6rem;
   background: var(--slideshow-cream);
-  box-shadow: 0 1.5rem 5rem color-mix(in srgb, var(--slideshow-shadow) 30%, transparent);
+  box-shadow: 0 1.5rem 5rem
+    color-mix(in srgb, var(--slideshow-shadow) 30%, transparent);
   font-family: var(--font-sans);
 }
 
@@ -1039,7 +1063,7 @@ button.slideshow-quote-card {
   font: 700 0.9rem/1 var(--font-sans);
 }
 
-.slideshow-chip[aria-pressed="true"] {
+.slideshow-chip[aria-pressed='true'] {
   border-color: var(--slideshow-accent);
   background: var(--slideshow-accent);
   color: var(--slideshow-cream);
@@ -1070,7 +1094,7 @@ button.slideshow-quote-card {
   text-align: left;
 }
 
-.slideshow-theme-chip[aria-pressed="true"] {
+.slideshow-theme-chip[aria-pressed='true'] {
   border-color: var(--slideshow-accent);
   background: var(--slideshow-accent);
   color: var(--slideshow-cream);
@@ -1081,7 +1105,8 @@ button.slideshow-quote-card {
   height: 1.65rem;
   flex-shrink: 0;
   border-radius: 50%;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--slideshow-ink) 12%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--slideshow-ink) 12%, transparent);
 }
 
 .slideshow-theme-label {
@@ -1135,8 +1160,7 @@ button.slideshow-quote-card {
   inset: 0;
   display: grid;
   place-items: center;
-  padding:
-    max(0.75rem, env(safe-area-inset-top))
+  padding: max(0.75rem, env(safe-area-inset-top))
     max(0.75rem, env(safe-area-inset-right))
     max(0.75rem, env(safe-area-inset-bottom))
     max(0.75rem, env(safe-area-inset-left));

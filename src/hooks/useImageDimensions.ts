@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   getImageDimensionsEntry,
   preloadImageDimensions,
   type ImageDimensions,
-} from "../lib/imageDimensions";
+} from '../lib/imageDimensions';
 
 function readCached(url: string | undefined): ImageDimensions | null {
   if (!url) return null;
@@ -14,7 +14,9 @@ function readCached(url: string | undefined): ImageDimensions | null {
  * Resolves natural image dimensions via off-DOM preload.
  * Cache hits are read during render; async loads bump a version to re-read.
  */
-export function useImageDimensions(url: string | undefined): ImageDimensions | null {
+export function useImageDimensions(
+  url: string | undefined,
+): ImageDimensions | null {
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
