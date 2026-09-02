@@ -13,11 +13,11 @@ const FAQS = [
   },
   {
     q: "How does the host moderate the guestbook?",
-    a: "When you create a guestbook, The Willow Book gives you a private host link. Anyone with that link can hide messages. Guests never see moderation tools.",
+    a: "Sign in to open guestbooks you created, or use the private host link we give you when the guestbook is made. Either way, you can hide messages. Guests never see moderation tools.",
   },
   {
     q: "What if I lose the host link?",
-    a: "We cannot recover a lost host link. Save it somewhere only you can find — print the keepsafe card, or store it with your other important papers.",
+    a: "If you created the guestbook while signed in, open it from your account. Otherwise, save the host link somewhere only you can find — print the keepsafe card, or store it with your other important papers. We cannot recover a host link on its own.",
   },
   {
     q: "Can guests add photos or video?",

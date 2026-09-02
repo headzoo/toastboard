@@ -2,6 +2,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   query,
   serverTimestamp,
@@ -16,7 +17,7 @@ import { httpsCallable } from "firebase/functions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { compressGuestPhoto } from "./compress";
 import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from "./crypto";
-import { db, functions, storage } from "./firebase";
+import { auth as firebaseAuth, db, functions, storage } from "./firebase";
 import {
   getEventCopy,
   normalizeEventType,
@@ -49,6 +50,37 @@ type CreatedEvent = {
   signTheme: SignThemeId;
 };
 
+export type OwnedEventSummary = {
+  slug: string;
+  coupleNames: string;
+  eventType: EventType;
+  createdAt: Date | null;
+};
+
+export async function listOwnedEvents(): Promise<OwnedEventSummary[]> {
+  const user = firebaseAuth.currentUser;
+  if (!user) throw new Error("Sign in to view your guestbooks.");
+
+  const ownedQuery = query(collection(db, "events"), where("ownerUid", "==", user.uid));
+  const snap = await getDocs(ownedQuery);
+
+  return snap.docs
+    .map((item) => {
+      const data = item.data();
+      return {
+        slug: item.id,
+        coupleNames: String(data.coupleNames ?? ""),
+        eventType: normalizeEventType(data.eventType),
+        createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
+      };
+    })
+    .sort((a, b) => {
+      const aTime = a.createdAt?.getTime() ?? 0;
+      const bTime = b.createdAt?.getTime() ?? 0;
+      return bTime - aTime;
+    });
+}
+
 export async function createEvent(input: {
   eventType: EventType;
   coupleNames: string;
@@ -56,6 +88,9 @@ export async function createEvent(input: {
   welcomeMessage: string;
   themeColor: string;
 }): Promise<CreatedEvent> {
+  const user = firebaseAuth.currentUser;
+  if (!user) throw new Error("Sign in to create a guestbook.");
+
   const eventType = normalizeEventType(input.eventType);
   const copy = getEventCopy(eventType);
   const coupleNames = sanitizeText(input.coupleNames, 120);
@@ -70,6 +105,7 @@ export async function createEvent(input: {
     const payload: DocumentData = {
       coupleNames,
       eventType,
+      ownerUid: user.uid,
       createdAt: serverTimestamp(),
       signTheme: DEFAULT_SIGN_THEME,
     };
@@ -177,13 +213,21 @@ export async function submitMessage(input: {
   }
 }
 
-export async function hideMessage(slug: string, messageId: string, hostToken: string): Promise<void> {
+export async function hideMessage(
+  slug: string,
+  messageId: string,
+  hostToken?: string,
+): Promise<void> {
   try {
     const deleteMessage = httpsCallable<
-      { slug: string; messageId: string; hostToken: string },
+      { slug: string; messageId: string; hostToken?: string },
       { ok: true }
     >(functions, "deleteMessage");
-    await deleteMessage({ slug, messageId, hostToken });
+    await deleteMessage({
+      slug,
+      messageId,
+      ...(hostToken ? { hostToken } : {}),
+    });
   } catch (error) {
     throw toFriendlyError(error, "That host link isn’t valid for this guestbook.");
   }
@@ -192,14 +236,18 @@ export async function hideMessage(slug: string, messageId: string, hostToken: st
 export async function updateEventSignTheme(
   slug: string,
   signTheme: SignThemeId,
-  hostToken: string,
+  hostToken?: string,
 ): Promise<SignThemeId> {
   try {
     const updateSignTheme = httpsCallable<
-      { slug: string; signTheme: SignThemeId; hostToken: string },
+      { slug: string; signTheme: SignThemeId; hostToken?: string },
       { ok: true; signTheme: SignThemeId }
     >(functions, "updateSignTheme");
-    const result = await updateSignTheme({ slug, signTheme, hostToken });
+    const result = await updateSignTheme({
+      slug,
+      signTheme,
+      ...(hostToken ? { hostToken } : {}),
+    });
     return getSignTheme(result.data.signTheme).id;
   } catch (error) {
     throw toFriendlyError(error, "Couldn’t save that design. Please try again.");
@@ -216,6 +264,7 @@ function mapEvent(data: DocumentData): EventRecord {
     welcomeMessage: typeof data.welcomeMessage === "string" ? data.welcomeMessage : null,
     themeColor: typeof data.themeColor === "string" ? data.themeColor : null,
     signTheme: getSignTheme(data.signTheme).id,
+    ownerUid: typeof data.ownerUid === "string" ? data.ownerUid : null,
   };
 }
 

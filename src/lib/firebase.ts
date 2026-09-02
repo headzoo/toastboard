@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
@@ -17,22 +18,27 @@ const firebaseConfig = {
 // Keep ports in sync with firebase.json and scripts/seed.mjs.
 const EMULATOR_HOST = "127.0.0.1";
 const EMULATOR_PORTS = {
+  auth: 9099,
   firestore: 8080,
   storage: 9199,
   functions: 5001,
 } as const;
 
-function useEmulators() {
+function shouldUseEmulators() {
   const value = String(process.env.NEXT_PUBLIC_TOASTBOARD_EMULATORS ?? "").trim().toLowerCase();
   return value === "1" || value === "true" || value === "yes";
 }
 
 export const firebaseApp = initializeApp(firebaseConfig);
+export const auth = getAuth(firebaseApp);
 export const db = getFirestore(firebaseApp);
 export const functions = getFunctions(firebaseApp, "us-central1");
 export const storage = getStorage(firebaseApp);
 
-if (useEmulators()) {
+if (shouldUseEmulators()) {
+  connectAuthEmulator(auth, `http://${EMULATOR_HOST}:${EMULATOR_PORTS.auth}`, {
+    disableWarnings: true,
+  });
   connectFirestoreEmulator(db, EMULATOR_HOST, EMULATOR_PORTS.firestore);
   connectStorageEmulator(storage, EMULATOR_HOST, EMULATOR_PORTS.storage);
   connectFunctionsEmulator(functions, EMULATOR_HOST, EMULATOR_PORTS.functions);

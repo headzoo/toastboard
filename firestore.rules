@@ -40,12 +40,16 @@ service cloud.firestore {
 
     match /events/{slug} {
       allow get: if true;
-      allow list: if false;
+      allow list: if request.auth != null
+        && resource.data.ownerUid == request.auth.uid;
       allow create: if isValidSlug(slug)
+        && request.auth != null
+        && request.auth.uid == request.resource.data.ownerUid
         && request.resource.data.keys().hasOnly([
           'coupleNames',
           'eventDate',
           'eventType',
+          'ownerUid',
           'welcomeMessage',
           'themeColor',
           'createdAt',
@@ -54,6 +58,8 @@ service cloud.firestore {
         && request.resource.data.coupleNames is string
         && request.resource.data.coupleNames.size() > 0
         && request.resource.data.coupleNames.size() <= 120
+        && request.resource.data.ownerUid is string
+        && request.resource.data.ownerUid.size() > 0
         && request.resource.data.createdAt == request.time
         && request.resource.data.signTheme in [
           'classic',

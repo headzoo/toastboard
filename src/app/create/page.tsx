@@ -6,7 +6,7 @@ import { Shell } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Create a guestbook — The Willow Book",
   description:
-    "Start a Willow Book guestbook in minutes. No account, no checkout — just a link to share with your guests.",
+    "Start a Willow Book guestbook in minutes. Sign in to save it to your account — guests still never log in.",
 };
 
 function CreateFallback() {

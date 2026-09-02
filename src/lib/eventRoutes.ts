@@ -30,9 +30,12 @@ export function eventGuestbookPath(slug: string): string {
   return `/e/${slug}/guestbook/`;
 }
 
-export function eventManagePath(slug: string, token: string): string {
-  const params = new URLSearchParams({ token });
-  return `/e/${slug}/manage/?${params.toString()}`;
+export function eventManagePath(slug: string, token?: string): string {
+  if (token) {
+    const params = new URLSearchParams({ token });
+    return `/e/${slug}/manage/?${params.toString()}`;
+  }
+  return `/e/${slug}/manage/`;
 }
 
 export function pathsMatch(pathname: string, target: string): boolean {

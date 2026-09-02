@@ -99,7 +99,7 @@ type MessageCardProps = {
 
 export function MessageCard({ message, hostToken, slug, moderation, onHidden }: MessageCardProps) {
   async function onDelete() {
-    if (!hostToken || !slug || !moderation) return;
+    if (!slug || !moderation) return;
     const ok = window.confirm(moderation.hideConfirmLabel);
     if (!ok) return;
     try {
@@ -119,7 +119,7 @@ export function MessageCard({ message, hostToken, slug, moderation, onHidden }: 
           <span>{message.guestName || "A guest"}</span>
           {message.createdAt ? <span>{formatEventDate(message.createdAt)}</span> : null}
         </div>
-        {hostToken && moderation ? (
+        {moderation ? (
           <button className="btn btn-danger btn-small" type="button" onClick={() => void onDelete()}>
             {moderation.hideButtonLabel}
           </button>

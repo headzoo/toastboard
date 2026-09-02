@@ -1,6 +1,6 @@
 # The Willow Book
 
-A live guestbook for personal events with no sign-up, no login, and no email. Guests scan a QR code, leave a note, photos, or one short video, and it appears on a live guestbook. The host link is the credential.
+A live guestbook for personal events. Guests scan a QR code, leave a note, photos, or one short video, and it appears on a live guestbook — no guest login. Hosts sign in with Google or email to create and keep guestbooks; the host link still works as a spare key.
 
 Supported event types: **wedding**, **birthday**, **graduation**, **religious milestone**, and **other**.
 
@@ -11,21 +11,27 @@ Live site: https://toastboard.web.app/
 | Path | Purpose |
 | --- | --- |
 | `/` | Neutral marketing hub |
+| `/login` | Host sign-in (Google or email) |
+| `/account` | Signed-in host’s guestbook list |
 | `/weddings`, `/birthdays`, `/graduations`, `/religious-milestones` | Type-specific landing pages |
-| `/create` | Create a guestbook (optional `?type=` for event type) |
+| `/create` | Create a guestbook (requires host sign-in; optional `?type=` for event type) |
 | `/e/:slug` | Guest submission page |
 | `/e/:slug/guestbook` | Live guestbook |
-| `/e/:slug/manage` | Host moderation (host link required) |
+| `/e/:slug/manage` | Host moderation (host link or signed-in owner) |
 | `/terms`, `/privacy` | Legal pages |
 
 ## Run locally
 
 ```bash
 pnpm install
+cp .env.example .env.local
+# Set AUTH_SECRET in .env.local (required for sign-in)
 pnpm dev
 ```
 
 Then open http://localhost:3000. By default the app talks to the live `toastboard` Firebase project.
+
+Host sign-in needs **Firebase Auth** enabled in the console (Google + Email/Password) and `AUTH_SECRET` in `.env.local`. For token verification locally, set `FIREBASE_CLIENT_EMAIL` and `FIREBASE_PRIVATE_KEY` from a Firebase service account, or use emulators.
 
 ### Local Firebase emulators
 
@@ -39,11 +45,11 @@ Use emulators when you want to develop without touching production data.
 
 If the Firestore tab in the Emulator UI looks empty, check the project selector in the top-left — it must be **toastboard**, not an old alias like `toastboard-guestbook`. Restart emulators after changing `firebase use`.
 
-Emulator ports are defined in `firebase.json` (Firestore `8080`, Storage `9199`, Functions `5001`). Override seed targets with `FIRESTORE_EMULATOR_HOST`, `FIREBASE_STORAGE_EMULATOR_HOST`, and `FIREBASE_FUNCTIONS_EMULATOR_HOST` if needed.
+Emulator ports are defined in `firebase.json` (Auth `9099`, Firestore `8080`, Storage `9199`, Functions `5001`). Override seed targets with `FIRESTORE_EMULATOR_HOST`, `FIREBASE_STORAGE_EMULATOR_HOST`, and `FIREBASE_FUNCTIONS_EMULATOR_HOST` if needed.
 
 #### Video uploads and the Functions emulator
 
-Short-video uploads need **Firestore, Storage, Functions, and the Emulator UI** running together (`pnpm emulators` starts all four). Install functions dependencies first: `pnpm install --dir functions`.
+Short-video uploads need **Auth, Firestore, Storage, Functions, and the Emulator UI** running together (`pnpm emulators` starts all five). Install functions dependencies first: `pnpm install --dir functions`.
 
 - **`ffmpeg-static` must match your OS/architecture.** If you change machines or see ffmpeg spawn errors, reinstall functions deps so the bundled binary matches.
 - **Gen2 Storage event delivery can vary by Firebase CLI version.** The `transcodeUploadedVideo` trigger may not fire locally even when raw uploads succeed. If that happens:
@@ -63,10 +69,28 @@ seeds four stable demo guestbooks (wedding, birthday, graduation, religious mile
 
 ## Deploy
 
+The Next.js app runs on **Firebase App Hosting** (server-rendered — required for host sign-in). Firestore rules, Storage rules, and Cloud Functions deploy separately.
+
+1. Create an App Hosting backend linked to this repo (Firebase console or CLI).
+2. Store secrets in Google Secret Manager: `AUTH_SECRET`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` (see [`apphosting.yaml`](apphosting.yaml)).
+3. Deploy backend rules and functions:
+
 ```bash
 pnpm deploy
 ```
 
-Builds a static export into `out/` (`next build` with `output: "export"`) and deploys it to Firebase Hosting along with Firestore rules, Storage rules, and Cloud Functions.
+4. Deploy the web app:
 
-Local preview of the production build (including `/e/**` deep links) uses `pnpm preview`, which serves `out/` with the same `/e/**` → `/e/index.html` rewrite as Firebase Hosting (`public/serve.json`).
+```bash
+pnpm deploy:app
+```
+
+Point `toastboard.web.app` at the App Hosting backend when ready. Until then, use the App Hosting URL from the Firebase console.
+
+Local production preview:
+
+```bash
+pnpm preview
+```
+
+Runs `next build` then `next start` on port 3456.

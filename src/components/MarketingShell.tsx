@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { pathsMatch } from "../lib/eventRoutes";
-import { marketingBtnClass } from "../lib/styles";
+import { MarketingAuthLinks } from "./MarketingAuthLinks";
 
 type MarketingShellProps = {
   children: ReactNode;
@@ -167,12 +167,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
           </div>
 
           <div className="hidden items-center justify-end gap-4 min-[960px]:flex">
-            <Link className="text-[0.85rem] text-ink-soft no-underline hover:text-ink" href="/create/">
-              Sign in
-            </Link>
-            <Link className={marketingBtnClass} href="/create/">
-              14-day Free Trial
-            </Link>
+            <MarketingAuthLinks />
           </div>
         </div>
 
@@ -184,12 +179,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
           >
             <LeftNavLinks onNavigate={closeMenu} />
             <hr className="border-ink/10" />
-            <Link className="text-[0.9rem] text-ink no-underline" href="/create/" onClick={closeMenu}>
-              Sign in
-            </Link>
-            <Link className={marketingBtnClass} href="/create/" onClick={closeMenu}>
-              14-day Free Trial
-            </Link>
+            <MarketingAuthLinks onNavigate={closeMenu} />
           </nav>
         ) : null}
       </header>

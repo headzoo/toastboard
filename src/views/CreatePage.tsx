@@ -100,7 +100,7 @@ export function CreatePage() {
         <section className={narrowClass}>
           <p className={kickerClass}>One-time setup</p>
           <h1>Create a guestbook</h1>
-          <p className={ledeClass}>No account. We’ll give you a host link once — save it like a key.</p>
+          <p className={ledeClass}>Sign in once. We’ll save your guestbook to your account and give you a host link as a spare key.</p>
 
           <form className="mt-6 grid gap-4" onSubmit={(e) => void onSubmit(e)}>
             <fieldset className="block border-0 p-0">

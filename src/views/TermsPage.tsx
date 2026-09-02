@@ -29,19 +29,24 @@ export function TermsPage() {
 
           <h2>2. The Service</h2>
           <p>
-            The Willow Book lets hosts create a digital guestbook without signing up for an account. Guests
-            scan a QR code or open a guest link, leave an optional name, a note, photos (up to ten),
-            or one short video (under 10 MiB), and that content appears on a live guestbook. Video uploads
-            may show a processing state until Cloud Functions prepare a browser-compatible display copy.
-            Hosts moderate with a private host link rather than a username and password. There is no
-            email-based account, login, or password reset.
+            The Willow Book is a live guestbook for personal events. Guests scan a QR code or open a
+            guest link, leave an optional name, a note, photos (up to ten), or one short video (under
+            10 MiB), and that content appears on a live guestbook. Video uploads may show a processing
+            state until Cloud Functions prepare a browser-compatible display copy. Guests never create an
+            account or sign in.
+          </p>
+          <p>
+            Hosts sign in with Google or email to create guestbooks and reopen them from their account.
+            Hosts may also moderate with a private host link. Anyone with the host link can hide messages
+            on that guestbook.
           </p>
 
           <h2>3. Host credentials</h2>
           <p>
-            When you create a guestbook, The Willow Book gives you a host link that acts as the credential
-            for that event. Anyone who has the host link can moderate the guestbook. The Willow Book cannot
-            recover a lost host link. You are responsible for saving and protecting it.
+            When you create a guestbook while signed in, The Willow Book saves it to your account and
+            gives you a host link as a spare key. Anyone who has the host link can moderate that
+            guestbook. If you signed in when you created the guestbook, you can also reopen it from your
+            account. You are responsible for saving and protecting your host link if you share it.
           </p>
 
           <h2>4. Guest content</h2>

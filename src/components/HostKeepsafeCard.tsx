@@ -96,7 +96,8 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       <div className="my-5 grid gap-2.5 rounded-[1.2rem] bg-cream p-4">
         <span className="text-[0.8rem] font-bold uppercase tracking-[0.04em]">Private host link</span>
         <StatusNote tone="warn">
-          This host link is the only way to moderate the guestbook. It cannot be recovered if you lose it — there is no email, no account, no reset.
+          Your guestbook is saved to your account. This host link is a spare key — keep it safe if you
+          share moderation with someone else.
         </StatusNote>
         <code className="break-all text-[0.82rem] text-ink-soft">{hostLink}</code>
         <Button variant="primary" href={hostLink}>

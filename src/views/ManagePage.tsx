@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { TableSignCard } from "../components/TableSignCard";
 import { SignThemePicker } from "../components/SignThemePicker";
@@ -16,8 +17,11 @@ import { formatEventDate } from "../lib/theme";
 import { DEFAULT_THEME } from "../lib/types";
 
 export function ManagePage({ slug, token }: { slug: string; token: string }) {
+  const { data: session } = useSession();
   const { event, status } = useEvent(slug);
-  const { messages, error } = useMessages(slug, status === "ready" && Boolean(token));
+  const isOwner = Boolean(session?.user?.id && event?.ownerUid === session.user.id);
+  const canModerate = Boolean(token) || isOwner;
+  const { messages, error } = useMessages(slug, status === "ready" && canModerate);
   const [signTheme, setSignTheme] = useState<SignThemeId>("classic");
   const [themeBusy, setThemeBusy] = useState(false);
   const [themePendingId, setThemePendingId] = useState<SignThemeId | null>(null);
@@ -39,7 +43,7 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
   }, [event]);
 
   async function selectSignTheme(id: SignThemeId) {
-    if (!slug || !token || themeBusy || id === signTheme) return;
+    if (!slug || !canModerate || themeBusy || id === signTheme) return;
 
     themeRequestRef.current = id;
     setThemeError(null);
@@ -47,7 +51,7 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
     setThemeBusy(true);
 
     try {
-      const saved = await updateEventSignTheme(slug, id, token);
+      const saved = await updateEventSignTheme(slug, id, token || undefined);
       if (themeRequestRef.current !== id) return;
       setSignTheme(saved);
     } catch (err) {
@@ -62,14 +66,14 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
     }
   }
 
-  if (!token) {
+  if (!canModerate) {
     return (
       <Shell>
         <section className={narrowClass}>
           <h1>This page needs the host link</h1>
           <p>
-            The Willow Book doesn’t have accounts. If you still have the original “save this link” page, that’s the
-            credential.
+            Sign in to open guestbooks you created with your account, or use the private host link we
+            gave you when the guestbook was made.
           </p>
         </section>
       </Shell>
@@ -142,7 +146,7 @@ export function ManagePage({ slug, token }: { slug: string; token: string }) {
       <GuestbookFeed
         messages={messages}
         slug={slug}
-        hostToken={token}
+        hostToken={token || undefined}
         emptyLabel={copy.moderationEmptyLabel}
         moderation={moderation}
       />

@@ -18,6 +18,7 @@ export type EventRecord = {
   welcomeMessage: string | null;
   themeColor: string | null;
   signTheme: SignThemeId;
+  ownerUid: string | null;
 };
 
 export type VideoStatus = "processing" | "ready" | "failed";

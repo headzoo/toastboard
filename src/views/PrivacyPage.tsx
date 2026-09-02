@@ -23,8 +23,8 @@ export function PrivacyPage() {
           <p>
             This Privacy Policy explains how The Willow Book (“we,” “us”) collects, uses, and shares
             information when you use the personal event guestbook service at toastboard.web.app (the
-            “Service”). The Willow Book does not require accounts, email addresses, or passwords. The host
-            link is the credential for moderating a guestbook.
+            “Service”). Guests do not create accounts. Hosts sign in with Google or email to create and
+            keep guestbooks; the host link remains a spare credential for moderation.
           </p>
 
           <h2>2. Information we collect</h2>
@@ -38,6 +38,10 @@ export function PrivacyPage() {
             <li>
               <strong>Guest Content</strong> submitted to a guestbook: optional guest name, note text,
               photos, and short videos (under 10 MiB).
+            </li>
+            <li>
+              <strong>Host account data</strong> when you sign in: email address and authentication
+              identifiers from Google or email/password sign-in, used to tie guestbooks to your account.
             </li>
             <li>
               <strong>Host credentials</strong>: a host token associated with your guestbook. We store
@@ -55,8 +59,8 @@ export function PrivacyPage() {
             </li>
           </ul>
           <p>
-            We do not ask for email, phone number, or payment card details as part of ordinary
-            guestbook use.
+            We do not ask guests for email, phone number, or payment card details as part of ordinary
+            guestbook use. Hosts provide an email address (or use Google) when signing in.
           </p>
 
           <h2>3. How we use information</h2>
@@ -67,7 +71,7 @@ export function PrivacyPage() {
               Process uploaded videos into a browser-compatible display copy using Firebase Cloud
               Functions (including transcoding or remuxing as needed)
             </li>
-            <li>Verify host links and allow hosts to hide or remove Guest Content</li>
+            <li>Verify host links and signed-in host access, and allow hosts to hide or remove Guest Content</li>
             <li>Secure, maintain, and improve the Service</li>
             <li>Comply with law and enforce our Terms</li>
           </ul>
@@ -123,9 +127,9 @@ export function PrivacyPage() {
           <h2>10. Your choices</h2>
           <p>
             Guests choose what name, text, photos, and videos to submit. Hosts can hide Guest Content
-            with the host link. You can clear local keepsafe and slideshow data in your browser. Because there
-            are no accounts, access and deletion of server-stored guestbook data are handled through
-            the host link and ordinary Service features.
+            with the host link or from their signed-in account. You can clear local keepsafe and slideshow
+            data in your browser. Hosts can sign out and request account deletion through ordinary Service
+            features as we make them available.
           </p>
 
           <h2>11. Changes</h2>

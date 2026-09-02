@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Figtree, Fraunces } from "next/font/google";
+import { SessionProvider } from "@/components/SessionProvider";
 import "../index.css";
 
 const figtree = Figtree({
@@ -34,7 +35,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${figtree.variable} ${fraunces.variable}`}>
-      <body>{children}</body>
+      <body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

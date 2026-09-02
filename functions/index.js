@@ -242,16 +242,36 @@ async function verifyHostToken(slug, hostToken) {
   return { db, incomingHash };
 }
 
+async function verifyHostAccess(slug, hostToken, authUid) {
+  const db = getFirestore();
+  const eventSnap = await db.doc(`events/${slug}`).get();
+  if (!eventSnap.exists) {
+    throw new HttpsError("not-found", "Guestbook not found.");
+  }
+
+  const ownerUid = eventSnap.get("ownerUid");
+  if (authUid && typeof ownerUid === "string" && ownerUid === authUid) {
+    return { db, incomingHash: null };
+  }
+
+  if (typeof hostToken === "string" && hostToken.length >= 20) {
+    return verifyHostToken(slug, hostToken);
+  }
+
+  throw new HttpsError("permission-denied", "Host link is not valid for this guestbook.");
+}
+
 exports.deleteMessage = onCall({ cors: true, region: "us-central1" }, async (request) => {
   const slug = typeof request.data?.slug === "string" ? request.data.slug : "";
   const messageId = typeof request.data?.messageId === "string" ? request.data.messageId : "";
   const hostToken = typeof request.data?.hostToken === "string" ? request.data.hostToken : "";
+  const authUid = request.auth?.uid ?? null;
 
-  if (!SLUG.test(slug) || !messageId || hostToken.length < 20) {
+  if (!SLUG.test(slug) || !messageId) {
     throw new HttpsError("invalid-argument", "Missing or invalid moderation payload.");
   }
 
-  const { db, incomingHash } = await verifyHostToken(slug, hostToken);
+  const { db, incomingHash } = await verifyHostAccess(slug, hostToken, authUid);
 
   const messageRef = db.doc(`events/${slug}/messages/${messageId}`);
   const messageSnap = await messageRef.get();
@@ -259,11 +279,15 @@ exports.deleteMessage = onCall({ cors: true, region: "us-central1" }, async (req
     throw new HttpsError("not-found", "That toast has already been removed.");
   }
 
-  await messageRef.update({
+  const updatePayload = {
     isHidden: true,
-    hostTokenHash: incomingHash,
     hiddenAt: FieldValue.serverTimestamp(),
-  });
+  };
+  if (incomingHash) {
+    updatePayload.hostTokenHash = incomingHash;
+  }
+
+  await messageRef.update(updatePayload);
 
   const bucket = getStorage().bucket();
   await deleteMessageStorage(bucket, slug, messageId);
@@ -275,12 +299,13 @@ exports.updateSignTheme = onCall({ cors: true, region: "us-central1" }, async (r
   const slug = typeof request.data?.slug === "string" ? request.data.slug : "";
   const signTheme = typeof request.data?.signTheme === "string" ? request.data.signTheme : "";
   const hostToken = typeof request.data?.hostToken === "string" ? request.data.hostToken : "";
+  const authUid = request.auth?.uid ?? null;
 
-  if (!SLUG.test(slug) || hostToken.length < 20 || !SIGN_THEMES.has(signTheme)) {
+  if (!SLUG.test(slug) || !SIGN_THEMES.has(signTheme)) {
     throw new HttpsError("invalid-argument", "Missing or invalid theme update payload.");
   }
 
-  const { db } = await verifyHostToken(slug, hostToken);
+  const { db } = await verifyHostAccess(slug, hostToken, authUid);
   await db.doc(`events/${slug}`).update({ signTheme });
 
   return { ok: true, signTheme };
