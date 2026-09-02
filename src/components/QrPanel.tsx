@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { copyText, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls.ts";
-import { btnClass } from "../lib/styles.ts";
+import { copyText, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls";
+import { btnClass } from "../lib/styles";
 
 type QrPanelProps = {
   slug: string;

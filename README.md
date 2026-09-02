@@ -25,7 +25,7 @@ pnpm install
 pnpm dev
 ```
 
-Then open http://localhost:5173. By default the app talks to the live `toastboard` Firebase project.
+Then open http://localhost:3000. By default the app talks to the live `toastboard` Firebase project.
 
 ### Local Firebase emulators
 
@@ -66,3 +66,7 @@ seeds four stable demo guestbooks (wedding, birthday, graduation, religious mile
 ```bash
 pnpm deploy
 ```
+
+Builds a static export into `out/` (`next build` with `output: "export"`) and deploys it to Firebase Hosting along with Firestore rules, Storage rules, and Cloud Functions.
+
+Local preview of the production build (including `/e/**` deep links) uses `pnpm preview`, which serves `out/` with the same `/e/**` → `/e/index.html` rewrite as Firebase Hosting (`public/serve.json`).

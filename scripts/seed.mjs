@@ -414,7 +414,7 @@ async function main() {
     await seedDemo(db, storage, functions, demo);
   }
 
-  const origin = process.env.TOASTBOARD_ORIGIN ?? "http://localhost:5173";
+  const origin = process.env.TOASTBOARD_ORIGIN ?? "http://localhost:3000";
   console.log("Seeded demo guestbooks");
   let weddingHostUrl = "";
   for (const demo of demos) {

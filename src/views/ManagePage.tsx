@@ -1,22 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import { TableSignCard } from "../components/TableSignCard.tsx";
-import { SignThemePicker } from "../components/SignThemePicker.tsx";
-import { Shell, StatusNote } from "../components/ui.tsx";
-import { GuestbookFeed } from "../components/GuestbookFeed.tsx";
-import { useEvent } from "../hooks/useEvent.ts";
-import { useMessages } from "../hooks/useMessages.ts";
-import { updateEventSignTheme } from "../lib/api.ts";
-import { getEventCopy } from "../lib/eventTypes.ts";
-import { getSignTheme, type SignThemeId } from "../lib/signThemes.ts";
-import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
-import { formatEventDate } from "../lib/theme.ts";
-import { DEFAULT_THEME } from "../lib/types.ts";
+"use client";
 
-export function ManagePage() {
-  const { slug } = useParams();
-  const [params] = useSearchParams();
-  const token = params.get("token") ?? "";
+import { useEffect, useRef, useState } from "react";
+import { TableSignCard } from "../components/TableSignCard";
+import { SignThemePicker } from "../components/SignThemePicker";
+import { Shell, StatusNote } from "../components/ui";
+import { GuestbookFeed } from "../components/GuestbookFeed";
+import { useEvent } from "../hooks/useEvent";
+import { useMessages } from "../hooks/useMessages";
+import { updateEventSignTheme } from "../lib/api";
+import { eventGuestPath, eventGuestbookPath } from "../lib/eventRoutes";
+import { getEventCopy } from "../lib/eventTypes";
+import { getSignTheme, type SignThemeId } from "../lib/signThemes";
+import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles";
+import { formatEventDate } from "../lib/theme";
+import { DEFAULT_THEME } from "../lib/types";
+
+export function ManagePage({ slug, token }: { slug: string; token: string }) {
   const { event, status } = useEvent(slug);
   const { messages, error } = useMessages(slug, status === "ready" && Boolean(token));
   const [signTheme, setSignTheme] = useState<SignThemeId>("classic");
@@ -110,12 +109,12 @@ export function ManagePage() {
         <h1>{event.coupleNames}</h1>
         <p className={ledeClass}>{copy.moderationIntro}</p>
         <div className={btnRowClass}>
-          <Link className={btnClass("ghost")} to={`/e/${slug}/guestbook`}>
+          <a className={btnClass("ghost")} href={eventGuestbookPath(slug)}>
             Public guestbook
-          </Link>
-          <Link className={btnClass("ghost")} to={`/e/${slug}`}>
+          </a>
+          <a className={btnClass("ghost")} href={eventGuestPath(slug)}>
             Guest form
-          </Link>
+          </a>
         </div>
       </section>
 

@@ -1,6 +1,6 @@
-import { normalizeEventType } from "./eventTypes.ts";
-import { isSignThemeId } from "./signThemes.ts";
-import type { HostKeepsafe } from "./types.ts";
+import { normalizeEventType } from "./eventTypes";
+import { isSignThemeId } from "./signThemes";
+import type { HostKeepsafe } from "./types";
 
 const KEY = "toastboard:host-keepsafe";
 

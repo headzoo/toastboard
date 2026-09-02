@@ -1,6 +1,6 @@
-import { getImageDimensionsEntry, type ImageDimensions } from "./imageDimensions.ts";
-import { isSignThemeId, type SignThemeId } from "./signThemes.ts";
-import type { MessageRecord } from "./types.ts";
+import { getImageDimensionsEntry, type ImageDimensions } from "./imageDimensions";
+import { isSignThemeId, type SignThemeId } from "./signThemes";
+import type { MessageRecord } from "./types";
 
 export const SLIDESHOW_DURATIONS = [5000, 8000, 12000, 20000] as const;
 

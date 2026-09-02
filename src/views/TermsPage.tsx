@@ -1,14 +1,12 @@
-import { MarketingShell } from "../components/MarketingShell.tsx";
-import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
-import { TERMS_PAGE_METADATA } from "../lib/pageMetadata.ts";
-import { applyTheme } from "../lib/theme.ts";
-import { usePageMetadata } from "../hooks/usePageMetadata.ts";
+"use client";
+
+import Link from "next/link";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { MarketingShell } from "../components/MarketingShell";
+import { kickerClass, ledeClass, narrowClass } from "../lib/styles";
+import { applyTheme } from "../lib/theme";
 
 export function TermsPage() {
-  usePageMetadata(TERMS_PAGE_METADATA);
-
   useEffect(() => {
     applyTheme("#C45C67");
   }, []);
@@ -106,7 +104,7 @@ export function TermsPage() {
           <h2>10. Privacy</h2>
           <p>
             How we handle information is described in our{" "}
-            <Link to="/privacy">Privacy Policy</Link>.
+            <Link href="/privacy/">Privacy Policy</Link>.
           </p>
 
           <h2>11. Governing law</h2>

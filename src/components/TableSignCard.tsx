@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { getEventCopy, type EventType } from "../lib/eventTypes.ts";
-import { renderTableSignPdf, renderTableSignPng, type TableSignInput } from "../lib/tableSign.ts";
-import type { SignThemeId } from "../lib/signThemes.ts";
-import { DEFAULT_THEME } from "../lib/types.ts";
-import { copyText, downloadBytes, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls.ts";
-import { Button, StatusNote } from "./ui.tsx";
+import { getEventCopy, type EventType } from "../lib/eventTypes";
+import { renderTableSignPdf, renderTableSignPng, type TableSignInput } from "../lib/tableSign";
+import type { SignThemeId } from "../lib/signThemes";
+import { DEFAULT_THEME } from "../lib/types";
+import { copyText, downloadBytes, downloadDataUrl, guestUrl, qrDataUrl } from "../lib/urls";
+import { Button, StatusNote } from "./ui";
 
 type TableSignCardProps = {
   slug: string;

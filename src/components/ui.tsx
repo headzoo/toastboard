@@ -1,6 +1,8 @@
+"use client";
+
+import Link from "next/link";
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { btnClass, btnVariants } from "../lib/styles.ts";
+import { btnClass, btnVariants } from "../lib/styles";
 
 type ShellProps = {
   children: ReactNode;
@@ -15,7 +17,7 @@ function SiteFooter({ showLogo = false }: { showLogo?: boolean }) {
     <footer className="mt-auto border-t border-[color-mix(in_srgb,var(--color-ink)_12%,transparent)] px-[6vw] py-8 print:hidden">
       <div className="mx-auto flex max-w-[1180px] flex-col gap-5 text-[0.85rem] text-ink-soft">
         {showLogo ? (
-          <Link className="mx-auto inline-flex items-center no-underline" to="/">
+          <Link className="mx-auto inline-flex items-center no-underline" href="/">
             <img
               src="/images/logo.png"
               alt="The Willow Book by Keepwell & Bell"
@@ -26,10 +28,10 @@ function SiteFooter({ showLogo = false }: { showLogo?: boolean }) {
         <div className="flex flex-col gap-3 min-[700px]:flex-row min-[700px]:items-center min-[700px]:justify-between">
           <p className="m-0">© {year} The Willow Book. All rights reserved.</p>
           <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Legal">
-            <Link className="text-ink-soft no-underline hover:text-ink" to="/terms">
+            <Link className="text-ink-soft no-underline hover:text-ink" href="/terms/">
               Terms and Conditions
             </Link>
-            <Link className="text-ink-soft no-underline hover:text-ink" to="/privacy">
+            <Link className="text-ink-soft no-underline hover:text-ink" href="/privacy/">
               Privacy Policy
             </Link>
           </nav>
@@ -50,7 +52,7 @@ export function Shell({
       <div className="paper-grain" aria-hidden="true" />
       {headerLogo ? (
         <header className="flex justify-center px-[6vw] pt-5 print:hidden">
-          <Link className="inline-flex items-center no-underline" to="/">
+          <Link className="inline-flex items-center no-underline" href="/">
             <img
               src="/images/logo.png"
               alt="The Willow Book by Keepwell & Bell"

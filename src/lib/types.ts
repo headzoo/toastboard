@@ -1,5 +1,5 @@
-import type { EventType } from "./eventTypes.ts";
-import type { SignThemeId } from "./signThemes.ts";
+import type { EventType } from "./eventTypes";
+import type { SignThemeId } from "./signThemes";
 
 export const DEFAULT_THEME = "#C45C67";
 

@@ -1,5 +1,5 @@
 import demoCatalog from "../content/demoCatalog.json";
-import type { EventType } from "./eventTypes.ts";
+import type { EventType } from "./eventTypes";
 
 export const MARKETED_EVENT_TYPES = [
   "wedding",

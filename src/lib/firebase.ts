@@ -23,7 +23,7 @@ const EMULATOR_PORTS = {
 } as const;
 
 function useEmulators() {
-  const value = String(import.meta.env.VITE_TOASTBOARD_EMULATORS ?? "").trim().toLowerCase();
+  const value = String(process.env.NEXT_PUBLIC_TOASTBOARD_EMULATORS ?? "").trim().toLowerCase();
   return value === "1" || value === "true" || value === "yes";
 }
 

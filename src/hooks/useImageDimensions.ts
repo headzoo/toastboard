@@ -3,7 +3,7 @@ import {
   getImageDimensionsEntry,
   preloadImageDimensions,
   type ImageDimensions,
-} from "../lib/imageDimensions.ts";
+} from "../lib/imageDimensions";
 
 function readCached(url: string | undefined): ImageDimensions | null {
   if (!url) return null;

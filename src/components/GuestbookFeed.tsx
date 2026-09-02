@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { hideMessage } from "../lib/api.ts";
-import { formatEventDate } from "../lib/theme.ts";
-import type { MessageRecord } from "../lib/types.ts";
-import { PhotoGallery } from "./PhotoGallery.tsx";
-import { VideoLightbox } from "./VideoLightbox.tsx";
-import { VideoPlayer } from "./VideoPlayer.tsx";
+import { hideMessage } from "../lib/api";
+import { formatEventDate } from "../lib/theme";
+import type { MessageRecord } from "../lib/types";
+import { PhotoGallery } from "./PhotoGallery";
+import { VideoLightbox } from "./VideoLightbox";
+import { VideoPlayer } from "./VideoPlayer";
 
 export type ModerationCopy = {
   hideConfirmLabel: string;

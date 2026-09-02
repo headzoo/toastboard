@@ -3,7 +3,7 @@ import {
   DEFAULT_PAGE_METADATA,
   setPageMetadata,
   type PageMetadata,
-} from "../lib/pageMetadata.ts";
+} from "../lib/pageMetadata";
 
 export function usePageMetadata(metadata: PageMetadata) {
   const { title, description } = metadata;

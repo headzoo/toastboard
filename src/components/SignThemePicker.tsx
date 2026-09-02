@@ -1,4 +1,4 @@
-import { SIGN_THEMES, type SignThemeId } from "../lib/signThemes.ts";
+import { SIGN_THEMES, type SignThemeId } from "../lib/signThemes";
 
 type SignThemePickerProps = {
   selected: SignThemeId;

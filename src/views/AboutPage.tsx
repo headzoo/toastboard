@@ -1,13 +1,11 @@
+"use client";
+
 import { useEffect } from "react";
-import { MarketingShell } from "../components/MarketingShell.tsx";
-import { usePageMetadata } from "../hooks/usePageMetadata.ts";
-import { ABOUT_PAGE_METADATA } from "../lib/pageMetadata.ts";
-import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
-import { applyTheme } from "../lib/theme.ts";
+import { MarketingShell } from "../components/MarketingShell";
+import { kickerClass, ledeClass, narrowClass } from "../lib/styles";
+import { applyTheme } from "../lib/theme";
 
 export function AboutPage() {
-  usePageMetadata(ABOUT_PAGE_METADATA);
-
   useEffect(() => {
     applyTheme("#C45C67");
   }, []);

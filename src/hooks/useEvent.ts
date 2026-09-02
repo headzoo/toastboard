@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getEvent } from "../lib/api.ts";
-import { applyTheme } from "../lib/theme.ts";
-import type { EventRecord } from "../lib/types.ts";
+import { getEvent } from "../lib/api";
+import { applyTheme } from "../lib/theme";
+import type { EventRecord } from "../lib/types";
 
 export function useEvent(slug: string | undefined) {
   const [event, setEvent] = useState<EventRecord | null>(null);

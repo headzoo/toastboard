@@ -5,10 +5,10 @@ import {
   loadImage,
   roundRect,
   waitForPrintFonts,
-} from "./canvas.ts";
-import { canvasToLetterPdf } from "./pdf.ts";
-import { DEFAULT_SIGN_THEME, getSignTheme, type SignTheme, type SignThemeId } from "./signThemes.ts";
-import { qrDataUrl } from "./urls.ts";
+} from "./canvas";
+import { canvasToLetterPdf } from "./pdf";
+import { DEFAULT_SIGN_THEME, getSignTheme, type SignTheme, type SignThemeId } from "./signThemes";
+import { qrDataUrl } from "./urls";
 
 export type TableSignInput = {
   coupleNames: string;

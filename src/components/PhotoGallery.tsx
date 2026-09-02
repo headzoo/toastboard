@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, type MouseEvent, type PointerEvent } from "react";
-import { useImageDimensions } from "../hooks/useImageDimensions.ts";
-import { PhotoLightbox } from "./PhotoLightbox.tsx";
+import { useImageDimensions } from "../hooks/useImageDimensions";
+import { PhotoLightbox } from "./PhotoLightbox";
 
 const CLICK_MOVE_THRESHOLD = 10;
 

@@ -1,19 +1,22 @@
-import { HostKeepsafeCard } from "../components/HostKeepsafeCard.tsx";
-import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
-import { createEvent } from "../lib/api.ts";
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, type FormEvent } from "react";
+import { HostKeepsafeCard } from "../components/HostKeepsafeCard";
+import { Button, Field, Shell, StatusNote } from "../components/ui";
+import { createEvent } from "../lib/api";
 import {
   EVENT_TYPE_OPTIONS,
   getEventCopy,
   isEventType,
   normalizeEventType,
   type EventType,
-} from "../lib/eventTypes.ts";
-import { clearKeepsafe, loadKeepsafe, saveKeepsafe } from "../lib/session.ts";
-import { kickerClass, ledeClass, narrowClass } from "../lib/styles.ts";
-import { applyTheme } from "../lib/theme.ts";
-import { DEFAULT_THEME, THEME_SWATCHES } from "../lib/types.ts";
-import { useEffect, useState, type FormEvent } from "react";
-import { useSearchParams } from "react-router-dom";
+} from "../lib/eventTypes";
+import { clearKeepsafe, loadKeepsafe, saveKeepsafe } from "../lib/session";
+import { kickerClass, ledeClass, narrowClass } from "../lib/styles";
+import { applyTheme } from "../lib/theme";
+import { DEFAULT_THEME, THEME_SWATCHES } from "../lib/types";
+import type { HostKeepsafe } from "../lib/types";
 
 function eventTypeFromParams(searchParams: URLSearchParams): EventType {
   const raw = searchParams.get("type");
@@ -21,7 +24,8 @@ function eventTypeFromParams(searchParams: URLSearchParams): EventType {
 }
 
 export function CreatePage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const forceNew = searchParams.get("new") === "true";
   const eventType = eventTypeFromParams(searchParams);
   const [coupleNames, setCoupleNames] = useState("");
@@ -30,8 +34,12 @@ export function CreatePage() {
   const [themeColor, setThemeColor] = useState(DEFAULT_THEME);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [keepsafe, setKeepsafe] = useState(() => (forceNew ? null : loadKeepsafe()));
+  const [keepsafe, setKeepsafe] = useState<HostKeepsafe | null>(null);
   const copy = getEventCopy(eventType);
+
+  useEffect(() => {
+    setKeepsafe(forceNew ? null : loadKeepsafe());
+  }, [forceNew]);
 
   useEffect(() => {
     applyTheme(themeColor);
@@ -41,15 +49,16 @@ export function CreatePage() {
     if (!forceNew) return;
     clearKeepsafe();
     setKeepsafe(null);
-    const next = new URLSearchParams(searchParams);
+    const next = new URLSearchParams(searchParams.toString());
     next.delete("new");
-    setSearchParams(next, { replace: true });
-  }, [forceNew, searchParams, setSearchParams]);
+    const query = next.toString();
+    router.replace(query ? `/create/?${query}` : "/create/");
+  }, [forceNew, router, searchParams]);
 
   function onEventTypeChange(nextType: EventType) {
-    const next = new URLSearchParams(searchParams);
+    const next = new URLSearchParams(searchParams.toString());
     next.set("type", nextType);
-    setSearchParams(next, { replace: true });
+    router.replace(`/create/?${next.toString()}`);
   }
 
   async function onSubmit(event: FormEvent) {

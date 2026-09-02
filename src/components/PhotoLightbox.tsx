@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { downloadRemoteUrl } from "../lib/urls.ts";
+import { downloadRemoteUrl } from "../lib/urls";
 
 const SWIPE_THRESHOLD = 80;
 const FOCUSABLE =

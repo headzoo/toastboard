@@ -13,8 +13,8 @@ import {
   type SlideMediaTarget,
   type SlideSlot,
   type SlideshowPreferences,
-} from "../lib/slideshow.ts";
-import type { MessageRecord } from "../lib/types.ts";
+} from "../lib/slideshow";
+import type { MessageRecord } from "../lib/types";
 
 const LOOKAHEAD_ENTRIES = 3;
 

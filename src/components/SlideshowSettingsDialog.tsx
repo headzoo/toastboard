@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
-import { SIGN_THEMES, type SignThemeId } from "../lib/signThemes.ts";
+import { SIGN_THEMES, type SignThemeId } from "../lib/signThemes";
 import {
   MOTION_STYLES,
   SLIDESHOW_DURATIONS,
   type MotionStyle,
   type SlideshowDuration,
   type SlideshowPreferences,
-} from "../lib/slideshow.ts";
+} from "../lib/slideshow";
 
 type Props = {
   preferences: SlideshowPreferences;

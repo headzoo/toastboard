@@ -1,5 +1,5 @@
-import { getSignTheme } from "./signThemes.ts";
-import { qrDataUrl } from "./urls.ts";
+import { getSignTheme } from "./signThemes";
+import { qrDataUrl } from "./urls";
 
 type KeepsafeInput = {
   coupleNames: string;

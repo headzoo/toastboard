@@ -1,8 +1,10 @@
-import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { CornerSprig, HeroGuestbookPreview } from "../components/HeroGuestbookPreview.tsx";
-import { MarketingShell } from "../components/MarketingShell.tsx";
-import { usePageMetadata } from "../hooks/usePageMetadata.ts";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { CornerSprig, HeroGuestbookPreview } from "../components/HeroGuestbookPreview";
+import { MarketingShell } from "../components/MarketingShell";
 import {
   HOME_COME_BACK_AGAIN,
   HOME_FEATURES,
@@ -19,15 +21,15 @@ import {
   type HomeBigDayScene,
   type HomeComeBackMoment,
   type HomeOccasion,
-} from "../lib/homepageContent.ts";
-import { HUB_PAGE_METADATA } from "../lib/pageMetadata.ts";
-import { loadKeepsafe } from "../lib/session.ts";
+} from "../lib/homepageContent";
+import { loadKeepsafe } from "../lib/session";
+import type { HostKeepsafe } from "../lib/types";
 import {
   marketingBtnClass,
   marketingKickerClass,
   marketingLinkClass,
-} from "../lib/styles.ts";
-import { applyTheme } from "../lib/theme.ts";
+} from "../lib/styles";
+import { applyTheme } from "../lib/theme";
 
 function SectionHeading({ children }: { children: string }) {
   return (
@@ -182,7 +184,7 @@ function WhatYouGetFeatures({ titleAs: Title = "h2" }: { titleAs?: "h2" | "h3" }
 function FreeTrialCta({ align = "start" }: { align?: "start" | "center" }) {
   return (
     <div className={`flex flex-col gap-2 ${align === "center" ? "items-center text-center" : "items-start"}`}>
-      <Link className={marketingBtnClass} to="/create">
+      <Link className={marketingBtnClass} href="/create/">
         {HOME_HERO.primaryCta}
       </Link>
       <p className="mb-0 font-serif text-[0.95rem] text-ink-soft">
@@ -196,7 +198,7 @@ function OccasionCard({ occasion, className }: { occasion: HomeOccasion; classNa
   return (
     <Link
       className={`relative z-0 flex items-start gap-4 rounded-lg border border-[color-mix(in_srgb,var(--color-ink)_12%,transparent)] px-5 py-3.5 text-ink no-underline transition-[transform,border-color] duration-500 ease-out hover:z-10 hover:scale-[1.03] hover:border-ink/25 motion-reduce:transition-none motion-reduce:hover:scale-100${className ? ` ${className}` : ""}`}
-      to={occasion.path}
+      href={occasion.path}
     >
       <img
         src={occasion.iconSrc}
@@ -222,23 +224,31 @@ function OccasionCard({ occasion, className }: { occasion: HomeOccasion; classNa
 }
 
 export function HomePage() {
-  usePageMetadata(HUB_PAGE_METADATA);
-  const location = useLocation();
+  const pathname = usePathname();
+  const [keepsafe, setKeepsafe] = useState<HostKeepsafe | null>(null);
 
   useEffect(() => {
     applyTheme("#C45C67");
   }, []);
 
   useEffect(() => {
-    if (!location.hash) return;
-    const id = location.hash.replace(/^#/, "");
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [location.hash]);
+    setKeepsafe(loadKeepsafe());
+  }, []);
 
-  const keepsafe = loadKeepsafe();
+  useEffect(() => {
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const id = hash.replace(/^#/, "");
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
+  }, [pathname]);
 
   return (
     <MarketingShell>
@@ -257,10 +267,13 @@ export function HomePage() {
           <div className="mt-7 flex flex-wrap items-start gap-x-6 gap-y-3">
             {keepsafe ? (
               <>
-                <Link className={marketingBtnClass} to="/create">
+                <Link className={marketingBtnClass} href="/create/">
                   Edit Guestbook
                 </Link>
-                <Link className={`${marketingLinkClass} underline decoration-oxblood/70 underline-offset-4`} to="/create?new=true">
+                <Link
+                  className={`${marketingLinkClass} underline decoration-oxblood/70 underline-offset-4`}
+                  href="/create/?new=true"
+                >
                   Create Another Guestbook
                 </Link>
               </>

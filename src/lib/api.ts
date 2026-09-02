@@ -14,16 +14,16 @@ import {
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { compressGuestPhoto } from "./compress.ts";
-import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from "./crypto.ts";
-import { db, functions, storage } from "./firebase.ts";
+import { compressGuestPhoto } from "./compress";
+import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from "./crypto";
+import { db, functions, storage } from "./firebase";
 import {
   getEventCopy,
   normalizeEventType,
   type EventType,
-} from "./eventTypes.ts";
-import { DEFAULT_SIGN_THEME, getSignTheme, type SignThemeId } from "./signThemes.ts";
-import type { EventRecord, MessageRecord, VideoStatus } from "./types.ts";
+} from "./eventTypes";
+import { DEFAULT_SIGN_THEME, getSignTheme, type SignThemeId } from "./signThemes";
+import type { EventRecord, MessageRecord, VideoStatus } from "./types";
 
 export const DEMO_SLUG = "maya-james-k8n2w4p9qx";
 

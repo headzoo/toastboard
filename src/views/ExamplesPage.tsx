@@ -1,15 +1,14 @@
+"use client";
+
+import Link from "next/link";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { MarketingShell } from "../components/MarketingShell.tsx";
-import { usePageMetadata } from "../hooks/usePageMetadata.ts";
-import { MARKETING_CONTENT, MARKETED_EVENT_TYPES } from "../lib/marketingContent.ts";
-import { EXAMPLES_PAGE_METADATA } from "../lib/pageMetadata.ts";
-import { kickerClass, ledeClass, marketingLinkClass, narrowClass } from "../lib/styles.ts";
-import { applyTheme } from "../lib/theme.ts";
+import { MarketingShell } from "../components/MarketingShell";
+import { MARKETING_CONTENT, MARKETED_EVENT_TYPES } from "../lib/marketingContent";
+import { eventGuestbookPath } from "../lib/eventRoutes";
+import { kickerClass, ledeClass, marketingLinkClass, narrowClass } from "../lib/styles";
+import { applyTheme } from "../lib/theme";
 
 export function ExamplesPage() {
-  usePageMetadata(EXAMPLES_PAGE_METADATA);
-
   useEffect(() => {
     applyTheme("#C45C67");
   }, []);
@@ -35,12 +34,12 @@ export function ExamplesPage() {
                 <h2 className="mb-2 font-serif text-[1.3rem] font-medium">{content.hubTitle}</h2>
                 <p className="mb-4 text-[0.95rem] text-ink-soft">{content.hubDescription}</p>
                 <div className="flex flex-wrap gap-x-5 gap-y-2">
-                  <Link className={marketingLinkClass} to={content.path}>
+                  <Link className={marketingLinkClass} href={content.path}>
                     Learn more →
                   </Link>
-                  <Link className={marketingLinkClass} to={`/e/${content.demoSlug}/guestbook`}>
+                  <a className={marketingLinkClass} href={eventGuestbookPath(content.demoSlug)}>
                     {content.demoCtaLabel} →
-                  </Link>
+                  </a>
                 </div>
               </li>
             );
@@ -49,7 +48,7 @@ export function ExamplesPage() {
 
         <p className={`${narrowClass} mt-10 text-ink-soft`}>
           Ready to make your own?{" "}
-          <Link className={marketingLinkClass} to="/create">
+          <Link className={marketingLinkClass} href="/create/">
             Create a guestbook →
           </Link>
         </p>

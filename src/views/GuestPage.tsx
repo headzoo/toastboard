@@ -1,10 +1,12 @@
+"use client";
+
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Button, Field, Shell, StatusNote } from "../components/ui.tsx";
-import { useEvent } from "../hooks/useEvent.ts";
-import { MAX_PHOTOS, submitMessage, validateGuestVideo } from "../lib/api.ts";
-import { getEventCopy } from "../lib/eventTypes.ts";
-import { formatEventDate } from "../lib/theme.ts";
+import { Button, Field, Shell, StatusNote } from "../components/ui";
+import { useEvent } from "../hooks/useEvent";
+import { MAX_PHOTOS, submitMessage, validateGuestVideo } from "../lib/api";
+import { eventGuestbookPath } from "../lib/eventRoutes";
+import { getEventCopy } from "../lib/eventTypes";
+import { formatEventDate } from "../lib/theme";
 
 type PreviewItem = {
   file: File;
@@ -20,8 +22,7 @@ function formatMediaSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
 }
 
-export function GuestPage() {
-  const { slug } = useParams();
+export function GuestPage({ slug }: { slug: string }) {
   const { event, status } = useEvent(slug);
 
   const [guestName, setGuestName] = useState("");
@@ -138,9 +139,9 @@ export function GuestPage() {
           <h1>{copy.thankYouHeadline}</h1>
           <p className="lede">It should appear in the guestbook in a moment.</p>
           <div className="btn-row">
-            <Link className="btn btn-primary" to={`/e/${slug}/guestbook`}>
+            <a className="btn btn-primary" href={eventGuestbookPath(slug)}>
               See the guestbook
-            </Link>
+            </a>
             <Button
               variant="ghost"
               onClick={() => {

@@ -1,4 +1,4 @@
-import { DEFAULT_THEME } from "./types.ts";
+import { DEFAULT_THEME } from "./types";
 
 export function applyTheme(color?: string | null) {
   document.documentElement.style.setProperty("--accent", color || DEFAULT_THEME);

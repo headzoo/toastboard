@@ -4,7 +4,7 @@ import {
   HOME_HERO_GUESTBOOK,
   type HomeHeroAccent,
   type HomeHeroGuestbookEntry,
-} from "../lib/homepageContent.ts";
+} from "../lib/homepageContent";
 
 const ACCENT_CLASS: Record<HomeHeroAccent, string> = {
   gold: "bg-gold",

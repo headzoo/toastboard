@@ -1,17 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Shell, StatusNote } from "../components/ui.tsx";
-import { GuestbookFeed } from "../components/GuestbookFeed.tsx";
-import { GuestbookSlideshow } from "../components/GuestbookSlideshow.tsx";
-import { useEvent } from "../hooks/useEvent.ts";
-import { useMessages } from "../hooks/useMessages.ts";
-import { btnClass, btnRowClass, narrowClass, ledeClass } from "../lib/styles.ts";
-import { getSignTheme } from "../lib/signThemes.ts";
-import { getEventCopy } from "../lib/eventTypes.ts";
-import { formatEventDate } from "../lib/theme.ts";
+"use client";
 
-export function GuestbookPage() {
-  const { slug } = useParams();
+import { useEffect, useRef, useState } from "react";
+import { Shell, StatusNote } from "../components/ui";
+import { GuestbookFeed } from "../components/GuestbookFeed";
+import { GuestbookSlideshow } from "../components/GuestbookSlideshow";
+import { useEvent } from "../hooks/useEvent";
+import { useMessages } from "../hooks/useMessages";
+import { eventGuestPath } from "../lib/eventRoutes";
+import { btnClass, btnRowClass, narrowClass, ledeClass } from "../lib/styles";
+import { getSignTheme } from "../lib/signThemes";
+import { getEventCopy } from "../lib/eventTypes";
+import { formatEventDate } from "../lib/theme";
+
+export function GuestbookPage({ slug }: { slug: string }) {
   const { event, status } = useEvent(slug);
   const { messages, error, live } = useMessages(slug, status === "ready");
   const fullscreenRootRef = useRef<HTMLDivElement>(null);
@@ -88,9 +89,9 @@ export function GuestbookPage() {
             <h1 className="mb-0">{event.coupleNames}</h1>
             {event.eventDate ? <p className={ledeClass}>{formatEventDate(event.eventDate)}</p> : null}
             <div className={`${btnRowClass} print:hidden`}>
-              <Link className={btnClass("ghost")} to={`/e/${slug}`}>
+              <a className={btnClass("ghost")} href={eventGuestPath(slug)}>
                 {copy.guestbookCtaLabel}
-              </Link>
+              </a>
               <button
                 className={btnClass("ghost")}
                 type="button"

@@ -1,14 +1,14 @@
 import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
-import { useSlideshowDeck } from "../hooks/useSlideshowDeck.ts";
-import { getEventCopy } from "../lib/eventTypes.ts";
-import { getSignTheme } from "../lib/signThemes.ts";
-import { renderTableSignPng } from "../lib/tableSign.ts";
-import type { MotionStyle } from "../lib/slideshow.ts";
-import type { EventRecord, MessageRecord } from "../lib/types.ts";
-import { formatEventDate } from "../lib/theme.ts";
-import { guestUrl, qrDataUrl } from "../lib/urls.ts";
-import { SlideshowSettingsDialog } from "./SlideshowSettingsDialog.tsx";
+import { useSlideshowDeck } from "../hooks/useSlideshowDeck";
+import { getEventCopy } from "../lib/eventTypes";
+import { getSignTheme } from "../lib/signThemes";
+import { renderTableSignPng } from "../lib/tableSign";
+import type { MotionStyle } from "../lib/slideshow";
+import type { EventRecord, MessageRecord } from "../lib/types";
+import { formatEventDate } from "../lib/theme";
+import { guestUrl, qrDataUrl } from "../lib/urls";
+import { SlideshowSettingsDialog } from "./SlideshowSettingsDialog";
 
 type Props = {
   event: EventRecord;

@@ -20,7 +20,7 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "public": "dist",
+    "public": "out",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "headers": [
       {
@@ -31,7 +31,7 @@
         ]
       }
     ],
-    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+    "rewrites": [{ "source": "/e/**", "destination": "/e/index.html" }]
   },
   "emulators": {
     "functions": { "port": 5001 },

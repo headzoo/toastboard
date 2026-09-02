@@ -1,23 +1,23 @@
 import { useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { TableSignCard } from "./TableSignCard.tsx";
-import { SignThemePicker } from "./SignThemePicker.tsx";
-import { updateEventSignTheme } from "../lib/api.ts";
-import { renderKeepsafePng } from "../lib/keepsafe.ts";
-import { saveKeepsafe } from "../lib/session.ts";
+import Link from "next/link";
+import { TableSignCard } from "./TableSignCard";
+import { SignThemePicker } from "./SignThemePicker";
+import { updateEventSignTheme } from "../lib/api";
+import { renderKeepsafePng } from "../lib/keepsafe";
+import { saveKeepsafe } from "../lib/session";
 import {
   DEFAULT_SIGN_THEME,
   getSignTheme,
   type SignThemeId,
-} from "../lib/signThemes.ts";
-import { btnClass, ledeClass, narrowClass } from "../lib/styles.ts";
-import { formatEventDate } from "../lib/theme.ts";
-import { formatKeepsafeLede, getEventCopy } from "../lib/eventTypes.ts";
-import { copyText, downloadDataUrl, guestUrl, guestbookUrl, manageUrl } from "../lib/urls.ts";
-import { DEFAULT_THEME } from "../lib/types.ts";
-import type { HostKeepsafe } from "../lib/types.ts";
+} from "../lib/signThemes";
+import { btnClass, ledeClass, narrowClass } from "../lib/styles";
+import { formatEventDate } from "../lib/theme";
+import { formatKeepsafeLede, getEventCopy } from "../lib/eventTypes";
+import { copyText, downloadDataUrl, guestUrl, guestbookUrl, manageUrl } from "../lib/urls";
+import { DEFAULT_THEME } from "../lib/types";
+import type { HostKeepsafe } from "../lib/types";
 
-import { Button, StatusNote } from "./ui.tsx";
+import { Button, StatusNote } from "./ui";
 
 export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
   const [copied, setCopied] = useState<"host" | "guest" | null>(null);
@@ -34,7 +34,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
   const guestLink = useMemo(() => guestUrl(keepsafe.slug), [keepsafe.slug]);
   const accent = keepsafe.themeColor || DEFAULT_THEME;
   const eventCopy = getEventCopy(keepsafe.eventType);
-  const createAnotherHref = `/create?new=true&type=${keepsafe.eventType}`;
+  const createAnotherHref = `/create/?new=true&type=${keepsafe.eventType}`;
 
   async function selectSignTheme(id: SignThemeId) {
     if (themeBusy || id === signTheme) return;
@@ -147,7 +147,7 @@ export function HostKeepsafeCard({ keepsafe }: { keepsafe: HostKeepsafe }) {
       </div>
 
       <div className="mt-8 flex justify-center">
-        <Link className={btnClass("primary")} to={createAnotherHref}>
+        <Link className={btnClass("primary")} href={createAnotherHref}>
           Create another guestbook
         </Link>
       </div>
