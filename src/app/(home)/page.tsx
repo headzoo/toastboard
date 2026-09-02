@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CornerSprig, HeroGuestbookPreview } from "../components/HeroGuestbookPreview";
-import { MarketingShell } from "../components/MarketingShell";
+import { CornerSprig, HeroGuestbookPreview } from "@/components/HeroGuestbookPreview";
+import { MarketingShell } from "@/components/MarketingShell";
 import {
   HOME_COME_BACK_AGAIN,
   HOME_FEATURES,
@@ -21,15 +21,15 @@ import {
   type HomeBigDayScene,
   type HomeComeBackMoment,
   type HomeOccasion,
-} from "../lib/homepageContent";
-import { loadKeepsafe } from "../lib/session";
-import type { HostKeepsafe } from "../lib/types";
+} from "@/lib/homepageContent";
+import { loadKeepsafe } from "@/lib/session";
+import type { HostKeepsafe } from "@/lib/types";
 import {
   marketingBtnClass,
   marketingKickerClass,
   marketingLinkClass,
-} from "../lib/styles";
-import { applyTheme } from "../lib/theme";
+} from "@/lib/styles";
+import { applyTheme } from "@/lib/theme";
 
 function SectionHeading({ children }: { children: string }) {
   return (
@@ -223,7 +223,7 @@ function OccasionCard({ occasion, className }: { occasion: HomeOccasion; classNa
   );
 }
 
-export function HomePage() {
+export default function Page() {
   const pathname = usePathname();
   const [keepsafe, setKeepsafe] = useState<HostKeepsafe | null>(null);
 

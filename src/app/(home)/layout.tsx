@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HomePage } from "@/views/HomePage";
+import type { ReactNode } from "react";
 import { HUB_PAGE_METADATA } from "@/lib/pageMetadata";
 
 export const metadata: Metadata = {
@@ -7,6 +7,6 @@ export const metadata: Metadata = {
   description: HUB_PAGE_METADATA.description,
 };
 
-export default function Page() {
-  return <HomePage />;
+export default function HomeLayout({ children }: { children: ReactNode }) {
+  return children;
 }
