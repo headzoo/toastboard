@@ -6,7 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { pathsMatch } from "../lib/eventRoutes";
 import { MarketingAuthLinks } from "./MarketingAuthLinks";
 
-type MarketingShellProps = {
+type SiteLayoutProps = {
   children: ReactNode;
 };
 
@@ -89,7 +89,7 @@ function LeftNavLinks({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-function MarketingFooter() {
+function SiteLayoutFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="mt-auto border-t border-[color-mix(in_srgb,var(--color-ink)_12%,transparent)] px-[4vw] py-10 print:hidden">
@@ -127,7 +127,7 @@ function MarketingFooter() {
   );
 }
 
-export function MarketingShell({ children }: MarketingShellProps) {
+export function SiteLayout({ children }: SiteLayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
@@ -149,7 +149,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
               type="button"
               className="inline-flex items-center rounded-md border border-ink/15 bg-cream px-3 py-2 text-[0.8rem] font-semibold text-ink min-[960px]:hidden"
               aria-expanded={menuOpen}
-              aria-controls="marketing-mobile-nav"
+              aria-controls="site-mobile-nav"
               onClick={() => setMenuOpen((open) => !open)}
             >
               {menuOpen ? "Close" : "Menu"}
@@ -173,7 +173,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
 
         {menuOpen ? (
           <nav
-            id="marketing-mobile-nav"
+            id="site-mobile-nav"
             className="mx-auto mt-4 flex max-w-[1180px] flex-col gap-3 rounded-xl border border-ink/10 bg-cream/95 px-4 py-4 shadow-soft min-[960px]:hidden"
             aria-label="Mobile"
           >
@@ -185,7 +185,7 @@ export function MarketingShell({ children }: MarketingShellProps) {
       </header>
 
       <main className="mx-auto w-full max-w-[1180px] flex-1 px-[4vw] pb-20">{children}</main>
-      <MarketingFooter />
+      <SiteLayoutFooter />
     </div>
   );
 }

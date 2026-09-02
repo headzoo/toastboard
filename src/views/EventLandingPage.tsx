@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { MarketingShell } from "../components/MarketingShell";
 import type { MarketingContent, MarketingVisualFigure } from "../lib/marketingContent";
 import { eventGuestbookPath } from "../lib/eventRoutes";
 import { loadKeepsafe } from "../lib/session";
@@ -77,7 +76,7 @@ export function EventLandingPage({ content }: EventLandingPageProps) {
   }, [content.themeColor]);
 
   return (
-    <MarketingShell>
+    <>
       <section className="max-w-[760px] pb-16 pt-8">
         <p className={kickerClass}>{content.kicker}</p>
         <h1>{content.headline}</h1>
@@ -115,6 +114,6 @@ export function EventLandingPage({ content }: EventLandingPageProps) {
 
       {content.visualStory ? <VisualStory story={content.visualStory} /> : null}
       {content.highlights ? <Highlights highlights={content.highlights} /> : null}
-    </MarketingShell>
+    </>
   );
 }

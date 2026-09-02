@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense, type ReactNode } from "react";
-import { MarketingShell } from "@/components/MarketingShell";
 import { kickerClass, narrowClass } from "@/lib/styles";
 
 export const metadata: Metadata = {
@@ -10,11 +9,9 @@ export const metadata: Metadata = {
 
 function LoginFallback() {
   return (
-    <MarketingShell>
-      <section className={narrowClass}>
-        <p className={kickerClass}>Loading</p>
-      </section>
-    </MarketingShell>
+    <section className={narrowClass}>
+      <p className={kickerClass}>Loading</p>
+    </section>
   );
 }
 

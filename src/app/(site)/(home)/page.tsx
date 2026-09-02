@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CornerSprig, HeroGuestbookPreview } from "@/components/HeroGuestbookPreview";
-import { MarketingShell } from "@/components/MarketingShell";
 import {
   HOME_COME_BACK_AGAIN,
   HOME_FEATURES,
@@ -251,161 +250,161 @@ export default function Page() {
   }, [pathname]);
 
   return (
-    <MarketingShell>
+    <>
       {/* Hero */}
-      <section className="grid items-center gap-10 py-8 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(17.5rem,24rem)] min-[900px]:gap-12 min-[900px]:py-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(19rem,26rem)] lg:gap-16">
-        <div className="relative max-w-[34rem]">
-          <p className={`${marketingKickerClass} font-serif`}>{HOME_HERO.kicker}</p>
-          <h1 className="max-w-[16ch] text-balance font-serif text-[clamp(2.05rem,4.6vw,3.35rem)] font-medium tracking-[-0.03em]">
-            {HOME_HERO.headline}
-          </h1>
+    <section className="grid items-center gap-10 py-8 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(17.5rem,24rem)] min-[900px]:gap-12 min-[900px]:py-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(19rem,26rem)] lg:gap-16">
+      <div className="relative max-w-[34rem]">
+        <p className={`${marketingKickerClass} font-serif`}>{HOME_HERO.kicker}</p>
+        <h1 className="max-w-[16ch] text-balance font-serif text-[clamp(2.05rem,4.6vw,3.35rem)] font-medium tracking-[-0.03em]">
+          {HOME_HERO.headline}
+        </h1>
 
-          <p className="relative mb-0 max-w-[34rem] font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
-            <CornerSprig className="pointer-events-none absolute -left-4 -top-5 z-0 w-[6.75rem] min-[900px]:-left-5 min-[900px]:-top-6 min-[900px]:w-[7.5rem]" />
-            <span className="relative z-10">{HOME_HERO.lede}</span>
-          </p>
-          <div className="mt-7 flex flex-wrap items-start gap-x-6 gap-y-3">
-            {keepsafe ? (
-              <>
-                <Link className={marketingBtnClass} href="/create/">
-                  Edit Guestbook
-                </Link>
-                <Link
-                  className={`${marketingLinkClass} underline decoration-oxblood/70 underline-offset-4`}
-                  href="/create/?new=true"
-                >
-                  Create Another Guestbook
-                </Link>
-              </>
-            ) : (
-              <FreeTrialCta />
-            )}
-          </div>
-        </div>
-
-        <HeroGuestbookPreview />
-      </section>
-
-      {/* What you get */}
-      <section
-        className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 "
-        aria-label="What you get"
-      >
-        <div className="px-[4vw] py-10 lg:px-[5vw]">
-          <WhatYouGetFeatures />
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section
-        id="how-it-works"
-        className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 scroll-mt-8 py-12"
-        aria-label={HOME_HOW_IT_WORKS.heading}
-      >
-        <div className="px-[4vw] lg:px-[5vw]">
-          <SectionHeading>{HOME_HOW_IT_WORKS.heading}</SectionHeading>
-          <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
-            {HOME_HOW_IT_WORKS.lede}
-          </p>
-
-          <ol className="m-0 -mt-4 grid list-none gap-10 p-0 min-[900px]:grid-cols-3 min-[900px]:gap-0">
-            {HOME_STEPS.map((step, index) => (
-              <li
-                key={step.title}
-                className={`flex flex-col gap-5 min-[900px]:px-8 ${index > 0
-                  ? "min-[900px]:border-l min-[900px]:border-dotted min-[900px]:border-[color-mix(in_srgb,var(--color-ink)_28%,transparent)]"
-                  : ""
-                  }`}
+        <p className="relative mb-0 max-w-[34rem] font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
+          <CornerSprig className="pointer-events-none absolute -left-4 -top-5 z-0 w-[6.75rem] min-[900px]:-left-5 min-[900px]:-top-6 min-[900px]:w-[7.5rem]" />
+          <span className="relative z-10">{HOME_HERO.lede}</span>
+        </p>
+        <div className="mt-7 flex flex-wrap items-start gap-x-6 gap-y-3">
+          {keepsafe ? (
+            <>
+              <Link className={marketingBtnClass} href="/create/">
+                Edit Guestbook
+              </Link>
+              <Link
+                className={`${marketingLinkClass} underline decoration-oxblood/70 underline-offset-4`}
+                href="/create/?new=true"
               >
-                <img
-                  src={step.imageSrc}
-                  alt={step.imageAlt}
-                  width={step.width}
-                  height={step.height}
-                  className="aspect-[4/3] w-full rounded-[1.2rem] object-contain"
-                  loading="lazy"
-                />
-                <div className="flex items-start gap-4">
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gold font-serif text-[1.15rem] font-medium text-cream">
-                    {index + 1}
-                  </span>
-                  <div className="min-w-0 pt-0.5">
-                    <h3 className="mb-1.5 font-serif text-[1.2rem] font-medium leading-tight">{step.title}</h3>
-                    <p className="mb-0 font-serif text-[0.95rem] leading-snug text-ink-soft">{step.description}</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
+                Create Another Guestbook
+              </Link>
+            </>
+          ) : (
+            <FreeTrialCta />
+          )}
         </div>
-      </section>
+      </div>
 
-      {/* Choose occasion */}
-      <section
-        id="occasions"
-        className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 scroll-mt-8 py-12"
-        aria-label={HOME_CHOOSE_OCCASION.heading}
-      >
-        <div className="px-[4vw] lg:px-[5vw]">
-          <SectionHeading>{HOME_CHOOSE_OCCASION.heading}</SectionHeading>
-          <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
-            {HOME_CHOOSE_OCCASION.lede}
-          </p>
-          <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 min-[720px]:grid-cols-2 min-[1200px]:grid-cols-4">
-            {HOME_OCCASIONS.map((occasion) => (
-              <li key={occasion.path} className="min-w-0">
-                <OccasionCard occasion={occasion} className="w-full" />
-              </li>
-            ))}
-            <li className="min-w-0 min-[1200px]:col-span-4 min-[1200px]:flex min-[1200px]:justify-center">
-              <OccasionCard
-                occasion={HOME_OCCASION_YOU_PICK}
-                className="w-full min-[1200px]:max-w-[calc((100%-3*1rem)/4)]"
+      <HeroGuestbookPreview />
+    </section>
+
+    {/* What you get */}
+    <section
+      className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 "
+      aria-label="What you get"
+    >
+      <div className="px-[4vw] py-10 lg:px-[5vw]">
+        <WhatYouGetFeatures />
+      </div>
+    </section>
+
+    {/* How it works */}
+    <section
+      id="how-it-works"
+      className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 scroll-mt-8 py-12"
+      aria-label={HOME_HOW_IT_WORKS.heading}
+    >
+      <div className="px-[4vw] lg:px-[5vw]">
+        <SectionHeading>{HOME_HOW_IT_WORKS.heading}</SectionHeading>
+        <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
+          {HOME_HOW_IT_WORKS.lede}
+        </p>
+
+        <ol className="m-0 -mt-4 grid list-none gap-10 p-0 min-[900px]:grid-cols-3 min-[900px]:gap-0">
+          {HOME_STEPS.map((step, index) => (
+            <li
+              key={step.title}
+              className={`flex flex-col gap-5 min-[900px]:px-8 ${index > 0
+                ? "min-[900px]:border-l min-[900px]:border-dotted min-[900px]:border-[color-mix(in_srgb,var(--color-ink)_28%,transparent)]"
+                : ""
+                }`}
+            >
+              <img
+                src={step.imageSrc}
+                alt={step.imageAlt}
+                width={step.width}
+                height={step.height}
+                className="aspect-[4/3] w-full rounded-[1.2rem] object-contain"
+                loading="lazy"
               />
+              <div className="flex items-start gap-4">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gold font-serif text-[1.15rem] font-medium text-cream">
+                  {index + 1}
+                </span>
+                <div className="min-w-0 pt-0.5">
+                  <h3 className="mb-1.5 font-serif text-[1.2rem] font-medium leading-tight">{step.title}</h3>
+                  <p className="mb-0 font-serif text-[0.95rem] leading-snug text-ink-soft">{step.description}</p>
+                </div>
+              </div>
             </li>
-          </ul>
-        </div>
-      </section>
+          ))}
+        </ol>
+      </div>
+    </section>
 
-      <section
-        className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 py-12"
-        aria-label={HOME_ON_THE_BIG_DAY.heading}
-      >
-        <div className="px-[4vw] lg:px-[5vw]">
-          <SectionHeading>{HOME_ON_THE_BIG_DAY.heading}</SectionHeading>
-          <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
-            {HOME_ON_THE_BIG_DAY.lede}
-          </p>
-          <OnTheBigDayGallery />
-        </div>
-      </section>
+    {/* Choose occasion */}
+    <section
+      id="occasions"
+      className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 scroll-mt-8 py-12"
+      aria-label={HOME_CHOOSE_OCCASION.heading}
+    >
+      <div className="px-[4vw] lg:px-[5vw]">
+        <SectionHeading>{HOME_CHOOSE_OCCASION.heading}</SectionHeading>
+        <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
+          {HOME_CHOOSE_OCCASION.lede}
+        </p>
+        <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 min-[720px]:grid-cols-2 min-[1200px]:grid-cols-4">
+          {HOME_OCCASIONS.map((occasion) => (
+            <li key={occasion.path} className="min-w-0">
+              <OccasionCard occasion={occasion} className="w-full" />
+            </li>
+          ))}
+          <li className="min-w-0 min-[1200px]:col-span-4 min-[1200px]:flex min-[1200px]:justify-center">
+            <OccasionCard
+              occasion={HOME_OCCASION_YOU_PICK}
+              className="w-full min-[1200px]:max-w-[calc((100%-3*1rem)/4)]"
+            />
+          </li>
+        </ul>
+      </div>
+    </section>
 
-      <section
-        className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 py-12"
-        aria-label="Come back again and again"
-      >
-        <div className="px-[4vw] lg:px-[5vw]">
-          <SectionHeading>{HOME_COME_BACK_AGAIN.heading}</SectionHeading>
-          <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
-            {HOME_COME_BACK_AGAIN.lede}
-          </p>
-          <ComeBackAgainGallery />
-        </div>
-      </section>
+    <section
+      className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 py-12"
+      aria-label={HOME_ON_THE_BIG_DAY.heading}
+    >
+      <div className="px-[4vw] lg:px-[5vw]">
+        <SectionHeading>{HOME_ON_THE_BIG_DAY.heading}</SectionHeading>
+        <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
+          {HOME_ON_THE_BIG_DAY.lede}
+        </p>
+        <OnTheBigDayGallery />
+      </div>
+    </section>
 
-      <section
-        id="getting-started"
-        className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 scroll-mt-8 pt-12 pb-0"
-        aria-label={HOME_GETTING_STARTED.heading}
-      >
-        <div className="px-[4vw] lg:px-[5vw]">
-          <SectionHeading>{HOME_GETTING_STARTED.heading}</SectionHeading>
-          <WhatYouGetFeatures titleAs="h3" />
-          <div className="mt-10 flex justify-center">
-            <FreeTrialCta align="center" />
-          </div>
+    <section
+      className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 py-12"
+      aria-label="Come back again and again"
+    >
+      <div className="px-[4vw] lg:px-[5vw]">
+        <SectionHeading>{HOME_COME_BACK_AGAIN.heading}</SectionHeading>
+        <p className="mx-auto mb-10 max-w-[34rem] text-balance text-center font-serif text-[1.08rem] italic leading-relaxed text-ink-soft">
+          {HOME_COME_BACK_AGAIN.lede}
+        </p>
+        <ComeBackAgainGallery />
+      </div>
+    </section>
+
+    <section
+      id="getting-started"
+      className="relative left-1/2 w-[100cqw] max-w-none -translate-x-1/2 scroll-mt-8 pt-12 pb-0"
+      aria-label={HOME_GETTING_STARTED.heading}
+    >
+      <div className="px-[4vw] lg:px-[5vw]">
+        <SectionHeading>{HOME_GETTING_STARTED.heading}</SectionHeading>
+        <WhatYouGetFeatures titleAs="h3" />
+        <div className="mt-10 flex justify-center">
+          <FreeTrialCta align="center" />
         </div>
-      </section>
-    </MarketingShell>
+      </div>
+    </section>
+    </>
   );
 }
