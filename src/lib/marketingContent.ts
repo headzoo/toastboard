@@ -44,6 +44,7 @@ export type MarketingContent = {
   eventType: MarketedEventType;
   path: string;
   themeColor: string;
+  iconSrc: string;
   hubTitle: string;
   hubDescription: string;
   kicker: string;
@@ -77,6 +78,7 @@ const WEDDING_MARKETING: MarketingContent = {
   eventType: "wedding",
   path: "/weddings",
   themeColor: demoThemeFor("wedding"),
+  iconSrc: "/images/wedding_rings_icon_transparent.png",
   hubTitle: "Weddings",
   hubDescription:
     "A live guestbook for the reception — guests leave toasts, photos, or one short video without signing in.",
@@ -157,6 +159,7 @@ const BIRTHDAY_MARKETING: MarketingContent = {
   eventType: "birthday",
   path: "/birthdays",
   themeColor: demoThemeFor("birthday"),
+  iconSrc: "/images/birthday_cake_icon_transparent.png",
   hubTitle: "Birthdays",
   hubDescription:
     "Collect wishes, party photos, or one short video on a live guestbook — no app, no login, just a QR code on the table.",
@@ -206,6 +209,7 @@ const GRADUATION_MARKETING: MarketingContent = {
   eventType: "graduation",
   path: "/graduations",
   themeColor: demoThemeFor("graduation"),
+  iconSrc: "/images/graduation_cap_icon_transparent.png",
   hubTitle: "Graduations",
   hubDescription:
     "Gather congratulations, advice, and memories from family and friends on a live guestbook.",
@@ -255,6 +259,7 @@ const RELIGIOUS_MILESTONE_MARKETING: MarketingContent = {
   eventType: "religious-milestone",
   path: "/religious-milestones",
   themeColor: demoThemeFor("religious-milestone"),
+  iconSrc: "/images/anniversary_sprig_icon_transparent.png",
   hubTitle: "Religious milestones",
   hubDescription:
     "Bar mitzvah, bat mitzvah, confirmation, and similar celebrations — guests leave blessings on a live guestbook.",
