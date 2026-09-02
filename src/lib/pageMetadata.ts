@@ -48,7 +48,7 @@ export const EXAMPLES_PAGE_METADATA: PageMetadata = {
 export const PRICING_PAGE_METADATA: PageMetadata = {
   title: "Pricing — The Willow Book",
   description:
-    "Creating a Willow Book does not go through a checkout today. No payment card required for ordinary use.",
+    "One-time plans for a Willow Book guestbook: Keepsake, Heirloom, and Legacy. Start with a 14-day free trial — no credit card required.",
 };
 
 export function setPageMetadata(metadata: PageMetadata) {

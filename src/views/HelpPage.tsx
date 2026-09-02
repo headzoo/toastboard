@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: "Is there a cost?",
-    a: "Creating a Willow Book does not go through a checkout today. We may introduce paid plans later; ordinary use does not require a payment card now.",
+    a: "Yes — three one-time plans (Keepsake, Heirloom, and Legacy) cover storage and how long the guestbook is kept. Every plan starts with a 14-day free trial, no credit card required.",
   },
 ] as const;
 
@@ -48,7 +48,22 @@ export function HelpPage() {
           {FAQS.map((item) => (
             <div key={item.q}>
               <dt className="mb-2 font-serif text-[1.15rem] font-medium text-ink">{item.q}</dt>
-              <dd className="m-0 text-[0.98rem] leading-relaxed text-ink-soft">{item.a}</dd>
+              <dd className="m-0 text-[0.98rem] leading-relaxed text-ink-soft">
+                {item.a}
+                {item.q === "Is there a cost?" ? (
+                  <>
+                    {" "}
+                    See{" "}
+                    <Link
+                      className="text-ink underline decoration-oxblood/50 underline-offset-4"
+                      href="/pricing/"
+                    >
+                      Pricing
+                    </Link>{" "}
+                    for the full breakdown.
+                  </>
+                ) : null}
+              </dd>
             </div>
           ))}
         </dl>
