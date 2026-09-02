@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@firebase/util",
+      "protobufjs"
+    ]
+  },
   "scripts": {
     "dev": "next dev",
     "dev:emu": "NEXT_PUBLIC_TOASTBOARD_EMULATORS=1 next dev",
