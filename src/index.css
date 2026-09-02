@@ -494,6 +494,12 @@
   }
 }
 
+@media (min-width: 1500px) {
+  .guestbook-grid {
+    columns: 4;
+  }
+}
+
 .slideshow-root {
   position: fixed;
   inset: 0;

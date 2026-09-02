@@ -17,7 +17,9 @@ import { httpsCallable } from "firebase/functions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { compressGuestPhoto } from "./compress";
 import { makeEventSlug, randomToken, sanitizeText, sha256Hex } from "./crypto";
-import { auth as firebaseAuth, db, functions, storage } from "./firebase";
+import { db, functions, storage } from "./firebase";
+import { waitForFirebaseAuth } from "./firebaseAuth";
+import { friendlyErrorMessage, toFriendlyError } from "./friendlyErrors";
 import {
   getEventCopy,
   normalizeEventType,
@@ -58,27 +60,31 @@ export type OwnedEventSummary = {
 };
 
 export async function listOwnedEvents(): Promise<OwnedEventSummary[]> {
-  const user = firebaseAuth.currentUser;
+  const user = await waitForFirebaseAuth();
   if (!user) throw new Error("Sign in to view your guestbooks.");
 
-  const ownedQuery = query(collection(db, "events"), where("ownerUid", "==", user.uid));
-  const snap = await getDocs(ownedQuery);
+  try {
+    const ownedQuery = query(collection(db, "events"), where("ownerUid", "==", user.uid));
+    const snap = await getDocs(ownedQuery);
 
-  return snap.docs
-    .map((item) => {
-      const data = item.data();
-      return {
-        slug: item.id,
-        coupleNames: String(data.coupleNames ?? ""),
-        eventType: normalizeEventType(data.eventType),
-        createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
-      };
-    })
-    .sort((a, b) => {
-      const aTime = a.createdAt?.getTime() ?? 0;
-      const bTime = b.createdAt?.getTime() ?? 0;
-      return bTime - aTime;
-    });
+    return snap.docs
+      .map((item) => {
+        const data = item.data();
+        return {
+          slug: item.id,
+          coupleNames: String(data.coupleNames ?? ""),
+          eventType: normalizeEventType(data.eventType),
+          createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : null,
+        };
+      })
+      .sort((a, b) => {
+        const aTime = a.createdAt?.getTime() ?? 0;
+        const bTime = b.createdAt?.getTime() ?? 0;
+        return bTime - aTime;
+      });
+  } catch (error) {
+    throw toFriendlyError(error, "Couldn’t load your guestbooks.");
+  }
 }
 
 export async function createEvent(input: {
@@ -88,7 +94,7 @@ export async function createEvent(input: {
   welcomeMessage: string;
   themeColor: string;
 }): Promise<CreatedEvent> {
-  const user = firebaseAuth.currentUser;
+  const user = await waitForFirebaseAuth();
   if (!user) throw new Error("Sign in to create a guestbook.");
 
   const eventType = normalizeEventType(input.eventType);
@@ -162,7 +168,7 @@ export function listenMessages(
       onChange(messages);
     },
     (error: FirestoreError) => {
-      onError(error.message || "Couldn’t load the guestbook.");
+      onError(friendlyErrorMessage(error, "Couldn’t load the guestbook."));
     },
   );
 }
@@ -367,21 +373,3 @@ function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
-function toFriendlyError(error: unknown, fallback: string): Error {
-  const message = error instanceof Error ? error.message : "";
-  const code =
-    error && typeof error === "object" && "code" in error && typeof error.code === "string"
-      ? error.code
-      : "";
-
-  if (/functions\/(permission-denied|invalid-argument)|Host link is not valid/i.test(message)) {
-    return new Error("That host link isn’t valid for this guestbook.");
-  }
-  if (/functions\/(not-found|unavailable|internal|deadline-exceeded)/i.test(`${code} ${message}`)) {
-    return new Error(fallback);
-  }
-  if (error instanceof Error && /storage\/unauthorized|storage\/retry-limit/i.test(error.message)) {
-    return new Error("Media upload isn’t available yet. Send a note for now, or try again shortly.");
-  }
-  return new Error(fallback);
-}

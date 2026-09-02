@@ -37,8 +37,7 @@ export function HelpPage() {
   return (
     <MarketingShell>
       <article className={narrowClass}>
-        <p className={kickerClass}>Help Center</p>
-        <h1>Short answers</h1>
+        <h1 className="mt-8">Short answers</h1>
         <p className={ledeClass}>
           A Willow Book is a live guestbook for personal events. Guests scan a QR code — no account, no
           app, no email.

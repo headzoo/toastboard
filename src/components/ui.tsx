@@ -9,13 +9,15 @@ type ShellProps = {
   footer?: boolean;
   headerLogo?: boolean;
   footerLogo?: boolean;
+  wide?: boolean;
 };
 
-function SiteFooter({ showLogo = false }: { showLogo?: boolean }) {
+function SiteFooter({ showLogo = false, wide = false }: { showLogo?: boolean; wide?: boolean }) {
   const year = new Date().getFullYear();
+  const maxWidthClass = wide ? "max-w-[2000px]" : "max-w-[1180px]";
   return (
     <footer className="mt-auto border-t border-[color-mix(in_srgb,var(--color-ink)_12%,transparent)] px-[6vw] py-8 print:hidden">
-      <div className="mx-auto flex max-w-[1180px] flex-col gap-5 text-[0.85rem] text-ink-soft">
+      <div className={`mx-auto flex ${maxWidthClass} flex-col gap-5 text-[0.85rem] text-ink-soft`}>
         {showLogo ? (
           <Link className="mx-auto inline-flex items-center no-underline" href="/">
             <img
@@ -46,7 +48,9 @@ export function Shell({
   footer = true,
   headerLogo = true,
   footerLogo = false,
+  wide = false,
 }: ShellProps) {
+  const maxWidthClass = wide ? "max-w-[2000px]" : "max-w-[1180px]";
   return (
     <div className="relative flex min-h-svh flex-col">
       <div className="paper-grain" aria-hidden="true" />
@@ -62,11 +66,11 @@ export function Shell({
         </header>
       ) : null}
       <main
-        className={`mx-auto w-full max-w-[1180px] flex-1 px-[6vw] pb-20 ${headerLogo ? "pt-4" : "pt-8"}`}
+        className={`mx-auto w-full ${maxWidthClass} flex-1 px-[6vw] pb-20 ${headerLogo ? "pt-4" : "pt-8"}`}
       >
         {children}
       </main>
-      {footer ? <SiteFooter showLogo={footerLogo} /> : null}
+      {footer ? <SiteFooter showLogo={footerLogo} wide={wide} /> : null}
     </div>
   );
 }
@@ -122,11 +126,14 @@ export function Field({ label, hint, children }: FieldProps) {
 }
 
 const statusTones = {
-  muted: "text-ink-soft",
-  warn: "rounded-2xl bg-[color-mix(in_srgb,var(--color-warn)_12%,white)] px-4 py-3.5 text-warn print:hidden",
-  ok: "text-ok",
-  error: "rounded-2xl bg-[color-mix(in_srgb,var(--color-warn)_12%,white)] px-4 py-3.5 text-warn",
+  muted: "mb-1 px-4 py-3.5 text-ink-soft",
+  ok: "mb-1 px-4 py-3.5 text-ok",
+  warn: "print:hidden",
+  error: "",
 } as const;
+
+const boxedNoteClass =
+  "relative mb-1 overflow-hidden rounded-[0.4rem] border border-[color-mix(in_srgb,var(--color-ink)_11%,transparent)] bg-[color-mix(in_srgb,var(--color-paper)_70%,white)] px-3.5 py-8 pl-4 font-serif text-[16px] italic leading-snug text-ink";
 
 export function StatusNote({
   children,
@@ -135,5 +142,20 @@ export function StatusNote({
   children: ReactNode;
   tone?: keyof typeof statusTones;
 }) {
-  return <p className={`px-4 py-3.5 ${statusTones[tone]} mb-1`}>{children}</p>;
+  if (tone === "error" || tone === "warn") {
+    return (
+      <p
+        className={`${boxedNoteClass} ${statusTones[tone]}`}
+        role={tone === "error" ? "alert" : undefined}
+      >
+        <span
+          className={`absolute inset-y-0 left-0 w-1 ${tone === "error" ? "bg-oxblood" : "bg-gold"}`}
+          aria-hidden="true"
+        />
+        {children}
+      </p>
+    );
+  }
+
+  return <p className={statusTones[tone]}>{children}</p>;
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { MarketingShell } from "../components/MarketingShell";
 import { PRICING_PAGE, PRICING_PLANS, type PricingPlanAccent } from "../lib/pricingContent";
-import { marketingBtnClass, marketingKickerClass, marketingLinkClass } from "../lib/styles";
+import { marketingBtnClass, marketingLinkClass } from "../lib/styles";
 import { applyTheme } from "../lib/theme";
 
 const ACCENT_WELL: Record<PricingPlanAccent, string> = {
@@ -22,7 +22,6 @@ export function PricingPage() {
     <MarketingShell>
       <article className="py-8 min-[900px]:py-10">
         <header className="mx-auto max-w-[40rem] text-center">
-          <p className={`${marketingKickerClass} font-serif`}>{PRICING_PAGE.kicker}</p>
           <h1 className="text-balance font-serif text-[clamp(2.05rem,4.6vw,3.35rem)] font-medium tracking-[-0.03em]">
             {PRICING_PAGE.headline}
           </h1>

@@ -61,10 +61,12 @@ Keepwell & Bell is presented the way Betty Crocker, Uncle Ben's, Sara Lee, or Dr
 > Every kind word, kept.
 > A quiet place to keep the words a moment deserves.
 
-**About / "Our Standards" (replaces a founder bio page)**
-> At Keepwell & Bell, we set high standards. Every guestbook we build is meant to be read again — at the gathering, the next morning, years later. We hold every detail, from a single toast to a full celebration, to one measure: simple to use, built to last, worth returning to.
+**About page on this site (`/about`) — about The Willow Book, not the house brand**
+> The Willow Book is a live guestbook for a gathering. Guests leave a note, a photo, or a short video — without making an account to do it.
 >
-> Keepwell & Bell seeks fine craftsmanship in the smallest details — a card, a guestbook, a keepsake. We believe no memory should need a password to be kept safe.
+> The Willow Book is our answer to a simple question: how do you keep the words people say at your table, without asking them to sign in to say them?
+>
+> Close with Keepwell & Bell only as attribution/standard (“made the Keepwell & Bell way”), never as the page’s subject. House-brand “Our Standards” copy belongs on keepwellandbell.com, not here.
 
 **Product intro (The Willow Book)**
 > The Willow Book is our answer to a simple question: how do you keep the words people say at your table, without asking them to sign in to say them?

@@ -1,10 +1,16 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { cert, getApps, initializeApp as initializeAdminApp } from "firebase-admin/app";
+import {
+  FieldValue,
+  Timestamp as AdminTimestamp,
+  getFirestore as getAdminFirestore,
+} from "firebase-admin/firestore";
+import { getStorage as getAdminStorage } from "firebase-admin/storage";
 import { initializeApp } from "firebase/app";
 import {
-  Timestamp,
   collection,
   connectFirestoreEmulator,
   doc,
@@ -18,12 +24,13 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
-import { connectStorageEmulator, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { connectStorageEmulator, getDownloadURL, getStorage, ref } from "firebase/storage";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const BRANDING = join(ROOT, "public", "branding");
+const BRANDING = join(ROOT, "public", "images");
 const CATALOG_PATH = join(ROOT, "src", "content", "demoCatalog.json");
 const WEDDING_DEMO_SLUG = "maya-james-k8n2w4p9qx";
+const STORAGE_BUCKET = "toastboard.firebasestorage.app";
 
 const ALLOWED_EVENT_TYPES = new Set(["wedding", "birthday", "graduation", "religious-milestone"]);
 const SIGN_THEMES = new Set(["classic", "botanical", "modern", "art-deco", "coastal", "midnight"]);
@@ -222,7 +229,7 @@ function initFirebase(emulatorMode) {
   const app = initializeApp({
     projectId: "toastboard",
     appId: "1:695090103004:web:71de06a692807c4afaea19",
-    storageBucket: "toastboard.firebasestorage.app",
+    storageBucket: STORAGE_BUCKET,
     apiKey: "AIzaSyAQSSPFYToH69ZcM8i73awb4MTQS8CXpQc",
     authDomain: "toastboard.firebaseapp.com",
     messagingSenderId: "695090103004",
@@ -249,15 +256,51 @@ function initFirebase(emulatorMode) {
   return { db, storage, functions };
 }
 
-async function uploadDemoPhoto(storage, slug, messageId, index, filename) {
-  const bytes = readFileSync(join(BRANDING, filename));
-  const photoRef = ref(storage, `events/${slug}/messages/${messageId}-${index}.jpg`);
-  try {
-    await uploadBytes(photoRef, bytes, { contentType: "image/jpeg" });
-  } catch {
-    // storage.rules forbid update/delete — re-seed reuses the existing object.
+function initAdmin(emulatorMode) {
+  if (emulatorMode) {
+    const emulators = emulatorEndpoints();
+    if (!process.env.FIRESTORE_EMULATOR_HOST) {
+      process.env.FIRESTORE_EMULATOR_HOST = `${emulators.firestore.host}:${emulators.firestore.port}`;
+    }
+    if (!process.env.FIREBASE_STORAGE_EMULATOR_HOST) {
+      process.env.FIREBASE_STORAGE_EMULATOR_HOST = `${emulators.storage.host}:${emulators.storage.port}`;
+    }
   }
-  return getDownloadURL(photoRef);
+
+  if (!getApps().length) {
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+
+    if (clientEmail && privateKey) {
+      initializeAdminApp({
+        credential: cert({ projectId: "toastboard", clientEmail, privateKey }),
+        projectId: "toastboard",
+        storageBucket: STORAGE_BUCKET,
+      });
+    } else {
+      initializeAdminApp({ projectId: "toastboard", storageBucket: STORAGE_BUCKET });
+    }
+  }
+
+  return {
+    adminDb: getAdminFirestore(),
+    adminBucket: getAdminStorage().bucket(STORAGE_BUCKET),
+  };
+}
+
+async function uploadDemoPhoto(adminBucket, storage, slug, messageId, index, filename) {
+  const bytes = readFileSync(join(BRANDING, filename));
+  const objectPath = `events/${slug}/messages/${messageId}-${index}.jpg`;
+  const token = randomUUID();
+  await adminBucket.file(objectPath).save(bytes, {
+    contentType: "image/jpeg",
+    metadata: {
+      metadata: {
+        firebaseStorageDownloadTokens: token,
+      },
+    },
+  });
+  return getDownloadURL(ref(storage, objectPath));
 }
 
 async function hideIfVisible(db, slug, messageId, hostTokenHash) {
@@ -294,7 +337,7 @@ async function hideVisibleSeedMessages(db, demo, hostTokenHash) {
   }
 }
 
-async function buildMessagePayload(storage, slug, message, messageId) {
+async function buildMessagePayload(adminBucket, storage, slug, message, messageId) {
   const payload = {
     guestName: message.guestName,
     text: message.text,
@@ -305,18 +348,26 @@ async function buildMessagePayload(storage, slug, message, messageId) {
   if (photos.length > 0) {
     payload.photoUrls = [];
     for (let index = 0; index < photos.length; index += 1) {
-      payload.photoUrls.push(await uploadDemoPhoto(storage, slug, messageId, index, photos[index]));
+      payload.photoUrls.push(
+        await uploadDemoPhoto(adminBucket, storage, slug, messageId, index, photos[index]),
+      );
     }
   }
   return { payload, photoCount: photos.length };
 }
 
-async function createSeedMessages(db, storage, demo) {
+async function createSeedMessages(db, adminBucket, storage, demo) {
   const created = [];
   const batch = writeBatch(db);
   for (const message of demo.messages) {
     const id = messageIdFor(message.guestName);
-    const { payload, photoCount } = await buildMessagePayload(storage, demo.slug, message, id);
+    const { payload, photoCount } = await buildMessagePayload(
+      adminBucket,
+      storage,
+      demo.slug,
+      message,
+      id,
+    );
     batch.set(doc(db, "events", demo.slug, "messages", id), payload);
     created.push({ id, guestName: message.guestName, photos: photoCount });
   }
@@ -332,7 +383,13 @@ async function createSeedMessages(db, storage, demo) {
     const suffix = Date.now().toString(36);
     for (const message of demo.messages) {
       const id = `${messageIdFor(message.guestName)}-${suffix}`;
-      const { payload, photoCount } = await buildMessagePayload(storage, demo.slug, message, id);
+      const { payload, photoCount } = await buildMessagePayload(
+        adminBucket,
+        storage,
+        demo.slug,
+        message,
+        id,
+      );
       retry.set(doc(db, "events", demo.slug, "messages", id), payload);
       created.push({ id, guestName: message.guestName, photos: photoCount });
     }
@@ -341,19 +398,18 @@ async function createSeedMessages(db, storage, demo) {
   }
 }
 
-async function createDemoEvent(db, demo, hostTokenHash) {
-  const eventRef = doc(db, "events", demo.slug);
-  const batch = writeBatch(db);
-  batch.set(eventRef, {
+async function createDemoEvent(adminDb, demo, hostTokenHash) {
+  const batch = adminDb.batch();
+  batch.set(adminDb.doc(`events/${demo.slug}`), {
     coupleNames: demo.coupleNames,
     eventType: demo.eventType,
-    eventDate: Timestamp.fromDate(new Date(`${demo.eventDate}T12:00:00`)),
+    eventDate: AdminTimestamp.fromDate(new Date(`${demo.eventDate}T12:00:00`)),
     welcomeMessage: demo.welcomeMessage,
     themeColor: demo.themeColor,
     signTheme: demo.signTheme,
-    createdAt: serverTimestamp(),
+    createdAt: FieldValue.serverTimestamp(),
   });
-  batch.set(doc(db, "events", demo.slug, "secrets", "host"), { hostTokenHash });
+  batch.set(adminDb.doc(`events/${demo.slug}/secrets/host`), { hostTokenHash });
   await batch.commit();
 }
 
@@ -373,15 +429,14 @@ async function enrichExistingDemo(functions, demo) {
   }
 }
 
-async function seedDemo(db, storage, functions, demo) {
+async function seedDemo(db, adminDb, adminBucket, storage, functions, demo) {
   const hostTokenHash = sha256Hex(demo.hostToken);
-  const eventRef = doc(db, "events", demo.slug);
-  const existing = await getDoc(eventRef);
+  const existing = await adminDb.doc(`events/${demo.slug}`).get();
 
   console.log(`Seeding ${demo.coupleNames} (${demo.eventType}) [${demo.slug}]`);
 
-  if (!existing.exists()) {
-    await createDemoEvent(db, demo, hostTokenHash);
+  if (!existing.exists) {
+    await createDemoEvent(adminDb, demo, hostTokenHash);
     console.log("  Created event and host secret");
   } else {
     console.log("  Event already exists; leaving stored fields unchanged");
@@ -389,7 +444,7 @@ async function seedDemo(db, storage, functions, demo) {
   }
 
   await hideVisibleSeedMessages(db, demo, hostTokenHash);
-  const created = await createSeedMessages(db, storage, demo);
+  const created = await createSeedMessages(db, adminBucket, storage, demo);
   for (const item of created) {
     console.log(`  ${item.guestName}: ${item.photos} photo${item.photos === 1 ? "" : "s"} (${item.id})`);
   }
@@ -409,9 +464,10 @@ async function main() {
   const demos = loadCatalog();
   const emulatorMode = useEmulators();
   const { db, storage, functions } = initFirebase(emulatorMode);
+  const { adminDb, adminBucket } = initAdmin(emulatorMode);
 
   for (const demo of demos) {
-    await seedDemo(db, storage, functions, demo);
+    await seedDemo(db, adminDb, adminBucket, storage, functions, demo);
   }
 
   const origin = process.env.TOASTBOARD_ORIGIN ?? "http://localhost:3000";

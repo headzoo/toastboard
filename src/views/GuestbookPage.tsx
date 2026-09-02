@@ -31,7 +31,7 @@ export function GuestbookPage({ slug }: { slug: string }) {
 
   if (status === "loading") {
     return (
-      <Shell headerLogo={false} footerLogo>
+      <Shell headerLogo={false} footerLogo wide>
         <StatusNote>Loading the guestbook…</StatusNote>
       </Shell>
     );
@@ -39,7 +39,7 @@ export function GuestbookPage({ slug }: { slug: string }) {
 
   if (status !== "ready" || !event || !slug) {
     return (
-      <Shell headerLogo={false} footerLogo>
+      <Shell headerLogo={false} footerLogo wide>
         <section className={narrowClass}>
           <h1>This guestbook isn’t here yet</h1>
           <p>Create a guestbook first, then share the guest QR.</p>
@@ -84,8 +84,8 @@ export function GuestbookPage({ slug }: { slug: string }) {
           onExit={exitSlideshow}
         />
       ) : (
-        <Shell headerLogo={false} footerLogo>
-          <section className="mb-8 max-w-[760px]">
+        <Shell headerLogo={false} footerLogo wide>
+          <section className="mb-8">
             <h1 className="mb-0">{event.coupleNames}</h1>
             {event.eventDate ? <p className={ledeClass}>{formatEventDate(event.eventDate)}</p> : null}
             <div className={`${btnRowClass} print:hidden`}>

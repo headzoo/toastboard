@@ -6,7 +6,7 @@ import { MarketingShell } from "../components/MarketingShell";
 import { HOME_OCCASION_YOU_PICK } from "../lib/homepageContent";
 import { MARKETING_CONTENT, MARKETED_EVENT_TYPES } from "../lib/marketingContent";
 import { eventGuestbookPath } from "../lib/eventRoutes";
-import { kickerClass, ledeClass, marketingLinkClass, narrowClass } from "../lib/styles";
+import { ledeClass, marketingLinkClass, narrowClass } from "../lib/styles";
 import { applyTheme } from "../lib/theme";
 
 export function ExamplesPage() {
@@ -17,8 +17,7 @@ export function ExamplesPage() {
   return (
     <MarketingShell>
       <article className="mx-auto max-w-[900px]">
-        <p className={kickerClass}>Examples</p>
-        <h1>See a guestbook in the room</h1>
+        <h1 className="mt-8">See a guestbook in the room</h1>
         <p className={`${ledeClass} max-w-[40rem]`}>
           Each occasion has a short landing page and a live demo guestbook you can open without creating
           anything. No accounts. No checkout.

@@ -28,9 +28,9 @@ export const PRIVACY_PAGE_METADATA: PageMetadata = {
 };
 
 export const ABOUT_PAGE_METADATA: PageMetadata = {
-  title: "About — The Willow Book by Keepwell & Bell",
+  title: "About — The Willow Book",
   description:
-    "Our standards: simple to use, built to last, worth returning to. No accounts required to keep a kind word safe.",
+    "The Willow Book is a live guestbook for gatherings. Guests leave notes, photos, or short video — no account needed — and you keep the words to read again.",
 };
 
 export const HELP_PAGE_METADATA: PageMetadata = {
