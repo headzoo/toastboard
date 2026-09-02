@@ -12,7 +12,6 @@
     "preview": "pnpm build && next start -p 3456",
     "seed": "node scripts/seed.mjs",
     "deploy": "firebase deploy --only firestore,storage,functions --project toastboard",
-    "deploy:app": "firebase deploy --only apphosting --project toastboard",
     "emulators": "firebase emulators:start --only auth,firestore,storage,functions,ui"
   },
   "dependencies": {

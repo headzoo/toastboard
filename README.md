@@ -4,7 +4,7 @@ A live guestbook for personal events. Guests scan a QR code, leave a note, photo
 
 Supported event types: **wedding**, **birthday**, **graduation**, **religious milestone**, and **other**.
 
-Live site: https://toastboard.web.app/
+Live site: https://preview.thewillowbook.com/
 
 ## Routes
 
@@ -32,6 +32,8 @@ pnpm dev
 Then open http://localhost:3000. By default the app talks to the live `toastboard` Firebase project.
 
 Host sign-in needs **Firebase Auth** enabled in the console (Google + Email/Password) and `AUTH_SECRET` in `.env.local`. For token verification locally, set `FIREBASE_CLIENT_EMAIL` and `FIREBASE_PRIVATE_KEY` from a Firebase service account, or use emulators.
+
+See [`.env.example`](.env.example) for all environment variables.
 
 ### Local Firebase emulators
 
@@ -69,28 +71,59 @@ seeds four stable demo guestbooks (wedding, birthday, graduation, religious mile
 
 ## Deploy
 
-The Next.js app runs on **Firebase App Hosting** (server-rendered — required for host sign-in). Firestore rules, Storage rules, and Cloud Functions deploy separately.
+The Next.js app runs on **Vercel**. Firebase provides Auth, Firestore, Storage, and Cloud Functions only — not web hosting.
 
-1. Create an App Hosting backend linked to this repo (Firebase console or CLI).
-2. Store secrets in Google Secret Manager: `AUTH_SECRET`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` (see [`apphosting.yaml`](apphosting.yaml)).
-3. Deploy backend rules and functions:
+### Web app (Vercel)
 
-```bash
-pnpm deploy
-```
+1. Import this repo in Vercel (framework: **Next.js**, package manager: **pnpm**).
+2. Set environment variables in the Vercel project (Production, and Preview if desired):
 
-4. Deploy the web app:
+| Variable | Production value |
+| --- | --- |
+| `AUTH_SECRET` | Random string (`openssl rand -base64 32`) |
+| `AUTH_TRUST_HOST` | `true` |
+| `AUTH_URL` | `https://preview.thewillowbook.com` |
+| `FIREBASE_CLIENT_EMAIL` | Service account `client_email` from Firebase |
+| `FIREBASE_PRIVATE_KEY` | Service account `private_key` (paste as one line; `\n` is fine) |
 
-```bash
-pnpm deploy:app
-```
+3. Add custom domain **`preview.thewillowbook.com`** in Vercel → Domains and point DNS at Vercel (CNAME to `cname.vercel-dns.com` or A records per Vercel’s instructions).
+4. Deploy via git push or `vercel deploy`.
 
-Point `toastboard.web.app` at the App Hosting backend when ready. Until then, use the App Hosting URL from the Firebase console.
+For preview deployments on `*.vercel.app`, add each preview hostname to Firebase Auth **Authorized domains** (or add them as you use them).
 
-Local production preview:
+Local production preview before pushing:
 
 ```bash
 pnpm preview
 ```
 
 Runs `next build` then `next start` on port 3456.
+
+### Firebase (rules + functions)
+
+Deploy Firestore rules, indexes, Storage rules, and Cloud Functions:
+
+```bash
+pnpm deploy
+```
+
+This does **not** deploy the web app.
+
+### Firebase Console (one-time)
+
+1. **Authentication → Sign-in method:** enable Google and Email/Password.
+2. **Authentication → Settings → Authorized domains:** add `preview.thewillowbook.com`, `localhost`, and any Vercel preview hostnames you use.
+3. **Project settings → Service accounts → Generate new private key:** use the JSON for `FIREBASE_CLIENT_EMAIL` and `FIREBASE_PRIVATE_KEY` in Vercel.
+
+### Post-deploy checks
+
+- `/` loads on `preview.thewillowbook.com`
+- `/login/` — Google and email sign-in work
+- `/create/` redirects when signed out
+- `/api/auth/session` returns 200 (not `MissingSecret`)
+- Creating a guestbook writes `ownerUid`; `/account/` lists it
+- Host moderation and video upload still work (Functions CORS is already enabled)
+
+### Legacy Firebase Hosting
+
+`toastboard.web.app` previously served a static export. Web hosting is removed from [`firebase.json`](firebase.json). Disable or delete the old Firebase Hosting site in the console if it still serves stale files.
