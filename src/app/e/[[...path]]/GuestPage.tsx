@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Field, Shell, StatusNote } from "../components/ui";
-import { useEvent } from "../hooks/useEvent";
-import { MAX_PHOTOS, submitMessage, validateGuestVideo } from "../lib/api";
-import { eventGuestbookPath } from "../lib/eventRoutes";
-import { getEventCopy } from "../lib/eventTypes";
-import { formatEventDate } from "../lib/theme";
+import { Button, Field, Shell, StatusNote } from "../../../components/ui";
+import { useEvent } from "../../../hooks/useEvent";
+import { MAX_PHOTOS, submitMessage, validateGuestVideo } from "../../../lib/api";
+import { eventGuestbookPath } from "../../../lib/eventRoutes";
+import { getEventCopy } from "../../../lib/eventTypes";
+import { formatEventDate } from "../../../lib/theme";
 
 type PreviewItem = {
   file: File;

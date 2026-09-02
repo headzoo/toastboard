@@ -2,7 +2,7 @@ export const HOME_HERO = {
   kicker: "Zero sign-up for your guests",
   headline: "A guestbook your guests never log into.",
   lede: "Guests scan a QR code to leave a note, photo, or short video. You create your guestbook once, and it’s yours to keep.",
-  primaryCta: "14-day Free Trial",
+  primaryCta: "14-Day Free Trial",
   trialNote: "Start a 14-day free trial — no credit card required",
 } as const;
 

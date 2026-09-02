@@ -42,7 +42,7 @@ export function MarketingAuthLinks({ onNavigate }: { onNavigate?: () => void }) 
           Sign out
         </button>
         <Link className={marketingBtnClass} href="/create/" onClick={onNavigate}>
-          14-day Free Trial
+          14-Day Free Trial
         </Link>
       </>
     );
@@ -58,7 +58,7 @@ export function MarketingAuthLinks({ onNavigate }: { onNavigate?: () => void }) 
         Sign in
       </Link>
       <Link className={marketingBtnClass} href="/create/" onClick={onNavigate}>
-        14-day Free Trial
+        14-Day Free Trial
       </Link>
     </>
   );

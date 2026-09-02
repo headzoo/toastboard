@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { EventLandingPage } from "@/views/EventLandingPage";
+import { EventLandingPage } from "@/components/EventLandingPage";
 import { MARKETING_CONTENT } from "@/lib/marketingContent";
 
 const content = MARKETING_CONTENT.wedding;

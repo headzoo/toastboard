@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/ui";
 import { parseEventPathname, type EventRoute } from "@/lib/eventRoutes";
-import { GuestPage } from "@/views/GuestPage";
-import { GuestbookPage } from "@/views/GuestbookPage";
-import { ManagePage } from "@/views/ManagePage";
+import { GuestPage } from "./GuestPage";
+import { GuestbookPage } from "./GuestbookPage";
+import { ManagePage } from "./ManagePage";
 
 function EventRouteView({ route }: { route: EventRoute }) {
   switch (route.kind) {

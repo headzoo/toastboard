@@ -2,19 +2,19 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import { TableSignCard } from "../components/TableSignCard";
-import { SignThemePicker } from "../components/SignThemePicker";
-import { Shell, StatusNote } from "../components/ui";
-import { GuestbookFeed } from "../components/GuestbookFeed";
-import { useEvent } from "../hooks/useEvent";
-import { useMessages } from "../hooks/useMessages";
-import { updateEventSignTheme } from "../lib/api";
-import { eventGuestPath, eventGuestbookPath } from "../lib/eventRoutes";
-import { getEventCopy } from "../lib/eventTypes";
-import { getSignTheme, type SignThemeId } from "../lib/signThemes";
-import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../lib/styles";
-import { formatEventDate } from "../lib/theme";
-import { DEFAULT_THEME } from "../lib/types";
+import { TableSignCard } from "../../../components/TableSignCard";
+import { SignThemePicker } from "../../../components/SignThemePicker";
+import { Shell, StatusNote } from "../../../components/ui";
+import { GuestbookFeed } from "../../../components/GuestbookFeed";
+import { useEvent } from "../../../hooks/useEvent";
+import { useMessages } from "../../../hooks/useMessages";
+import { updateEventSignTheme } from "../../../lib/api";
+import { eventGuestPath, eventGuestbookPath } from "../../../lib/eventRoutes";
+import { getEventCopy } from "../../../lib/eventTypes";
+import { getSignTheme, type SignThemeId } from "../../../lib/signThemes";
+import { btnClass, btnRowClass, kickerClass, ledeClass, narrowClass } from "../../../lib/styles";
+import { formatEventDate } from "../../../lib/theme";
+import { DEFAULT_THEME } from "../../../lib/types";
 
 export function ManagePage({ slug, token }: { slug: string; token: string }) {
   const { data: session } = useSession();

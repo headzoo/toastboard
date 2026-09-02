@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Shell, StatusNote } from "../components/ui";
-import { GuestbookFeed } from "../components/GuestbookFeed";
-import { GuestbookSlideshow } from "../components/GuestbookSlideshow";
-import { useEvent } from "../hooks/useEvent";
-import { useMessages } from "../hooks/useMessages";
-import { eventGuestPath } from "../lib/eventRoutes";
-import { btnClass, btnRowClass, narrowClass, ledeClass } from "../lib/styles";
-import { getSignTheme } from "../lib/signThemes";
-import { getEventCopy } from "../lib/eventTypes";
-import { formatEventDate } from "../lib/theme";
+import { Shell, StatusNote } from "../../../components/ui";
+import { GuestbookFeed } from "../../../components/GuestbookFeed";
+import { GuestbookSlideshow } from "../../../components/GuestbookSlideshow";
+import { useEvent } from "../../../hooks/useEvent";
+import { useMessages } from "../../../hooks/useMessages";
+import { eventGuestPath } from "../../../lib/eventRoutes";
+import { btnClass, btnRowClass, narrowClass, ledeClass } from "../../../lib/styles";
+import { getSignTheme } from "../../../lib/signThemes";
+import { getEventCopy } from "../../../lib/eventTypes";
+import { formatEventDate } from "../../../lib/theme";
 
 export function GuestbookPage({ slug }: { slug: string }) {
   const { event, status } = useEvent(slug);
